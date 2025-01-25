@@ -1,0 +1,1 @@
+from .services.assimilator import NoteAssimilator

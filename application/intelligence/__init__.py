@@ -1,0 +1,3 @@
+from .protocols.llm_client import LLMClientInterface
+from .protocols.note_assimilator import NoteAssimilatorInterface
+from .protocols.note_vault import NoteVaultInterface
