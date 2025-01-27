@@ -10,11 +10,11 @@ from infrastructure.ext.openai.client import OpenAIClient
 from infrastructure.notes import NoteAssimilator
 from infrastructure.config.ini import Config
 from domain.util.datetime import ymd
-from domain.notes.entities.note_collection import NoteCollection
+from domain.notes import NoteCollection
 
 class AssimilateVoiceMemoApp:
 
-  def run(path):
+  def run(self, path):
 
     config = Config()
     openai = OpenAIClient(config.get("openai","api_key"))

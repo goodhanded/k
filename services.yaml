@@ -1,0 +1,23 @@
+services:
+  agency.prompt_agent_use_case:
+    class: application.agency.PromptAgentUseCase
+    arguments: ['@agency.agent_registry']
+  agency.agent_registry:
+    class: domain.registry.Registry
+    arguments:
+      registry: !tagged_iterator { tag: agent, index_by: alias }
+  # agency.agent_registry:
+  #   factory: [ '@agency.agent_registry_factory', getRegistry ]
+  #   arguments:
+  #     services: !tagged_iterator { tag: agent, index_by: alias }
+  agency.agent_registry_factory:
+    class: infrastructure.agency.AgentRegistryFactory
+  agency.agent.scheduling:
+    class: infrastructure.agency.SchedulingAgent
+    tags:
+      - { name: agent, alias: scheduling }
+  agency.agent.architect:
+    class: infrastructure.agency.ArchitectAgent
+    tags:
+      - { name: agent, alias: architect }
+  

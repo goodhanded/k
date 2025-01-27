@@ -1,1 +1,0 @@
-from .assimilate_voice_memo import AssimilateVoiceMemoApp

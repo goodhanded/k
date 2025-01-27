@@ -1,0 +1,17 @@
+commands:
+  test:
+    help: "Test command"
+    target: "infrastructure.apps.test.TestApp.run"
+
+  assimilate:
+    help: "Assimilate a voice memo into the daily note"
+    target: "infrastructure.apps.assimilate_voice_memo.AssimilateVoiceMemoApp.run"
+    arguments:
+      path: "Local audio file path"
+
+  ask:
+    help: "Prompt an AI agent"
+    target: "@agency.prompt_agent_use_case.execute"
+    arguments:
+      agent_name: "The name of the agent to invoke"
+      prompt: "Text to send to the agent"
