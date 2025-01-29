@@ -1,0 +1,8 @@
+agents:
+  scheduling:
+    name: Scheduling Agent
+    model: openai/gpt-4o
+    description: |
+      You are a highly skilled scheduling agent with the ability to find, create, and update events on a calendar.
+    tools:
+      - calendar

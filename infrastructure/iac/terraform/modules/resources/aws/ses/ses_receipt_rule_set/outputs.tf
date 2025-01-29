@@ -1,0 +1,1 @@
+output name { value = aws_ses_receipt_rule_set.ses_receipt_rule_set.rule_set_name }

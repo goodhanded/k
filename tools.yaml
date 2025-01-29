@@ -1,0 +1,175 @@
+tools:
+  calendar:
+    name: Calendar
+    description: |
+      The Calendar tool allows agents to manage events.
+      It provides methods to get events for a given date,
+      add a new event, and update an existing event.
+    methods:
+      - name: get_events
+        description: Get events for a given date
+        params:
+          - name: date
+            type: string
+            description: Date in format YYYY-MM-DD
+        returns:
+          type: array
+          description: List of events
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Event ID
+              title:
+                type: string
+                description: Event title
+              description:
+                type: string
+                description: Event description
+              date:
+                type: string
+                description: Event date
+              time:
+                type: string
+                description: Event time
+              location:
+                type: string
+                description: Event location
+              attendees:
+                type: array
+                description: List of attendees
+                items:
+                  type: string
+                  description: Attendee ID
+      - name: add_event
+        description: Add a new event
+        params:
+          - name: title
+            type: string
+            description: Event title
+          - name: description
+            type: string
+            description: Event description
+          - name: date
+            type: string
+            description: Event date in format YYYY-MM-DD
+          - name: time
+            type: string
+            description: Event time in format HH:MM
+          - name: location
+            type: string
+            description: Event location
+          - name: attendees
+            type: array
+            description: List of attendees
+            items:
+              type: string
+              description: Attendee ID
+        returns:
+          type: object
+          description: Event details
+          properties:
+            id:
+              type: string
+              description: Event ID
+            title:
+              type: string
+              description: Event title
+            description:
+              type: string
+              description: Event description
+            date:
+              type: string
+              description: Event date
+            time:
+              type: string
+              description: Event time
+            location:
+              type: string
+              description: Event location
+            attendees:
+              type: array
+              description: List of attendees
+              items:
+                type: string
+                description: Attendee ID
+      - name: update_event
+        description: Update an existing event
+        params:
+          - name: id
+            type: string
+    examples:
+      - name: Get events for a given date
+        description: |
+          Get events for a given date.
+        request:
+          method: getEvents
+          params:
+            date: 2020-12-25
+        response:
+          status: 200
+          body:
+            - id: 1
+              title: Christmas Party
+              description: Annual Christmas party
+              date: 2020-12-25
+              time: 18:00
+              location: Office
+              attendees:
+                - 1
+                - 2
+            - id: 2
+              title: New Year's Eve
+              description: New Year's Eve celebration
+              date: 2020-12-31
+              time: 20:00
+              location: Rooftop
+              attendees:
+                - 1
+                - 2
+      - name: Add a new event
+        description: |
+          Add a new event.
+        request:
+          method: addEvent
+          params:
+            title: Christmas Party
+            description: Annual Christmas party
+            date: 2020-12-25
+            time: 18:00
+            location: Office
+            attendees:
+              - 1
+              - 2
+        response:
+          status: 200
+          body:
+            id: 1
+            title: Christmas Party
+            description: Annual Christmas party
+            date: 2020-12-25
+            time: 18:00
+            location: Office
+            attendees:
+              - 1
+              - 2
+      - name: Update an existing event
+        description: |
+          Update an existing event.
+        request:
+          method: updateEvent
+          params:
+            id: 1
+        response:
+          status: 200
+          body:
+            id: 1
+            title: Christmas Party
+            description: Annual Christmas party
+            date: 2020-12-25
+            time: 18:00
+            location: Office
+            attendees:
+              - 1
+              - 2
