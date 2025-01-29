@@ -24,4 +24,4 @@ fi
 cd /Users/keith/Projects/k || exit
 
 # Run the Python script to transcribe and assimilate the voice memo
-/Users/keith/Projects/k/.env/bin/python /Users/keith/Projects/k/k.py assimilate "$RECORDING_PATH" >> "$LOG_FILE" 2>&1
+/Users/keith/Projects/k/venv/bin/python /Users/keith/Projects/k/k.py assimilate "$RECORDING_PATH" >> "$LOG_FILE" 2>&1

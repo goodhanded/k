@@ -1,7 +1,7 @@
-# load_definitions.py
 import yaml
 import importlib
 from typing import Dict, List, Any, Union
+from domain.util.yaml import load_yaml
 
 from .service_definition import ServiceDefinition
 
@@ -9,10 +9,7 @@ from .service_definition import ServiceDefinition
 import infrastructure.di.tagged_iterator  # noqa
 
 def load_definitions_from_yaml(file_path: str) -> Dict[str, ServiceDefinition]:
-    with open(file_path, 'r', encoding='utf-8') as f:
-        data = yaml.safe_load(f) or {}
-
-    services_data = data.get('services', {})
+    services_data = load_yaml(file_path, "services") or {}
     definitions: Dict[str, ServiceDefinition] = {}
 
     for service_name, raw in services_data.items():

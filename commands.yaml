@@ -15,3 +15,10 @@ commands:
     arguments:
       agent_name: "The name of the agent to invoke"
       prompt: "Text to send to the agent"
+
+  run:
+    help: "Run a subcommand"
+    subcommands:
+      discord:
+        help: "Run the discord bot"
+        target: "@agency.run_discord_bot_use_case.execute"

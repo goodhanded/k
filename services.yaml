@@ -1,23 +1,26 @@
 services:
+
+  # APPLICATION LAYER USE CASES
+  
   agency.prompt_agent_use_case:
     class: application.agency.PromptAgentUseCase
-    arguments: ['@agency.agent_registry']
-  agency.agent_registry:
-    class: domain.registry.Registry
-    arguments:
-      registry: !tagged_iterator { tag: agent, index_by: alias }
-  # agency.agent_registry:
-  #   factory: [ '@agency.agent_registry_factory', getRegistry ]
-  #   arguments:
-  #     services: !tagged_iterator { tag: agent, index_by: alias }
-  agency.agent_registry_factory:
-    class: infrastructure.agency.AgentRegistryFactory
+    arguments: ['@agency.agent_factory']
+
+  agency.run_discord_bot_use_case:
+    class: application.agency.RunDiscordBotUseCase
+    arguments: ['@agency.prompt_agent_use_case']
+
+  # AGENCY IMPLEMENTATIONS
+  
+  agency.agent_factory:
+    class: infrastructure.agency.AgentFactory
+    arguments: ['@agency.tool_factory']
+
+  agency.tool_factory:
+    class: infrastructure.agency.ToolFactory
+  
   agency.agent.scheduling:
     class: infrastructure.agency.SchedulingAgent
     tags:
       - { name: agent, alias: scheduling }
-  agency.agent.architect:
-    class: infrastructure.agency.ArchitectAgent
-    tags:
-      - { name: agent, alias: architect }
   
