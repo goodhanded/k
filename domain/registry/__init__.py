@@ -1,1 +1,1 @@
-from .registry import Registry
+from .entities.registry import Registry

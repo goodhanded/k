@@ -1,5 +1,8 @@
 from typing import Protocol
 
-class LLMClientInterface(Protocol):
-  def get_chat_completion(self, prompt: str) -> str:
-    pass
+class LLMClientProtocol(Protocol):
+
+    model: str
+
+    def chat(self, model: str, prompt: str) -> str:
+        pass

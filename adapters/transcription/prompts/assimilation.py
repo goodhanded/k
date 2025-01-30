@@ -1,16 +1,16 @@
 from typing import Optional
 from domain.notes import Note, NoteCollection
 
-def assimilation_prompt(todays_transcripts: NoteCollection, daily_note: Optional[Note] = None) -> str:
+def assimilation_prompt(todays_transcript_content: str, daily_note_content: str) -> str:
 
   existing_content_section = f"""
 There is no existing daily note content for today.
 """
-  if daily_note and daily_note.content != '':
+  if daily_note_content.strip() != '':
     existing_content_section = f"""
 Here is the existing daily note content for today:
 ===
-{daily_note.content}
+{daily_note_content}
 ==="""
 
   prompt = f"""
@@ -20,7 +20,7 @@ You are an assistant who helps aggregate notes and transcripts for a user's pers
 
 **Transcripts for Today:**
 
-{todays_transcripts.content}
+{todays_transcript_content}
 
 **************************
 

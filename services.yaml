@@ -1,10 +1,8 @@
 services:
-
-  # APPLICATION LAYER USE CASES
-  
+ 
   agency.prompt_agent_use_case:
     class: application.agency.PromptAgentUseCase
-    arguments: ['@agency.agent_factory']
+    arguments: ['@agency.agent_registry']
 
   agency.run_discord_bot_use_case:
     class: application.agency.RunDiscordBotUseCase
@@ -12,10 +10,13 @@ services:
 
   agency.index_documents_use_case:
     class: application.agency.IndexDocumentsUseCase
-    arguments: ['@agency.indexer']
-
-  # AGENCY IMPLEMENTATIONS
+    arguments: ['@faiss.indexer']
   
+  agency.agent_registry:
+    class: domain.registry.Registry
+    arguments: 
+      services: !tagged_iterator { tag: agent, index_by: alias }
+
   agency.agent_factory:
     class: infrastructure.agency.AgentFactory
     arguments: ['@agency.tool_factory']
@@ -28,10 +29,50 @@ services:
     tags:
       - { name: agent, alias: scheduling }
 
-  agency.indexer:
-    class: infrastructure.ext.faiss.FAISSIndexer
+  agency.agent.search:
+    class: infrastructure.agency.SearchAgent
+    arguments: ['@faiss.search_engine','langchain.document_mapper','@openai.client','o1']
+    tags:
+      - { name: agent, alias: search }
+
+  daily_voice_notes.assimilate_voice_note_use_case:
+    class: application.daily_voice_notes.AssimilateVoiceNoteUseCase
+    arguments: 
+      - '@transcription.transcriber'
+      - '@daily_voice_notes.document_consolidator'
+      - '%TRANSCRIPTS_BASE_PATH%'
+
+  daily_voice_notes.document_consolidator:
+    class: infrastructure.daily_voice_notes.DailyNoteConsolidator
+    arguments: ['@openai.client','@obsidian.vault']
+
+  faiss.indexer:
+    class: infrastructure.faiss.FAISSIndexer
     arguments: 
       docs_path: '%OBSIDIAN_VAULT_PATH%'
       chunk_size: 1000
       chunk_overlap: 100
       save_path: '%FAISS_INDEX_PATH%'
+
+  faiss.search_engine:
+    class: infrastructure.faiss.FAISSSearchEngine
+    arguments: ['%FAISS_INDEX_PATH%', 5]
+
+  langchain.document_mapper:
+    class: infrastructure.langchain.LangchainDocumentMapper
+
+  openai.client:
+    class: infrastructure.openai.OpenAIClient
+    arguments: ['%OPENAI_API_KEY%']
+
+  obsidian.vault:
+    class: infrastructure.obsidian.ObsidianVault
+    arguments: ['%OBSIDIAN_VAULT_PATH%']
+
+  transcription.transcribe_audio_use_case:
+    class: application.transcription.TranscribeAudioUseCase
+    arguments: ['@transcription.transcriber']
+
+  transcription.transcriber:
+    class: infrastructure.amazon.AmazonTranscribe
+    arguments: ['%TRANSCRIPTS_BUCKET%', '%AWS_PATH%']

@@ -1,1 +1,1 @@
-from .protocols.config_service_protocol import ConfigServiceProtocol
+from .protocols.config import ConfigProtocol

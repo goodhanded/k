@@ -2,7 +2,7 @@
 import importlib
 from typing import Any, Dict, Set
 
-from infrastructure.config import ConfigService
+from infrastructure.config import Config
 
 from .service_definition import ServiceDefinition
 from .tagged_iterator import TaggedIterator
@@ -12,7 +12,7 @@ class Container:
         self.definitions = definitions
         self.singletons: Dict[str, Any] = {}
         self.resolving: Set[str] = set()
-        self.config = ConfigService()
+        self.config = Config()
 
     def get(self, service_name: str) -> Any:
         # Check if it's already instantiated

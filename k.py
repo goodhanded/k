@@ -1,4 +1,4 @@
-from infrastructure.commands.runner import load_and_run
+from infrastructure.command import load_and_run
 
 def main():
     load_and_run() 

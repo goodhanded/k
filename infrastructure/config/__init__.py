@@ -1,1 +1,1 @@
-from .config_service import ConfigService
+from .services.config import Config
