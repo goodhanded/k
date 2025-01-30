@@ -25,12 +25,15 @@ class ObsidianVault(NoteVaultInterface):
   def list(self, path: str) -> NoteCollection:
     path = os.path.join(self.path, path)
     return NoteCollection.from_path(path)
-  
+
   def get_daily_note(self) -> Note:
     daily_note_file = f"{date_string()}.md"
     daily_note_path = os.path.join(self.path, 'Calendar', *ym(), daily_note_file)
     return self.get(daily_note_path)
   
+  def get_all_notes(self) -> NoteCollection:
+    return self.list('')
+
   def overwrite_daily_note(self, content: str):
     daily_note_file = f"{date_string()}.md"
     daily_note_path = os.path.join(self.path, 'Calendar', *ym(), daily_note_file)

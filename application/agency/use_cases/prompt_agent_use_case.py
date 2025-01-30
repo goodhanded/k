@@ -13,4 +13,7 @@ class PromptAgentUseCase:
         if agent is None:
             return
 
-        return agent.invoke(prompt)
+        response = agent.invoke(prompt)
+
+        print(response)
+        return response

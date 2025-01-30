@@ -22,3 +22,6 @@ commands:
       discord:
         help: "Run the discord bot"
         target: "@agency.run_discord_bot_use_case.execute"
+      indexer:
+        help: "Run the indexer"
+        target: "@agency.index_documents_use_case.execute"

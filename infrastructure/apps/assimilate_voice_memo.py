@@ -8,7 +8,7 @@ from infrastructure.ext.amazon.transcribe import AmazonTranscribe
 from infrastructure.ext.obsidian.vault import ObsidianVault
 from infrastructure.ext.openai.client import OpenAIClient
 from infrastructure.notes import NoteAssimilator
-from infrastructure.config.ini import Config
+from infrastructure.config import ConfigService
 from domain.util.datetime import ymd
 from domain.notes import NoteCollection
 
@@ -16,12 +16,12 @@ class AssimilateVoiceMemoApp:
 
   def run(self, path):
 
-    config = Config()
-    openai = OpenAIClient(config.get("openai","api_key"))
-    obsidian_vault = ObsidianVault(config.get("obsidian", "vault_path"))
-    transcript_base_path = config.get("transcripts", "base_path")
+    config = ConfigService()
+    openai = OpenAIClient(config.require("OPENAI_API_KEY"))
+    obsidian_vault = ObsidianVault(config.require("OBSIDIAN_VAULT_PATH"))
+    transcript_base_path = config.require("TRANSCRIPTS_BASE_PATH")
     todays_transcripts_dir = os.path.join(transcript_base_path, *ymd())
-    amazon_transcribe = AmazonTranscribe(config.get("transcripts","voice_memo_bucket"), config.get("aws","path"))
+    amazon_transcribe = AmazonTranscribe(config.require("TRANSCRIPTS_BUCKET"), config.require("AWS_PATH"))
     transcribe = TranscribeVoiceMemoUseCase(transcription_service = amazon_transcribe).execute
 
     # Transcribe the voice memo

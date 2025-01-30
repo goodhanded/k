@@ -2,6 +2,8 @@
 import importlib
 from typing import Any, Dict, Set
 
+from infrastructure.config import ConfigService
+
 from .service_definition import ServiceDefinition
 from .tagged_iterator import TaggedIterator
 
@@ -10,6 +12,7 @@ class Container:
         self.definitions = definitions
         self.singletons: Dict[str, Any] = {}
         self.resolving: Set[str] = set()
+        self.config = ConfigService()
 
     def get(self, service_name: str) -> Any:
         # Check if it's already instantiated
@@ -74,6 +77,12 @@ class Container:
         return factory_method(*pos_args, **kw_args)
 
     def _resolve_argument(self, arg: Any) -> Any:
+        
+        # Handle configuration variables
+        if isinstance(arg, str) and arg.startswith('%') and arg.endswith('%'):
+            env_var = arg[1:-1]
+            return self.config.require(env_var)
+        
         # Handle service references
         if isinstance(arg, str) and arg.startswith('@'):
             return self.get(arg[1:])

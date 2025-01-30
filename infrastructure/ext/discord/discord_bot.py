@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
-from infrastructure.config import Config
+from infrastructure.config import ConfigService
 from application.agency import PromptAgentUseCase
 
 
 class DiscordBot:
     def __init__(self, prompt_agent_use_case: PromptAgentUseCase):
-        self.config = Config()
-        self.token = self.config.get('discord', 'bot_token')
+        self.config = ConfigService()
+        self.token = self.config.require('DISCORD_BOT_TOKEN')
 
         intents = discord.Intents.default()
         intents.message_content = True

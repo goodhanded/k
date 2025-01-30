@@ -10,6 +10,10 @@ services:
     class: application.agency.RunDiscordBotUseCase
     arguments: ['@agency.prompt_agent_use_case']
 
+  agency.index_documents_use_case:
+    class: application.agency.IndexDocumentsUseCase
+    arguments: ['@agency.indexer']
+
   # AGENCY IMPLEMENTATIONS
   
   agency.agent_factory:
@@ -23,4 +27,11 @@ services:
     class: infrastructure.agency.SchedulingAgent
     tags:
       - { name: agent, alias: scheduling }
-  
+
+  agency.indexer:
+    class: infrastructure.ext.faiss.FAISSIndexer
+    arguments: 
+      docs_path: '%OBSIDIAN_VAULT_PATH%'
+      chunk_size: 1000
+      chunk_overlap: 100
+      save_path: '%FAISS_INDEX_PATH%'
