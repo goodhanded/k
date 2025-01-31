@@ -20,7 +20,7 @@ class DocumentCollection:
 
     def to_document(self, delimiter: str = '\n\n') -> Document:
         """
-        Converts the collection to a Document object.
+        Concatenates the collection into a single Document object.
         """
         content = delimiter.join([document.content for document in self.documents])
         return Document(content=content)
@@ -43,6 +43,30 @@ class DocumentCollection:
         """
         self.documents.remove(document)
 
+    def to_list(self) -> List[Document]:
+        """
+        Returns the collection as a list of Document objects.
+        """
+        return self.documents
+    
+    def pop(self, index: int = 0) -> Document:
+        """
+        Removes and returns the document at the specified index.
+
+        Args:
+            - index: int: The index of the document to remove.
+        """
+        return self.documents.pop(index)
+    
+    def push(self, document: Document):
+        """
+        Appends a document to the collection.
+
+        Args:
+            - document: Document: The document to append.
+        """
+        self.add(document)
+
     @staticmethod
     def from_path(path: str) -> 'DocumentCollection':
         """
@@ -64,8 +88,21 @@ class DocumentCollection:
         
         return DocumentCollection(documents)
 
+    @staticmethod
+    def from_list(documents: List[Document]) -> 'DocumentCollection':
+        """
+        Returns a DocumentCollection from a list of Document objects.
+
+        Args:
+            - documents: List[Document]: The list of Document objects.
+        """
+        return DocumentCollection(documents)
+
     def __iter__(self):
         return iter(self.documents)
 
     def __len__(self):
         return len(self.documents)
+    
+    def __str__(self):
+        return self.to_document().content

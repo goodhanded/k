@@ -1,1 +1,2 @@
 from .document_mapper import LangchainDocumentMapper
+from .document_loaders.obsidian import ObsidianDocumentLoader

@@ -1,1 +1,2 @@
 from .protocols.search_engine import SearchEngineProtocol
+from .protocols.document_loader import DocumentLoaderProtocol

@@ -48,7 +48,9 @@ services:
 
   faiss.indexer:
     class: infrastructure.faiss.FAISSIndexer
-    arguments: 
+    arguments:
+      document_loader: '@langchain.obsidian_document_loader'
+      mapper: '@langchain.document_mapper'
       docs_path: '%OBSIDIAN_VAULT_PATH%'
       chunk_size: 1000
       chunk_overlap: 100
@@ -56,10 +58,14 @@ services:
 
   faiss.search_engine:
     class: infrastructure.faiss.FAISSSearchEngine
-    arguments: ['%FAISS_INDEX_PATH%', 5]
+    arguments: ['%FAISS_INDEX_PATH%', 1]
 
   langchain.document_mapper:
     class: infrastructure.langchain.LangchainDocumentMapper
+
+  langchain.obsidian_document_loader:
+    class: infrastructure.langchain.ObsidianDocumentLoader
+    arguments: ['@langchain.document_mapper','%OBSIDIAN_VAULT_PATH%']
 
   openai.client:
     class: infrastructure.openai.OpenAIClient

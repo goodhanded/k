@@ -19,33 +19,15 @@ class SearchAgent(AgentProtocol):
         
     def invoke(self, prompt: str):
 
-        print(f'{self.name} invoked with prompt: {prompt}')
-
         print('Searching...')
         search_result = self.search_engine.search(prompt)
-
-        if not search_result.success:
-            responseDTO = AgentResponseDTO(
-                agent=self.name,
-                timestamp=datetime.now(),
-                prompt=prompt,
-                success=False,
-                response=search_result.message
-            )
-            return responseDTO
-
-        docs = search_result.results
-        print(f'{len(docs)} documents found')
-        documents = DocumentCollection(docs)
-        print('Search complete')
-        #documents = self.mapper.to_langchain(search_result.results)
 
         responseDTO = AgentResponseDTO(
             agent=self.name,
             timestamp=datetime.now(),
             prompt=prompt,
             success=True,
-            response=documents.to_document().content
+            response=search_result.docs
         )
 
         return responseDTO
