@@ -23,7 +23,14 @@ class DiscordBot:
             if message.author == self.bot.user:
                 return
             response = prompt_agent_use_case.execute(str(message.channel), message.content)
-            await message.channel.send(response)
+
+            if message.thread:
+                # send the response in the thread
+                await message.thread.send(response)
+            else:
+                # create a new thread
+                thread = await message.create_thread(name="Agent Response")
+                await thread.send(response)
             
             
     def run(self):

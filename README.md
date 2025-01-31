@@ -127,16 +127,21 @@ You can further customize these to extend functionality or adapt to your specifi
 
 ## Extending k
 
-1. **Add a New Command**  
+1. **Add a New Python Dependency**
+   - Update `requirements.in` with the python dependency you want to add.
+   - Run `pip-compile requirements.in --strip-extras` to compile a new requirements.txt file.
+   - Run `pip install -r requirements.txt` to install the dependencies in the requirements.txt file.
+
+2. **Add a New Command**  
    - Create or update a `use_case` in the appropriate `application/...` folder.  
    - Reference that use case in `commands.yaml` by specifying a `target` that points to its DI container name (for example, `@agency.some_use_case.execute`).
 
-2. **Add a New AI Agent**  
+3. **Add a New AI Agent**  
    - Implement the agent logic in `infrastructure/agency/services/agents`.  
    - Register it via the DI container in `services.yaml`.
    - Tag it with `{ name: agent, alias: <alias> }` to have the di container add it to the agent registry.
 
-3. **Add a New Service**  
+4. **Add a New Service**  
    - Create a service class (for example, a new search engine or transcriber) in the `infrastructure/` layer.  
    - Update `services.yaml` and the DI container with the new service definition.
 
