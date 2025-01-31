@@ -6,6 +6,10 @@ commands:
     arguments:
       path: "Local audio file path"
 
+  tb:
+    help: "Build a troubleshooting prompt from a traceback on the clipboard"
+    target: "@traceback.build_troubleshooting_prompt_use_case.execute"
+
   transcribe:
     help: "Transcribe an audio file"
     target: "@transcription.transcribe_audio_use_case.execute"

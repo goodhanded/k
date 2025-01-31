@@ -1,64 +1,16 @@
-# aiohappyeyeballs
-# aiohttp
-# aiosignal
-# annotated-types
-# anyio
-# attrs
+# To update this file, run:
+# pip-compile requirements.in
 boto3
-# botocore
-# certifi
-# charset-normalizer
 discord
-# discord.py
-# distro
 faiss-cpu
 ffmpeg-python
-# frozenlist
-# future
-# h11
-# httpcore
-# httpx
-# idna
-# imageio-ffmpeg
-# jiter
-# jmespath
-# jsonpatch
-# jsonpointer
 langchain
 langchain-community
 langchain-openai
-# langchain-core
-# langchain-text-splitters
 langgraph
-# langgraph-checkpoint
-# langgraph-sdk
-# langsmith
-# msgpack
-# msgspec
-# multidict
-# numpy
 openai
-# orjson
-# packaging
-# propcache
 pycord
 pydantic
-# pydantic_core
-# python-dateutil
+pyperclip
 python-dotenv
 PyYAML
-# regex
-# requests
-# requests-toolbelt
-# s3transfer
-# six
-# sniffio
-# SQLAlchemy
-# tenacity
-# tiktoken
-# tqdm
-# typing_extensions
-# urllib3
-# wheel
-# yarl
-# zstandard

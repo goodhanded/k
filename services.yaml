@@ -75,6 +75,13 @@ services:
     class: infrastructure.obsidian.ObsidianVault
     arguments: ['%OBSIDIAN_VAULT_PATH%']
 
+  traceback.build_troubleshooting_prompt_use_case:
+    class: application.traceback.BuildTroubleshootingPromptUseCase
+    arguments: ['@traceback.prompt_builder']
+
+  traceback.prompt_builder:
+    class: infrastructure.traceback.TracebackPromptBuilder
+
   transcription.transcribe_audio_use_case:
     class: application.transcription.TranscribeAudioUseCase
     arguments: ['@transcription.transcriber']
