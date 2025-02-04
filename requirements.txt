@@ -19,6 +19,8 @@ anyio==4.8.0
     # via
     #   httpx
     #   openai
+asttokens==3.0.0
+    # via stack-data
 attrs==25.1.0
     # via aiohttp
 boto3==1.36.10
@@ -36,12 +38,16 @@ charset-normalizer==3.4.1
     # via requests
 dataclasses-json==0.6.7
     # via langchain-community
+decorator==5.1.1
+    # via ipython
 discord==2.3.2
     # via -r requirements.in
 discord-py==2.4.0
     # via discord
 distro==1.9.0
     # via openai
+executing==2.2.0
+    # via stack-data
 faiss-cpu==1.10.0
     # via -r requirements.in
 ffmpeg-python==0.2.0
@@ -73,6 +79,10 @@ idna==3.10
     #   yarl
 imageio-ffmpeg==0.6.0
     # via pycord
+ipython==8.32.0
+    # via -r requirements.in
+jedi==0.19.2
+    # via ipython
 jiter==0.8.2
     # via openai
 jmespath==1.0.1
@@ -114,6 +124,8 @@ langsmith==0.3.3
     #   langchain-core
 marshmallow==3.26.0
     # via dataclasses-json
+matplotlib-inline==0.1.7
+    # via ipython
 msgpack==1.1.0
     # via langgraph-checkpoint
 multidict==6.1.0
@@ -141,10 +153,22 @@ packaging==24.2
     #   faiss-cpu
     #   langchain-core
     #   marshmallow
+parso==0.8.4
+    # via jedi
+pathspec==0.12.1
+    # via -r requirements.in
+pexpect==4.9.0
+    # via ipython
+prompt-toolkit==3.0.50
+    # via ipython
 propcache==0.2.1
     # via
     #   aiohttp
     #   yarl
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.3
+    # via stack-data
 pycord==0.1.1
     # via -r requirements.in
 pydantic==2.10.6
@@ -159,6 +183,8 @@ pydantic-core==2.27.2
     # via pydantic
 pydantic-settings==2.7.1
     # via langchain-community
+pygments==2.19.1
+    # via ipython
 pyperclip==1.9.0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
@@ -196,6 +222,8 @@ sqlalchemy==2.0.37
     # via
     #   langchain
     #   langchain-community
+stack-data==0.6.3
+    # via ipython
 tenacity==9.0.0
     # via
     #   langchain
@@ -205,6 +233,10 @@ tiktoken==0.8.0
     # via langchain-openai
 tqdm==4.67.1
     # via openai
+traitlets==5.14.3
+    # via
+    #   ipython
+    #   matplotlib-inline
 typing-extensions==4.12.2
     # via
     #   anyio
@@ -220,6 +252,8 @@ urllib3==2.3.0
     # via
     #   botocore
     #   requests
+wcwidth==0.2.13
+    # via prompt-toolkit
 yarl==1.18.3
     # via aiohttp
 zstandard==0.23.0

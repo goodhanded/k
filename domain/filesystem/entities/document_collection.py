@@ -1,6 +1,7 @@
 import os
 from typing import List
 from domain.filesystem import File, Document
+from pathspec import PathSpec
 
 class DocumentCollection:
     """
@@ -98,7 +99,6 @@ class DocumentCollection:
 
         return tree_helper(self.documents)
 
-
     @staticmethod
     def from_path(path: str, ignore_rule: str = None) -> 'DocumentCollection':
         """
@@ -107,22 +107,25 @@ class DocumentCollection:
 
         Args:
             - path: str: The path to the directory containing the documents.
-            - ignore_rule: str: A '|' separated list of patterns to ignore.
+            - ignore_rule: str: A '|' separated list of patterns, supporting .gitignore rules.
 
         Returns:
             - DocumentCollection: A collection containing Document objects for each file.
         """
-        ignore_patterns = ignore_rule.split('|') if ignore_rule else []
+
+        spec = PathSpec.from_lines('gitwildmatch', ignore_rule.split('|')) if ignore_rule else None
         documents = []
 
         for root, dirs, files in os.walk(path):
+            dirs[:] = [
+                d for d in dirs
+                if not spec or not spec.match_file(os.path.relpath(os.path.join(root, d), path))
+            ]
             for file_name in files:
-                # Skip hidden or ignored files
-                if file_name.startswith('.') or any(p in file_name for p in ignore_patterns):
+                rel_file = os.path.relpath(os.path.join(root, file_name), path)
+                if spec and spec.match_file(rel_file):
                     continue
-
-                file_path = os.path.join(root, file_name)
-                document = Document.from_path(file_path)
+                document = Document.from_path(os.path.join(root, file_name))
                 documents.append(document)
         
         return DocumentCollection(documents)
