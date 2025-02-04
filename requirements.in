@@ -4,6 +4,7 @@ boto3
 discord
 faiss-cpu
 ffmpeg-python
+ipython
 langchain
 langchain-community
 langchain-openai

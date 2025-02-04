@@ -8,6 +8,9 @@ class OpenAIClient(LLMClientProtocol):
       api_key = api_key
     )
 
+  def get_models(self):
+    return self.client.models.list()
+
   def chat(self, model: str, prompt: str) -> str:
     chat = self.client.chat.completions.create(
       messages=[

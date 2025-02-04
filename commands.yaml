@@ -6,7 +6,23 @@ commands:
     arguments:
       path: "Local audio file path"
 
-  tb:
+  get:
+    help: "Get some resource"
+    subcommands:
+      openai:
+        help: "Get an OpenAI resource"
+        subcommands:
+          models:
+            help: "Get the list of available models"
+            target: "@openai.client.get_models"
+            print_result: true
+            print_map:
+              format: table
+              columns:
+                - id
+              order_by: id
+
+  traceback:
     help: "Build a troubleshooting prompt from a traceback on the clipboard"
     target: "@traceback.build_troubleshooting_prompt_use_case.execute"
 
