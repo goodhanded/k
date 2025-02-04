@@ -16,5 +16,4 @@ class PromptAgentUseCase:
         print(f'Invoking agent: {agent_name}')
         response = agent.invoke(prompt)
 
-        print(response)
         return response
