@@ -40,7 +40,7 @@ class File:
       - extension: The extension to check for
     """
     return self.extension == extension
-  
+
   @classmethod
   def required_extensions(cls) -> List[Ext]:
     """

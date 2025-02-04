@@ -67,67 +67,32 @@ class DocumentCollection:
         """
         self.add(document)
 
-    def tree(self) -> str:
-        """
-        Returns a string directory/file tree representation of the collection.
-        Implement like the tree command in Unix, with pipe and dash characters.
-
-        Example output:
-        ```
-        .
-        |- file1.txt
-        |- file2.txt
-        |- dir1
-        |  |- file3.txt
-        |  |- file4.txt
-        |- dir2
-        |  |- file5.txt
-        ```
-        """
-        def tree_helper(documents, indent=''):
-            tree = ''
-            for i, document in enumerate(documents):
-                if i == len(documents) - 1:
-                    tree += f'{indent}└─ {document.name}\n'
-                    if document.is_directory:
-                        tree += tree_helper(document.children, indent + '   ')
-                else:
-                    tree += f'{indent}├─ {document.name}\n'
-                    if document.is_directory:
-                        tree += tree_helper(document.children, indent + '│  ')
-            return tree
-
-        return tree_helper(self.documents)
-
     @staticmethod
     def from_path(path: str, ignore_rule: str = None) -> 'DocumentCollection':
-        """
-        Recursively reads all documents from a directory (including subdirectories)
-        and returns a DocumentCollection, applying an optional ignore rule.
-
-        Args:
-            - path: str: The path to the directory containing the documents.
-            - ignore_rule: str: A '|' separated list of patterns, supporting .gitignore rules.
-
-        Returns:
-            - DocumentCollection: A collection containing Document objects for each file.
-        """
-
         spec = PathSpec.from_lines('gitwildmatch', ignore_rule.split('|')) if ignore_rule else None
         documents = []
 
         for root, dirs, files in os.walk(path):
+            # Filter out directories that match ignore specs
             dirs[:] = [
                 d for d in dirs
                 if not spec or not spec.match_file(os.path.relpath(os.path.join(root, d), path))
             ]
             for file_name in files:
                 rel_file = os.path.relpath(os.path.join(root, file_name), path)
+                # Skip files that match the ignore specs
                 if spec and spec.match_file(rel_file):
                     continue
-                document = Document.from_path(os.path.join(root, file_name))
-                documents.append(document)
-        
+                
+                full_path = os.path.join(root, file_name)
+
+                print(f"Reading document from {full_path}")
+
+                document = Document.from_path(full_path)
+                # Only add it if it is not None (i.e., read successfully)
+                if document:
+                    documents.append(document)
+
         return DocumentCollection(documents)
 
     @staticmethod

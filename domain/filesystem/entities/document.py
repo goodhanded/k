@@ -55,8 +55,12 @@ class Document:
         Args:
             - path: str: The path to read the file from.
         """
-        with open(path, "r") as f:
-            content = f.read()
-
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+        except (UnicodeDecodeError, ValueError):
+            # If we can't read it as UTF-8 text, skip or return None.
+            return None
+        
         metadata = {"path": path}
         return Document(content=content, metadata=metadata)

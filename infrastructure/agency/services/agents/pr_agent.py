@@ -1,5 +1,5 @@
 import os
-from domain.filesystem import DocumentCollection
+from domain.filesystem import FileCollection
 from application.agency import AgentProtocol, ToolProtocol, PromptGeneratorProtocol
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
@@ -49,11 +49,11 @@ class PRAgent(AgentProtocol):
 
         print(f"Running PR Agent on {self.project_path} with ignore rule: {self.ignore_rule}")
         print(f"Getting document collection from {self.project_path}")
-        document_collection = DocumentCollection.from_path(self.project_path, self.ignore_rule)
+        file_collection = FileCollection.from_path(self.project_path, self.ignore_rule)
 
         print(f"Generating prompt for PR")
-        tree = document_collection.tree()
-        content = document_collection.to_document().content_with_path()
+        tree = file_collection.tree()
+        content = file_collection.to_document().content_with_path()
         prompt = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=content)
 
         pyperclip.copy(prompt)
