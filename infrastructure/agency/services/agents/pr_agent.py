@@ -21,17 +21,27 @@ class Response(BaseModel):
     modifications: List[FileChange] = Field(description="List of files modified.")
 
 class PRAgent(AgentProtocol):
-    def __init__(self, prompt_generator: PromptGeneratorProtocol, ignore_rule: str):
+    def __init__(self, prompt_generator: PromptGeneratorProtocol):
         llm = ChatOpenAI(model=LLM_MODEL, reasoning_effort="high")
 
         self.generator = prompt_generator
         self.llm = llm.with_structured_output(Response)
         self.project_path = os.getcwd()
-        self.ignore_rule = ignore_rule # format: '.git|__pycache__|venv'
+        self.ignore_rule = self.create_ignore_rule()
 
         self.name = "PR Agent"
         self.model = LLM_MODEL
         
+    def create_ignore_rule(self):
+        # Read .gitignore file and construct a rule using the format "pattern1|pattern2|..."
+        ignore_rule = ""
+        try:
+            with open(".gitignore") as f:
+                ignore_rule = "|".join([line.strip() for line in f if not line.startswith("#")])
+        except FileNotFoundError:
+            pass
+        return ignore_rule
+    
     def invoke(self, prompt: str):
 
         print(f"Running PR Agent on {self.project_path} with ignore rule: {self.ignore_rule}")
@@ -45,6 +55,7 @@ class PRAgent(AgentProtocol):
 
         pyperclip.copy(prompt)
 
+        print(f"Prompt copied to clipboard.")
         return
 
         print(f"Invoking LLM with prompt: {prompt}")

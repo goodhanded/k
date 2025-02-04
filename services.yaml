@@ -33,8 +33,7 @@ services:
   
   agency.agent.pr:
     class: infrastructure.agency.PRAgent
-    arguments:
-      - { ignore_rule: '.git|__pycache__|venv'}
+    arguments: ['@obsidian.prompt_generator']
 
   agency.agent.scheduling:
     class: infrastructure.agency.SchedulingAgent
