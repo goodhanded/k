@@ -22,6 +22,9 @@ class Response(BaseModel):
 
 class PRAgent(AgentProtocol):
     def __init__(self, prompt_generator: PromptGeneratorProtocol):
+
+        print(f"Initializing PR Agent with LLM model: {LLM_MODEL}")
+
         llm = ChatOpenAI(model=LLM_MODEL, reasoning_effort="high")
 
         self.generator = prompt_generator

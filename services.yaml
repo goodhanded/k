@@ -34,6 +34,8 @@ services:
   agency.agent.pr:
     class: infrastructure.agency.PRAgent
     arguments: ['@obsidian.prompt_generator']
+    tags:
+      - { name: agent, alias: pr }
 
   agency.agent.scheduling:
     class: infrastructure.agency.SchedulingAgent
