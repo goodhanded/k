@@ -2,8 +2,8 @@
 import re
 import sys
 import os
-import pyperclip
 
+from application.filesystem import ClipboardProtocol
 
 class TracebackPromptBuilder:
     """
@@ -12,7 +12,10 @@ class TracebackPromptBuilder:
     source code plus the original traceback.
     """
 
-    def __init__(self):
+    def __init__(self, clipboard: ClipboardProtocol):
+
+        self.clipboard = clipboard
+
         # Regex to capture Python tracebacks of the form:
         #   File "/path/to/file.py", line 32, in on_message
         self.python_tb_pattern = re.compile(
@@ -41,14 +44,14 @@ class TracebackPromptBuilder:
         4) Appends original traceback
         5) Copies the final result to the clipboard
         """
-        traceback_str = pyperclip.paste().strip()
+        traceback_str = self.clipboard.get()
         if not traceback_str:
             print("No traceback found in clipboard.")
             sys.exit(1)
 
         filepaths = self._extract_filepaths(traceback_str)
         prompt = self._build_prompt(filepaths, traceback_str)
-        pyperclip.copy(prompt)
+        self.clipboard.set(prompt)
         print("\nPrompt has been built and copied to clipboard.\n")
 
     def _extract_filepaths(self, traceback_str: str):

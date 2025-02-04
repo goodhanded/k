@@ -9,94 +9,105 @@ from domain.util.yaml import load_yaml
 COMMANDS_YAML_PATH = "/Users/keith/Projects/k/commands.yaml"
 SERVICES_YAML_PATH = "/Users/keith/Projects/k/services.yaml"
 
-
 def build_subcommands(subparsers, commands_dict):
-    """
-    Recursively add commands (and subcommands) to the parser.
-    
-    :param subparsers: an argparse._SubParsersAction object
-    :param commands_dict: dictionary describing commands and subcommands from YAML
-    """
     for cmd_name, cmd_info in commands_dict.items():
         help_text = cmd_info.get("help", "")
-        # Create a subparser for this command
-        subparser = subparsers.add_parser(cmd_name, help=help_text)
+        aliases = cmd_info.get("aliases", [])
+
+        subparser = subparsers.add_parser(cmd_name, help=help_text, aliases=aliases)
 
         # If this command has a "target", store it so we can call it later
         if "target" in cmd_info:
             subparser.set_defaults(target=cmd_info["target"])
 
-        # Optional flags, e.g. print_result, print_map, etc.
+        # Optional flags
         if "print_result" in cmd_info:
             subparser.set_defaults(print_result=cmd_info["print_result"])
         if "print_map" in cmd_info:
             subparser.set_defaults(print_map=cmd_info["print_map"])
 
-        # Add arguments if any
+        # Add known arguments (positional or optional)
         for arg_name, arg_help in cmd_info.get("arguments", {}).items():
             subparser.add_argument(arg_name, help=arg_help)
 
-        # If there are nested subcommands, recursively build them
+        # Nested subcommands
         if "subcommands" in cmd_info:
             nested_subparsers = subparser.add_subparsers(dest=f"{cmd_name}_subcommand")
             build_subcommands(nested_subparsers, cmd_info["subcommands"])
 
 
+def parse_unknown_as_kwargs(unknown_args):
+    """
+    Convert leftover unknown args of the form:
+      --key value
+      --key=value
+    into a dict: {'key': 'value'}.
+
+    Also treats a flag like --flag with no value as True.
+    """
+    kwargs = {}
+    idx = 0
+    while idx < len(unknown_args):
+        token = unknown_args[idx]
+        # Only process if it starts with --
+        if token.startswith("--"):
+            if "=" in token:
+                # e.g. --foo=bar
+                key, value = token.lstrip("-").split("=", 1)
+                kwargs[key] = value
+            else:
+                # e.g. --foo bar or just --foo
+                key = token.lstrip("-")
+                # Look ahead if there's another arg
+                if idx + 1 < len(unknown_args):
+                    next_token = unknown_args[idx + 1]
+                    if next_token.startswith("--"):
+                        # The next token is another flag, so interpret this one as bool
+                        kwargs[key] = True
+                    else:
+                        # next token is a value for this key
+                        kwargs[key] = next_token
+                        idx += 1
+                else:
+                    # no next token, treat as True
+                    kwargs[key] = True
+        else:
+            # Some unknown positional leftover. Decide how to handle it (ignore or collect).
+            pass
+        idx += 1
+
+    return kwargs
+
 def format_result(result, print_map):
-    """
-    Example format function that handles a few output formats:
-    - "table"
-    - "json"
-    
-    `print_map` can look like:
-      print_map:
-        format: "table" or "json"
-        columns: [field1, field2, ...]
-        order_by: <field_to_sort_on>
-        header: "true" or "false"
-    
-    Adjust this logic to match your return object structure.
-    """
+    """ Formatting logic (unchanged from your example). """
     fmt = print_map.get("format", "table")
     columns = print_map.get("columns", [])
     order_by = print_map.get("order_by", None)
     print_header = print_map.get("header", "true") == "true"
 
-    # Extract the main data list. If your result is a custom object with .data, use that.
     if hasattr(result, "data"):
         data = result.data
     elif isinstance(result, list):
         data = result
     else:
-        # Fallback if it's a single object or unknown structure
         return str(result)
 
-
-    # If order_by is present, sort the data
     if order_by:
-        # Distinguish between dicts vs. objects
         def get_key_value(item):
             if isinstance(item, dict):
                 return item.get(order_by)
             else:
                 return getattr(item, order_by, None)
-
         data = sorted(data, key=get_key_value)
 
     if fmt == "json":
-        # Dump the entire data array to JSON
         return json.dumps(data, indent=2, default=str)
-
     elif fmt == "table":
-        # Basic text table with specified columns
         if not columns:
-            # If no columns are specified, just str() the entire data
             return str(data)
-
         lines = []
         header = " | ".join(columns)
         separator = "-" * len(header)
-        
         if print_header:
             lines.append(header)
             lines.append(separator)
@@ -104,18 +115,13 @@ def format_result(result, print_map):
         for item in data:
             row_cells = []
             for col in columns:
-                # If item is an object, use getattr
-                val = getattr(item, col, None)
-                # If item is a dict, you might do item.get(col)
+                # handle dict vs. object
+                val = item.get(col) if isinstance(item, dict) else getattr(item, col, None)
                 row_cells.append(str(val))
-            line = " | ".join(row_cells)
-            lines.append(line)
-
+            lines.append(" | ".join(row_cells))
         return "\n".join(lines)
 
-    # Fallback for unknown format
     return str(result)
-
 
 def load_and_run():
     definitions = load_definitions_from_yaml(SERVICES_YAML_PATH)
@@ -126,7 +132,9 @@ def load_and_run():
     subparsers = parser.add_subparsers(dest="top_command")
 
     build_subcommands(subparsers, commands_dict)
-    args = parser.parse_args()
+
+    # 1) parse_known_args to separate recognized vs. leftover
+    args, unknown_args = parser.parse_known_args()
 
     if not args.top_command:
         parser.print_help()
@@ -137,33 +145,40 @@ def load_and_run():
         parser.print_help()
         return
 
+    # 2) Resolve the function from your container
     func = resolve_module(target, container)
 
-    # Copy argparse results into a dict
+    # 3) Build a dictionary from the known argparse results
     args_dict = vars(args).copy()
-
-    # Remove special keys we don't want to pass to the function
     print_result = args_dict.pop("print_result", False)
     print_map = args_dict.pop("print_map", None)
     args_dict.pop("target", None)
-    # <-- NEW: remove the top_command key
     args_dict.pop("top_command", None)
 
-    # Remove any subcommand placeholders (get_subcommand, openai_subcommand, etc.)
+    # Remove any subcommand placeholders
     for key in list(args_dict.keys()):
         if key.endswith("_subcommand"):
             args_dict.pop(key)
 
-    result = func(**args_dict)
+    # 4) Parse leftover unknown args as **kwargs
+    dynamic_kwargs = parse_unknown_as_kwargs(unknown_args)
 
+    # 5) Merge them into the final arg dict
+    args_dict.update(dynamic_kwargs)
+
+    # 6) Call the function with known + dynamic arguments
+    try:
+        result = func(**args_dict)
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # 7) Print result if requested
     if print_result:
         if print_map:
-            # Format output if print_map is defined
-            formatted = format_result(result, print_map)
-            print(formatted)
+            # your existing logic...
+            print(format_result(result, print_map))
         else:
             print(result)
-
 
 if __name__ == "__main__":
     load_and_run()

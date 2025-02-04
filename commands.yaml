@@ -6,6 +6,16 @@ commands:
     arguments:
       path: "Local audio file path"
 
+  generate:
+    help: "Generate some resource"
+    aliases: ["gen"]
+    subcommands:
+      prompt:
+        help: "Generate a prompt"
+        target: "@agency.generate_prompt_use_case.execute"
+        arguments:
+          template_name: "The name of the template to load from Obsidian"
+
   get:
     help: "Get some resource"
     subcommands:
@@ -23,6 +33,7 @@ commands:
               order_by: id
 
   traceback:
+    aliases: ["tb"]
     help: "Build a troubleshooting prompt from a traceback on the clipboard"
     target: "@traceback.build_troubleshooting_prompt_use_case.execute"
 

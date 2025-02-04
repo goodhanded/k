@@ -1,5 +1,12 @@
 services:
  
+  agency.generate_prompt_use_case:
+    class: application.agency.GeneratePromptUseCase
+    arguments:
+      - '@pyperclip'
+      - '@obsidian.vault'
+      - '%PROMPT_TEMPLATE_PATH%'
+
   agency.prompt_agent_use_case:
     class: application.agency.PromptAgentUseCase
     arguments: ['@agency.agent_registry']
@@ -75,12 +82,16 @@ services:
     class: infrastructure.obsidian.ObsidianVault
     arguments: ['%OBSIDIAN_VAULT_PATH%']
 
+  pyperclip:
+    class: infrastructure.pyperclip.Pyperclip
+
   traceback.build_troubleshooting_prompt_use_case:
     class: application.traceback.BuildTroubleshootingPromptUseCase
     arguments: ['@traceback.prompt_builder']
 
   traceback.prompt_builder:
     class: infrastructure.traceback.TracebackPromptBuilder
+    arguments: ['@pyperclip']
 
   transcription.transcribe_audio_use_case:
     class: application.transcription.TranscribeAudioUseCase

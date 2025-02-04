@@ -12,6 +12,10 @@ class ObsidianVault(NoteVaultProtocol):
     document.to_file(file_path)
 
   def get(self, path: str) -> Document:
+
+    if not path.endswith('.md'):
+      path = f"{path}.md"
+
     file_path = os.path.join(self.path, path)
 
     # If the file doesn't exist, create it
