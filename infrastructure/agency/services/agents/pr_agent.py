@@ -12,7 +12,7 @@ LLM_MODEL = "o3-mini"
 
 class FileChange(BaseModel):
     path: str = Field(description="Absolute path to the file.")
-    content: Optional[str] = Field(None, description="Content of the file.")
+    content: Optional[str] = Field(None, description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
 
 class Response(BaseModel):
     summary: str = Field(description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
