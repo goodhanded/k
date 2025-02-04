@@ -1,13 +1,15 @@
 import os
 from dotenv import load_dotenv
 
+ENV_PATH = '/Users/keith/Projects/k/.env'
+
 class Config:
     """
     A configuration service that reads environment variables
     and falls back to values defined in a .env file.
     """
 
-    def __init__(self, dotenv_path: str = '.env'):
+    def __init__(self, dotenv_path: str = ENV_PATH):
         """
         Initialize the ConfigService, loading the .env file.
         
