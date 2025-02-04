@@ -59,18 +59,12 @@ class PRAgent(AgentProtocol):
     
     def invoke(self, prompt: str):
 
-        print(f"Running PR Agent on {self.project_path} with ignore rule: {self.exclude_rule}")
-        print(f"Getting document collection from {self.project_path}")
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
 
-        print(f"Generating prompt for PR")
         tree = file_collection.tree()
         request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
 
         response = self.llm.invoke([request])
-
-        pyperclip.copy(response.summary)
-        print(f"Summary: {response.summary}")
 
         # For each file change, update the filesystem
         for file_change in response.additions + response.modifications:
@@ -82,6 +76,8 @@ class PRAgent(AgentProtocol):
         for file_change in response.removals:
             print(f"Removing {file_change.path}")
             os.remove(file_change.path)
+
+        print(f"Summary: {response.summary}")
 
     def add_tools(self, tools: list[ToolProtocol]):
         pass
