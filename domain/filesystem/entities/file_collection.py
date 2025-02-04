@@ -115,7 +115,7 @@ class FileCollection:
 
                 full_path = os.path.join(root, file_name)
 
-                print(f"Reading file from {full_path}")
+                # print(f"Reading file from {full_path}")
 
                 file = File(full_path)
                 # Only add it if it is not None (i.e., read successfully)

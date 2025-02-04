@@ -61,6 +61,8 @@ class PRAgent(AgentProtocol):
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()
         request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
+
+        print("Invoking LLM...")
         response = self.llm.invoke([request])
 
         # For each file change, update the filesystem
