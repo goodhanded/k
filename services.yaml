@@ -34,8 +34,6 @@ services:
   agency.agent.pr:
     class: infrastructure.agency.PRAgent
     arguments:
-      - { llm: '@openai.client' }
-      - { project_path: '%RIPPLE_PATH%'}
       - { ignore_rule: '.git|__pycache__|venv'}
 
   agency.agent.scheduling:

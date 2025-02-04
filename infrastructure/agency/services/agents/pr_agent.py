@@ -5,6 +5,8 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 from typing import Annotated, List, TypedDict, Optional
 
+import pyperclip
+
 PR_PROMPT_TEMPLATE = "pr"
 LLM_MODEL = "o3-mini"
 
@@ -19,12 +21,12 @@ class Response(BaseModel):
     modifications: List[FileChange] = Field(description="List of files modified.")
 
 class PRAgent(AgentProtocol):
-    def __init__(self, prompt_generator: PromptGeneratorProtocol, project_path: str, ignore_rule: str):
+    def __init__(self, prompt_generator: PromptGeneratorProtocol, ignore_rule: str):
         llm = ChatOpenAI(model=LLM_MODEL, reasoning_effort="high")
 
         self.generator = prompt_generator
         self.llm = llm.with_structured_output(Response)
-        self.project_path = project_path
+        self.project_path = os.getcwd()
         self.ignore_rule = ignore_rule # format: '.git|__pycache__|venv'
 
         self.name = "PR Agent"
@@ -40,6 +42,10 @@ class PRAgent(AgentProtocol):
         tree = document_collection.tree()
         content = document_collection.to_document().content_with_path()
         prompt = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=content)
+
+        pyperclip.copy(prompt)
+
+        return
 
         print(f"Invoking LLM with prompt: {prompt}")
         response = self.llm.invoke([prompt])
