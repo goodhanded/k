@@ -58,24 +58,29 @@ class PRAgent(AgentProtocol):
         return ignore_rule
     
     def invoke(self, prompt: str):
-
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
-
         tree = file_collection.tree()
         request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
-
         response = self.llm.invoke([request])
 
         # For each file change, update the filesystem
         for file_change in response.additions + response.modifications:
+            # Ensure the directory exists
+            directory = os.path.dirname(file_change.path)
+            if directory and not os.path.exists(directory):
+                os.makedirs(directory, exist_ok=True)
+            
             with open(file_change.path, 'w') as f:
                 print(f"Writing to {file_change.path}")
                 f.write(file_change.content)
         
         # For each file removal, delete the file
         for file_change in response.removals:
-            print(f"Removing {file_change.path}")
-            os.remove(file_change.path)
+            if os.path.exists(file_change.path):
+                print(f"Removing {file_change.path}")
+                os.remove(file_change.path)
+            else:
+                print(f"File {file_change.path} does not exist, cannot remove.")
 
         print(f"Summary: {response.summary}")
 
