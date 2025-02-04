@@ -33,7 +33,11 @@ services:
   
   agency.agent.pr:
     class: infrastructure.agency.PRAgent
-    arguments: ['@obsidian.prompt_generator']
+    arguments: 
+      prompt_generator: '@obsidian.prompt_generator'
+      include_rule: '*.py|*.ts|*.js|*.json|*.yml|*.yaml|*.md|*.tsx|*.jsx|*.css|*.scss|*.svg'
+      exclude_rule: '.git|venv|__pycache__|dist|build|.env*|node_modules|.turbo|pnpm-lock.yaml|package-lock.json'
+      exclude_gitignore: true
     tags:
       - { name: agent, alias: pr }
 

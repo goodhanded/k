@@ -14,7 +14,7 @@ class ObsidianPromptGenerator(PromptGeneratorProtocol):
         """
         # Load the template from your vault.
         full_path = f"{self.prompt_template_path}/{template_name}"
-        prompt_template = self.note_vault.get(full_path)
+        prompt_template = self.vault.get(full_path)
         parent_template_content = prompt_template.content  # e.g. "Hello {name}, your item is {item}."
 
         # Interpolate using Python's str.format(**kwargs).

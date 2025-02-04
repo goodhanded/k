@@ -21,7 +21,10 @@ class Response(BaseModel):
     modifications: List[FileChange] = Field(description="List of files modified.")
 
 class PRAgent(AgentProtocol):
-    def __init__(self, prompt_generator: PromptGeneratorProtocol):
+    def __init__(self, prompt_generator: PromptGeneratorProtocol,
+                 include_rule: Optional[str] = None,
+                 exclude_rule: Optional[str] = None,
+                 exclude_gitignore: bool = False):
 
         print(f"Initializing PR Agent with LLM model: {LLM_MODEL}")
 
@@ -30,12 +33,17 @@ class PRAgent(AgentProtocol):
         self.generator = prompt_generator
         self.llm = llm.with_structured_output(Response)
         self.project_path = os.getcwd()
-        self.ignore_rule = self.create_ignore_rule()
+        self.include_rule = include_rule
+
+        if exclude_gitignore:
+            self.exclude_rule = self.load_gitignore_patterns() + (f"|{exclude_rule}" if exclude_rule else "")
+        else:
+            self.exclude_rule = exclude_rule
 
         self.name = "PR Agent"
         self.model = LLM_MODEL
         
-    def create_ignore_rule(self):
+    def load_gitignore_patterns(self):
         # Read .gitignore file and construct a rule using the format "pattern1|pattern2|..."
         ignore_rule = ""
         try:
@@ -43,26 +51,26 @@ class PRAgent(AgentProtocol):
                 ignore_rule = "|".join([line.strip() for line in f if not line.startswith("#")])
         except FileNotFoundError:
             pass
+
+        # Append common ignore patterns
+        ignore_rule += "|.git|.vscode|__pycache__|venv|node_modules|dist|build"
+
         return ignore_rule
     
     def invoke(self, prompt: str):
 
-        print(f"Running PR Agent on {self.project_path} with ignore rule: {self.ignore_rule}")
+        print(f"Running PR Agent on {self.project_path} with ignore rule: {self.exclude_rule}")
         print(f"Getting document collection from {self.project_path}")
-        file_collection = FileCollection.from_path(self.project_path, self.ignore_rule)
+        file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
 
         print(f"Generating prompt for PR")
         tree = file_collection.tree()
-        content = file_collection.to_document().content_with_path()
-        prompt = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=content)
+        request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
 
-        pyperclip.copy(prompt)
+        response = self.llm.invoke([request])
 
-        print(f"Prompt copied to clipboard.")
-        return
-
-        print(f"Invoking LLM with prompt: {prompt}")
-        response = self.llm.invoke([prompt])
+        pyperclip.copy(response.summary)
+        print(f"Summary: {response.summary}")
 
         # For each file change, update the filesystem
         for file_change in response.additions + response.modifications:

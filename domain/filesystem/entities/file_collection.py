@@ -3,6 +3,7 @@ import os
 from pathspec import PathSpec
 from .file import File
 from .document import Document
+from .document_collection import DocumentCollection
 
 class FileCollection:
     """
@@ -17,12 +18,35 @@ class FileCollection:
         """
         self.files = files
 
-    def to_document(self, delimiter: str = '\n\n') -> Document:
+    def to_markdown(self) -> str:
         """
-        Concatenates the collection into a single Document object.
+        Returns a markdown representation of the collection.
         """
-        content = delimiter.join([file.content for file in self.files])
-        return Document(content=content)
+        markdown = ""
+        for file in self.files:
+            markdown += f"## {file.name}\n"
+            markdown += f"Path: `{file.path}`\n\n"
+            markdown += "```" + file.extension + "\n"
+            try:
+                with open(file.path, "r", encoding="utf-8", errors="replace") as f:
+                    content = f.read()
+            except Exception as e:
+                content = f"Could not read file: {e}"
+            markdown += content
+            markdown += "\n```\n\n"
+        return markdown
+
+    def to_document_collection(self) -> DocumentCollection:
+        """
+        Converts the FileCollection into a DocumentCollection.
+        """
+        documents = []
+        for file in self.files:
+            with open(file.path, "r", encoding="utf-8") as f:
+                content = f.read()
+                document = Document(content, metadata={"path": file.path})
+                documents.append(document)
+        return DocumentCollection(documents)
 
     def add(self, file: File):
         """
@@ -67,23 +91,28 @@ class FileCollection:
         self.add(file)
 
     @staticmethod
-    def from_path(path: str, ignore_rule: str = None) -> 'FileCollection':
-        spec = PathSpec.from_lines('gitwildmatch', ignore_rule.split('|')) if ignore_rule else None
-        files = []
+    def from_path(path: str, include_rule: str = None, exclude_rule: str = None) -> 'FileCollection':
+        exclude_spec = PathSpec.from_lines('gitwildmatch', exclude_rule.split('|')) if exclude_rule else None
+        include_spec = PathSpec.from_lines('gitwildmatch', include_rule.split('|')) if include_rule else None
+        collected_files = []  # Renamed accumulator
 
-        for root, dirs, files in os.walk(path):
+        # Use a different variable name for the files returned by os.walk()
+        for root, dirs, filenames in os.walk(path):
             # Filter out directories that match ignore specs
             dirs[:] = [
                 d for d in dirs
-                if not spec or not spec.match_file(os.path.relpath(os.path.join(root, d), path))
+                if not exclude_spec or not exclude_spec.match_file(os.path.relpath(os.path.join(root, d), path))
             ]
-            for file in files:
-                rel_file = os.path.relpath(os.path.join(root, file.name), path)
-
-                # Skip files that match the ignore specs
-                if spec and spec.match_file(rel_file):
+            for file_name in filenames:  # Now file_name is correctly a string
+                rel_file = os.path.relpath(os.path.join(root, file_name), path)
+                # Skip files that match the exclude specs
+                if exclude_spec and exclude_spec.match_file(rel_file):
                     continue
-                
+
+                # Skip files that do not match any of the include specs if include_rule is set
+                if include_spec and not include_spec.match_file(rel_file):
+                    continue
+
                 full_path = os.path.join(root, file_name)
 
                 print(f"Reading file from {full_path}")
@@ -91,9 +120,9 @@ class FileCollection:
                 file = File(full_path)
                 # Only add it if it is not None (i.e., read successfully)
                 if file:
-                    files.append(file)
+                    collected_files.append(file)
 
-        return FileCollection(files)
+        return FileCollection(collected_files)
 
     def tree(self) -> str:
         """
