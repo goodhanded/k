@@ -167,10 +167,7 @@ def load_and_run():
     args_dict.update(dynamic_kwargs)
 
     # 6) Call the function with known + dynamic arguments
-    try:
-        result = func(**args_dict)
-    except Exception as e:
-        print(f"Error: {e}")
+    result = func(**args_dict)
 
     # 7) Print result if requested
     if print_result:

@@ -49,7 +49,7 @@ class PRAgent(AgentProtocol):
 
         print(f"Running PR Agent on {self.project_path} with ignore rule: {self.ignore_rule}")
         print(f"Getting document collection from {self.project_path}")
-        document_collection = DocumentCollection(self.project_path, self.ignore_rule)
+        document_collection = DocumentCollection.from_path(self.project_path, self.ignore_rule)
 
         print(f"Generating prompt for PR")
         tree = document_collection.tree()
