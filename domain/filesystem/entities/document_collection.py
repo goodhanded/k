@@ -7,8 +7,7 @@ class DocumentCollection:
     Represents a collection of documents in memory. Can be read from or written to a directory.
 
     Attributes:
-    - content: str
-    - metadata: dict
+    - documents: List[Document]
     """
     documents: List[Document]
 
@@ -67,24 +66,64 @@ class DocumentCollection:
         """
         self.add(document)
 
-    @staticmethod
-    def from_path(path: str) -> 'DocumentCollection':
+    def tree(self) -> str:
         """
-        Reads all documents from a directory and returns a DocumentCollection.
+        Returns a string directory/file tree representation of the collection.
+        Implement like the tree command in Unix, with pipe and dash characters.
+
+        Example output:
+        ```
+        .
+        |- file1.txt
+        |- file2.txt
+        |- dir1
+        |  |- file3.txt
+        |  |- file4.txt
+        |- dir2
+        |  |- file5.txt
+        ```
+        """
+        def tree_helper(documents, indent=''):
+            tree = ''
+            for i, document in enumerate(documents):
+                if i == len(documents) - 1:
+                    tree += f'{indent}└─ {document.name}\n'
+                    if document.is_directory:
+                        tree += tree_helper(document.children, indent + '   ')
+                else:
+                    tree += f'{indent}├─ {document.name}\n'
+                    if document.is_directory:
+                        tree += tree_helper(document.children, indent + '│  ')
+            return tree
+
+        return tree_helper(self.documents)
+
+
+    @staticmethod
+    def from_path(path: str, ignore_rule: str = None) -> 'DocumentCollection':
+        """
+        Recursively reads all documents from a directory (including subdirectories)
+        and returns a DocumentCollection, applying an optional ignore rule.
 
         Args:
             - path: str: The path to the directory containing the documents.
+            - ignore_rule: str: A '|' separated list of patterns to ignore.
+
+        Returns:
+            - DocumentCollection: A collection containing Document objects for each file.
         """
-
+        ignore_patterns = ignore_rule.split('|') if ignore_rule else []
         documents = []
-        for file_name in os.listdir(path):
-        # Ignore dot files or hidden files
-            if file_name.startswith('.'):
-                continue
 
-            file_path = os.path.join(path, file_name)
-            document = Document.from_path(file_path)
-            documents.append(document)
+        for root, dirs, files in os.walk(path):
+            for file_name in files:
+                # Skip hidden or ignored files
+                if file_name.startswith('.') or any(p in file_name for p in ignore_patterns):
+                    continue
+
+                file_path = os.path.join(root, file_name)
+                document = Document.from_path(file_path)
+                documents.append(document)
         
         return DocumentCollection(documents)
 

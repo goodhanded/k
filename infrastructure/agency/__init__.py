@@ -1,5 +1,7 @@
+from .services.agents.pr_agent import PRAgent
 from .services.agents.scheduling_agent import SchedulingAgent
 from .services.agents.search_agent import SearchAgent
+
 from .services.agent_factory import AgentFactory
 from .services.tool_factory import ToolFactory
 from .services.tool import Tool

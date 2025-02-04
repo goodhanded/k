@@ -28,6 +28,16 @@ class Document:
     def __str__(self):
         return self.content
 
+    def content_with_path(self) -> str:
+        """
+        Returns the content of the document with the path.
+        """
+        if "path" not in self.metadata:
+            return self.content
+        
+        extension = self.metadata["path"].split(".")[-1]
+        return f"\n\n{self.metadata['path']}:\n```{extension}\n{self.content}\n```\n\n"
+
     def to_file(self, path: str) -> File:
         """
         Saves the document to a file.
@@ -47,4 +57,6 @@ class Document:
         """
         with open(path, "r") as f:
             content = f.read()
-        return Document(content=content)
+
+        metadata = {"path": path}
+        return Document(content=content, metadata=metadata)
