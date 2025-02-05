@@ -50,6 +50,13 @@ commands:
       agent_name: "The name of the agent to invoke"
       prompt: "Text to send to the agent"
 
+  pr:
+    help: "Generate pull request changes based on a prompt. Use the --clipboard flag to copy the generated prompt to the clipboard instead of invoking the LLM."
+    target: "@agency.agent.pr.invoke"
+    arguments:
+      prompt: "Text to generate pull request changes"
+      clipboard: "If set to true, the PR prompt is sent to the clipboard instead of being processed by the LLM"
+
   run:
     help: "Run a subcommand"
     subcommands:

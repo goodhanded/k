@@ -63,10 +63,18 @@ class PRAgent(AgentProtocol):
             raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
         return full_path
 
-    def invoke(self, prompt: str):
+    def invoke(self, prompt: str, clipboard: bool = False):
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()
         request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
+
+        if clipboard:
+            # Send the generated prompt to the clipboard instead of invoking the LLM
+            from infrastructure.pyperclip import Pyperclip
+            clipboard_client = Pyperclip()
+            clipboard_client.set(request)
+            print("PR prompt copied to clipboard. No LLM invocation performed.")
+            return
 
         print("Invoking LLM...")
         response = self.llm.invoke([request])
