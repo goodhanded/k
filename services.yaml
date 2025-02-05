@@ -24,17 +24,26 @@ services:
     arguments: 
       services: !tagged_iterator { tag: agent, index_by: alias }
 
-  agency.workflows.pull_request:
+  agency.prompt_generator:
+    class: infrastructure.agency.PromptGenerator
+    arguments: ['@agency.prompt_registry']
+
+  agency.prompt_registry:
+    class: domain.registry.Registry
+    arguments: 
+      services: !tagged_iterator { tag: prompt, index_by: alias }
+
+  agency.prompt.pr:
+    class: adapters.prompts.PullRequestPrompt
+    tags:
+      - { name: prompt, alias: pr }
+
+  agency.workflow.pull_request:
     class: infrastructure.agency.PullRequestWorkflow
     arguments: 
-      prompt_generator: '@obsidian.prompt_generator'
+      prompt_generator: '@agency.prompt_generator'
       clipboard: '@pyperclip'
       token_counter: '@util.token_counter'
-      include_rule: '*.py|*.ts|*.js|*.json|*.yml|*.yaml|*.md|*.tsx|*.jsx|*.css|*.scss|*.svg|*.sequelizerc|*.cjs'
-      exclude_rule: '.git|venv|__pycache__|dist|build|.env*|node_modules|.turbo|pnpm-lock.yaml|package-lock.json'
-      exclude_gitignore: true
-    tags:
-      - { name: agent, alias: pr }
 
   agency.agent.scheduling:
     class: infrastructure.agency.SchedulingAgent

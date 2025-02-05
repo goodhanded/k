@@ -1,0 +1,12 @@
+.git
+venv
+__pycache__
+dist
+build
+.env*
+node_modules
+.turbo
+pnpm-lock.yaml
+package-lock.json
+.pytest_cache
+effective_agents

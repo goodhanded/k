@@ -26,7 +26,7 @@ class FileCollection:
         for file in self.files:
             markdown += f"## {file.name}\n"
             markdown += f"Path: `{file.path}`\n\n"
-            markdown += "```" + file.extension + "\n"
+            markdown += "```" + file.extension.lstrip('.') + "\n"
             try:
                 with open(file.path, "r", encoding="utf-8", errors="replace") as f:
                     content = f.read()

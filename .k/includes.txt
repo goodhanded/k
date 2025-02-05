@@ -1,0 +1,14 @@
+*.py
+*.ts
+*.js
+*.json
+*.yml
+*.yaml
+*.md
+*.tsx
+*.jsx
+*.css
+*.scss
+*.svg
+*.sequelizerc
+*.cjs
