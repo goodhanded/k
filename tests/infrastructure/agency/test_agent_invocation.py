@@ -1,7 +1,7 @@
 import unittest
 
-from infrastructure.agency.services.agent import Agent
-from application.agency.dtos.agent_dto import AgentDTO
+from infrastructure.agency import Agent
+from application.agency import AgentDTO
 
 
 class TestAgentInvocation(unittest.TestCase):

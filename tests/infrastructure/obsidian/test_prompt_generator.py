@@ -1,8 +1,8 @@
 import unittest
 
-from infrastructure.obsidian.prompt_generator import ObsidianPromptGenerator
-from application.notes.protocols.note_vault import NoteVaultProtocol
-from domain.filesystem.entities.document import Document
+from infrastructure.obsidian import ObsidianPromptGenerator
+from application.notes import NoteVaultProtocol
+from domain.filesystem import Document
 
 
 class DummyNoteVault(NoteVaultProtocol):

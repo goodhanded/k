@@ -1,16 +1,13 @@
 import os
-from typing import Annotated, List, Optional, TypedDict
-
+from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
-from application.agency import AgentProtocol, ToolProtocol, PromptGeneratorProtocol
-from application.filesystem.protocols.clipboard import ClipboardProtocol
+from application.agency import AgentProtocol, PromptGeneratorProtocol
+from application.filesystem import ClipboardProtocol
+from application.util import TokenCounterProtocol
 from domain.filesystem import FileCollection
-from domain.util.token_counter import count_tokens
 
-PR_PROMPT_TEMPLATE = "pr"
-LLM_MODEL = "o3-mini"
-
+# Removed old token counter import
 
 class FileChange(BaseModel):
     path: str = Field(description="Relative path to the file within the project.")
@@ -19,9 +16,9 @@ class FileChange(BaseModel):
 
 class Response(BaseModel):
     summary: str = Field(description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
-    additions: List[FileChange] = Field(description="List of files added.")
-    removals: List[FileChange] = Field(description="List of files removed.")
-    modifications: List[FileChange] = Field(description="List of files modified.")
+    additions: list[FileChange] = Field(description="List of files added.")
+    removals: list[FileChange] = Field(description="List of files removed.")
+    modifications: list[FileChange] = Field(description="List of files modified.")
 
 
 class PRAgent(AgentProtocol):
@@ -29,17 +26,19 @@ class PRAgent(AgentProtocol):
         self,
         prompt_generator: PromptGeneratorProtocol,
         clipboard: ClipboardProtocol,
+        token_counter: TokenCounterProtocol,
         include_rule: Optional[str] = None,
         exclude_rule: Optional[str] = None,
         exclude_gitignore: bool = False
     ):
-        print(f"Initializing PR Agent with LLM model: {LLM_MODEL}")
-        llm = ChatOpenAI(model=LLM_MODEL, reasoning_effort="high")
+        print(f"Initializing PR Agent with LLM model: o3-mini")
+        llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
         self.generator = prompt_generator
         self.llm = llm.with_structured_output(Response)
         self.project_path = os.getcwd()
         self.include_rule = include_rule
         self.clipboard = clipboard
+        self.token_counter = token_counter
 
         if exclude_gitignore:
             self.exclude_rule = self.load_gitignore_patterns() + (f"|{exclude_rule}" if exclude_rule else "")
@@ -47,7 +46,7 @@ class PRAgent(AgentProtocol):
             self.exclude_rule = exclude_rule
 
         self.name = "PR Agent"
-        self.model = LLM_MODEL
+        self.model = "o3-mini"
 
     def load_gitignore_patterns(self) -> str:
         ignore_rule = ""
@@ -69,10 +68,10 @@ class PRAgent(AgentProtocol):
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()
         print(tree)
-        request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
+        request = self.generator.generate("pr", goal=prompt, tree=tree, content=file_collection.to_markdown())
 
-        # Calculate token count and confirm if requested
-        token_count = count_tokens(request)
+        # Calculate token count using injected token_counter
+        token_count = self.token_counter.count_tokens(request)
         if confirm:
             print(f"Estimated input tokens: {token_count}")
             user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()

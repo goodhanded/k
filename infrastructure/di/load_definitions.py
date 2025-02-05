@@ -1,6 +1,6 @@
 import importlib
 from typing import Dict
-from domain.util.yaml import load_yaml
+from infrastructure.util import YamlLoader
 
 from .service_definition import ServiceDefinition
 
@@ -8,7 +8,8 @@ from .service_definition import ServiceDefinition
 import infrastructure.di.tagged_iterator  # noqa
 
 def load_definitions_from_yaml(file_path: str) -> Dict[str, ServiceDefinition]:
-    services_data = load_yaml(file_path, "services") or {}
+    loader = YamlLoader()
+    services_data = loader.load_yaml(file_path, "services") or {}
     definitions: Dict[str, ServiceDefinition] = {}
 
     for service_name, raw in services_data.items():

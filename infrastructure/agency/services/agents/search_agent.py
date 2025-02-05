@@ -1,6 +1,5 @@
 from datetime import datetime
-from domain.filesystem import DocumentCollection
-from application.agency import AgentProtocol, ToolProtocol
+from application.agency import AgentProtocol
 from application.search import SearchEngineProtocol
 from application.intelligence import LLMClientProtocol
 from application.agency.dtos import AgentResponseDTO
@@ -31,9 +30,6 @@ class SearchAgent(AgentProtocol):
         )
 
         return responseDTO
-    def add_tools(self, tools: list[ToolProtocol]):
-        self.add_tool(tool for tool in tools)
-    def add_tool(self, tool: ToolProtocol):
-        self.tools.append(tool)
+
     def __str__(self):
         return f'{self.name} ({self.model}): {self.description}'

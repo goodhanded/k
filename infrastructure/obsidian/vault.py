@@ -1,11 +1,12 @@
 import os
 from application.notes import NoteVaultProtocol
 from domain.filesystem import Document, DocumentCollection
-from domain.util.datetime import ym, date_string
+from infrastructure.util import DatetimeService
 
 class ObsidianVault(NoteVaultProtocol):
   def __init__(self, path: str):
     self.path = path
+    self.datetime_service = DatetimeService()
 
   def save(self, document: Document, path: str):
     file_path = os.path.join(self.path, path)
@@ -34,15 +35,15 @@ class ObsidianVault(NoteVaultProtocol):
     return DocumentCollection.from_path(path)
 
   def get_daily_note(self) -> Document:
-    daily_note_file = f"{date_string()}.md"
-    daily_note_path = os.path.join(self.path, 'Calendar', *ym(), daily_note_file)
+    daily_note_file = f"{self.datetime_service.date_string()}.md"
+    daily_note_path = os.path.join(self.path, 'Calendar', *self.datetime_service.ym(), daily_note_file)
     return self.get(daily_note_path)
   
   def get_all_notes(self) -> DocumentCollection:
     return self.list('')
 
   def overwrite_daily_note(self, content: str):
-    daily_note_file = f"{date_string()}.md"
-    daily_note_path = os.path.join(self.path, 'Calendar', *ym(), daily_note_file)
+    daily_note_file = f"{self.datetime_service.date_string()}.md"
+    daily_note_path = os.path.join(self.path, 'Calendar', *self.datetime_service.ym(), daily_note_file)
     note = Document(content)
     self.save(note, daily_note_path)

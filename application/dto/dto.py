@@ -3,7 +3,6 @@ from typing import (
     TypeVar, Type, Union, Optional, List, Dict, Any,
     get_origin, get_args
 )
-from domain.util.yaml import load_yaml
 
 T = TypeVar("T", bound="DataTransferObject")
 
@@ -35,18 +34,6 @@ class DataTransferObject:
             init_args[f.name] = parsed_value
 
         return cls(**init_args)
-    
-    @classmethod
-    def from_yaml(cls: Type[T], path: str, key: str|List[str]) -> T:
-        """
-        Load a YAML file and parse a specific key into an instance of cls.
-        """
-        data = load_yaml(path, key)
-        
-        if not data:
-            raise ValueError(f"Could not find key {key} in {path}")
-
-        return cls.from_dict(data)
 
     @classmethod
     def _parse_value(cls, annotation: Any, raw_value: Any) -> Any:

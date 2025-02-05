@@ -8,5 +8,3 @@ from .protocols.prompt_generator import PromptGeneratorProtocol
 from .dtos.agent_dto import AgentDTO
 from .dtos.tool_dto import ToolDTO
 from .protocols.agent import AgentProtocol
-from .protocols.tool import ToolProtocol
-from .protocols.tool_factory import ToolFactoryProtocol

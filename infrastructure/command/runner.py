@@ -4,11 +4,10 @@ from textwrap import indent
 
 from domain.util.module_resolution import resolve_module
 from infrastructure.di import Container, load_definitions_from_yaml
-from domain.util.yaml import load_yaml
+from infrastructure.util.yaml_loader import YamlLoader
 
 COMMANDS_YAML_PATH = "/Users/keith/Projects/k/commands.yaml"
 SERVICES_YAML_PATH = "/Users/keith/Projects/k/services.yaml"
-
 
 def build_subcommands(subparsers, commands_dict):
     for cmd_name, cmd_info in commands_dict.items():
@@ -138,7 +137,8 @@ def load_and_run():
     definitions = load_definitions_from_yaml(SERVICES_YAML_PATH)
     container = Container(definitions)
 
-    commands_dict = load_yaml(COMMANDS_YAML_PATH, "commands")
+    yaml_loader = YamlLoader()
+    commands_dict = yaml_loader.load_yaml(COMMANDS_YAML_PATH, "commands")
     parser = argparse.ArgumentParser(description="Personal CLI of Keith Morris.")
     subparsers = parser.add_subparsers(dest="top_command")
 

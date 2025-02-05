@@ -2,10 +2,9 @@ import os
 import tempfile
 import unittest
 
-from domain.util.datetime import ymd
-from application.daily_voice_notes.use_cases.assimilate_voice_note import AssimilateVoiceNoteUseCase
-from domain.filesystem.entities.document import Document
-from domain.filesystem.entities.document_collection import DocumentCollection
+from application.daily_voice_notes import AssimilateVoiceNoteUseCase
+from domain.filesystem import Document
+from domain.filesystem import DocumentCollection
 
 class DummyTranscriber:
     def transcribe(self, audio_file):
@@ -20,13 +19,26 @@ class DummyConsolidator:
         self.last_collection = document_collection
         return document_collection
 
+class DummyDatetimeService:
+    def ym(self) -> tuple[str, str]:
+        return ("2023", "10")
+    def ymd(self) -> tuple[str, str, str]:
+        return ("2023", "10", "05")
+    def datetime_string(self) -> str:
+        return "2023-10-05 00:00:00"
+    def datetime_string_for_filename(self) -> str:
+        return "2023-10-05_00-00-00"
+    def date_string(self) -> str:
+        return "2023-10-05"
+
 class TestAssimilateVoiceNoteUseCase(unittest.TestCase):
     def test_execute_creates_transcript_file_and_consolidates(self):
         dummy_transcriber = DummyTranscriber()
         dummy_consolidator = DummyConsolidator()
+        dummy_datetime = DummyDatetimeService()
         with tempfile.TemporaryDirectory() as temp_dir:
             # Use temp_dir as the base for transcripts
-            use_case = AssimilateVoiceNoteUseCase(dummy_transcriber, dummy_consolidator, transcripts_path=temp_dir)
+            use_case = AssimilateVoiceNoteUseCase(dummy_transcriber, dummy_consolidator, transcripts_path=temp_dir, datetime_service=dummy_datetime)
             # Create a temporary dummy audio file with valid extension
             temp_audio_file = os.path.join(temp_dir, "test_audio.wav")
             with open(temp_audio_file, "wb") as f:
@@ -35,8 +47,8 @@ class TestAssimilateVoiceNoteUseCase(unittest.TestCase):
             # Execute the use case
             use_case.execute(temp_audio_file)
             
-            # Construct the expected transcripts folder using ymd()
-            todays_transcripts_path = os.path.join(temp_dir, *ymd())
+            # Construct the expected transcripts folder using dummy_datetime.ymd()
+            todays_transcripts_path = os.path.join(temp_dir, *dummy_datetime.ymd())
             expected_transcript_file = os.path.join(todays_transcripts_path, "test_audio.md")
             self.assertTrue(os.path.exists(expected_transcript_file), "Transcript file was not created")
             

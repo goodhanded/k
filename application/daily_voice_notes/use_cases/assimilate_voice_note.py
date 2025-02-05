@@ -1,6 +1,6 @@
 import os
 from application.transcription import TranscriberProtocol
-from domain.util.datetime import ymd
+from application.util import DatetimeServiceProtocol
 from application.daily_voice_notes import DocumentConsolidatorProtocol
 from domain.filesystem import AudioFile, DocumentCollection
 
@@ -9,14 +9,15 @@ class AssimilateVoiceNoteUseCase:
     def __init__(self,
                  transcriber: TranscriberProtocol,
                  document_consolidator: DocumentConsolidatorProtocol,
-                 transcripts_path: str):
+                 transcripts_path: str,
+                 datetime_service: DatetimeServiceProtocol):
         self.transcriber = transcriber
         self.transcripts_path = transcripts_path
-        self.todays_transcripts_path = os.path.join(self.transcripts_path, *ymd())
+        self.datetime_service = datetime_service
+        self.todays_transcripts_path = os.path.join(self.transcripts_path, *self.datetime_service.ymd())
         self.document_consolidator = document_consolidator
         
     def execute(self, path: str):
-
         os.makedirs(self.transcripts_path, exist_ok=True)
         audio_file = AudioFile(path)
         transcription = self.transcriber.transcribe(audio_file)

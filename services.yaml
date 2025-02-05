@@ -24,18 +24,12 @@ services:
     arguments: 
       services: !tagged_iterator { tag: agent, index_by: alias }
 
-  agency.agent_factory:
-    class: infrastructure.agency.AgentFactory
-    arguments: ['@agency.tool_factory']
-
-  agency.tool_factory:
-    class: infrastructure.agency.ToolFactory
-  
   agency.agent.pr:
     class: infrastructure.agency.PRAgent
     arguments: 
       prompt_generator: '@obsidian.prompt_generator'
       clipboard: '@pyperclip'
+      token_counter: '@util.token_counter'
       include_rule: '*.py|*.ts|*.js|*.json|*.yml|*.yaml|*.md|*.tsx|*.jsx|*.css|*.scss|*.svg|*.sequelizerc|*.cjs'
       exclude_rule: '.git|venv|__pycache__|dist|build|.env*|node_modules|.turbo|pnpm-lock.yaml|package-lock.json'
       exclude_gitignore: true
@@ -115,3 +109,6 @@ services:
   transcription.transcriber:
     class: infrastructure.amazon.AmazonTranscribe
     arguments: ['%TRANSCRIPTS_BUCKET%', '%AWS_PATH%']
+
+  util.token_counter:
+    class: infrastructure.util.TokenCounter
