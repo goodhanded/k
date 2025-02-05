@@ -1,6 +1,7 @@
 - Adhere to Clean Architecture principles, as written by Robert Martin.
 - Use type hints.
 - Keep imports sorted at the top of the file.
+- Limit classes to one per file.
 - Follow established conventions in __init__.py, adding references at the appropriate level as needed for python references. For example, if there is an `application/<package>/<component-type>/component.py` there should be an import statement in `application/<package>` but not in the component-type folder.
 - Keep service definitions up to date when modifying dependencies. Definitions are in services.yaml and follow a format similar to the symfony framework.
 - Commands can be configured in commands.yaml as needed to add functionality to the CLI.
