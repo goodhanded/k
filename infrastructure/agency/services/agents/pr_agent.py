@@ -11,7 +11,7 @@ PR_PROMPT_TEMPLATE = "pr"
 LLM_MODEL = "o3-mini"
 
 class FileChange(BaseModel):
-    path: str = Field(description="Absolute path to the file.")
+    path: str = Field(description="Relative path to the file within the project.")
     content: Optional[str] = Field(None, description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
 
 class Response(BaseModel):
@@ -57,6 +57,12 @@ class PRAgent(AgentProtocol):
 
         return ignore_rule
     
+    def _resolve_path(self, relative_path: str) -> str:
+        full_path = os.path.abspath(os.path.join(self.project_path, relative_path))
+        if not full_path.startswith(os.path.abspath(self.project_path)):
+            raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
+        return full_path
+
     def invoke(self, prompt: str):
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()
@@ -67,22 +73,23 @@ class PRAgent(AgentProtocol):
 
         # For each file change, update the filesystem
         for file_change in response.additions + response.modifications:
-            # Ensure the directory exists
-            directory = os.path.dirname(file_change.path)
+            abs_path = self._resolve_path(file_change.path)
+            directory = os.path.dirname(abs_path)
             if directory and not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
             
-            with open(file_change.path, 'w') as f:
-                print(f"Writing to {file_change.path}")
+            with open(abs_path, 'w') as f:
+                print(f"Writing to {abs_path}")
                 f.write(file_change.content)
         
         # For each file removal, delete the file
         for file_change in response.removals:
-            if os.path.exists(file_change.path):
-                print(f"Removing {file_change.path}")
-                os.remove(file_change.path)
+            abs_path = self._resolve_path(file_change.path)
+            if os.path.exists(abs_path):
+                print(f"Removing {abs_path}")
+                os.remove(abs_path)
             else:
-                print(f"File {file_change.path} does not exist, cannot remove.")
+                print(f"File {abs_path} does not exist, cannot remove.")
 
         print(f"Summary: {response.summary}")
 
