@@ -61,6 +61,9 @@ commands:
       clipboard:
         help: "If set, the PR prompt is sent to the clipboard instead of being processed by the LLM"
         flag: true
+      confirm:
+        help: "If set, show token count and require confirmation before proceeding"
+        flag: true
 
   run:
     help: "Run a subcommand"

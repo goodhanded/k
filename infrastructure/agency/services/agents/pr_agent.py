@@ -6,19 +6,23 @@ from langchain_openai import ChatOpenAI
 from application.agency import AgentProtocol, ToolProtocol, PromptGeneratorProtocol
 from application.filesystem.protocols.clipboard import ClipboardProtocol
 from domain.filesystem import FileCollection
+from domain.util.token_counter import count_tokens
 
 PR_PROMPT_TEMPLATE = "pr"
 LLM_MODEL = "o3-mini"
 
+
 class FileChange(BaseModel):
     path: str = Field(description="Relative path to the file within the project.")
     content: Optional[str] = Field(None, description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
+
 
 class Response(BaseModel):
     summary: str = Field(description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
     additions: List[FileChange] = Field(description="List of files added.")
     removals: List[FileChange] = Field(description="List of files removed.")
     modifications: List[FileChange] = Field(description="List of files modified.")
+
 
 class PRAgent(AgentProtocol):
     def __init__(
@@ -61,11 +65,20 @@ class PRAgent(AgentProtocol):
             raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
         return full_path
 
-    def invoke(self, prompt: str, clipboard: bool = False):
+    def invoke(self, prompt: str, clipboard: bool = False, confirm: bool = False):
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()
         print(tree)
         request = self.generator.generate(PR_PROMPT_TEMPLATE, goal=prompt, tree=tree, content=file_collection.to_markdown())
+
+        # Calculate token count and confirm if requested
+        token_count = count_tokens(request)
+        if confirm:
+            print(f"Estimated input tokens: {token_count}")
+            user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()
+            if user_input != 'y':
+                print("Operation cancelled.")
+                return
 
         if clipboard:
             self.clipboard.set(request)
@@ -93,9 +106,3 @@ class PRAgent(AgentProtocol):
                 print(f"File {abs_path} does not exist, cannot remove.")
 
         print(f"\nSummary: {response.summary}\n")
-
-    def add_tools(self, tools: List[ToolProtocol]):
-        pass
-
-    def __str__(self):
-        return f'{self.name} ({self.model}): {self.description}'
