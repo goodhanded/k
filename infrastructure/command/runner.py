@@ -9,14 +9,13 @@ from domain.util.yaml import load_yaml
 COMMANDS_YAML_PATH = "/Users/keith/Projects/k/commands.yaml"
 SERVICES_YAML_PATH = "/Users/keith/Projects/k/services.yaml"
 
+
 def build_subcommands(subparsers, commands_dict):
     for cmd_name, cmd_info in commands_dict.items():
         help_text = cmd_info.get("help", "")
         aliases = cmd_info.get("aliases", [])
-
         subparser = subparsers.add_parser(cmd_name, help=help_text, aliases=aliases)
 
-        # If this command has a "target", store it so we can call it later
         if "target" in cmd_info:
             subparser.set_defaults(target=cmd_info["target"])
 
@@ -27,8 +26,18 @@ def build_subcommands(subparsers, commands_dict):
             subparser.set_defaults(print_map=cmd_info["print_map"])
 
         # Add known arguments (positional or optional)
-        for arg_name, arg_help in cmd_info.get("arguments", {}).items():
-            subparser.add_argument(arg_name, help=arg_help)
+        for arg_name, arg_value in cmd_info.get("arguments", {}).items():
+            if isinstance(arg_value, dict):
+                # New logic to support positional arguments with 'nargs'
+                if arg_value.get("flag", False):
+                    subparser.add_argument(f"--{arg_name}", help=arg_value.get("help", ""), action="store_true", default=False)
+                elif arg_value.get("positional", False):
+                    subparser.add_argument(arg_name, help=arg_value.get("help", ""), nargs=arg_value.get("nargs", None), default=arg_value.get("default"))
+                else:
+                    subparser.add_argument(f"--{arg_name}", help=arg_value.get("help", ""), default=arg_value.get("default"), nargs=arg_value.get("nargs", None))
+            else:
+                # Treat as a required positional argument
+                subparser.add_argument(arg_name, help=arg_value)
 
         # Nested subcommands
         if "subcommands" in cmd_info:
@@ -78,6 +87,7 @@ def parse_unknown_as_kwargs(unknown_args):
 
     return kwargs
 
+
 def format_result(result, print_map):
     """ Formatting logic (unchanged from your example). """
     fmt = print_map.get("format", "table")
@@ -123,6 +133,7 @@ def format_result(result, print_map):
 
     return str(result)
 
+
 def load_and_run():
     definitions = load_definitions_from_yaml(SERVICES_YAML_PATH)
     container = Container(definitions)
@@ -135,6 +146,13 @@ def load_and_run():
 
     # 1) parse_known_args to separate recognized vs. leftover
     args, unknown_args = parser.parse_known_args()
+
+    # Generalized nargs handling: for any argument defined with nargs '+' or '*'
+    for action in parser._actions:
+        if hasattr(action, 'nargs') and action.nargs in ("+", "*"):
+            value = getattr(args, action.dest, None)
+            if isinstance(value, list) and all(isinstance(v, str) for v in value):
+                setattr(args, action.dest, " ".join(value))
 
     if not args.top_command:
         parser.print_help()
@@ -176,6 +194,7 @@ def load_and_run():
             print(format_result(result, print_map))
         else:
             print(result)
+
 
 if __name__ == "__main__":
     load_and_run()
