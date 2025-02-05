@@ -38,11 +38,22 @@ services:
     tags:
       - { name: prompt, alias: pr }
 
+  agency.prompt.code_review:
+    class: adapters.prompts.CodeReviewPrompt
+    tags:
+      - { name: prompt, alias: code_review }
+
   agency.workflow.pull_request:
     class: infrastructure.agency.PullRequestWorkflow
     arguments: 
       prompt_generator: '@agency.prompt_generator'
       clipboard: '@pyperclip'
+      token_counter: '@util.token_counter'
+
+  agency.workflow.code_review:
+    class: infrastructure.agency.CodeReviewWorkflow
+    arguments:
+      prompt_generator: '@agency.prompt_generator'
       token_counter: '@util.token_counter'
 
   agency.agent.scheduling:

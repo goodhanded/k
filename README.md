@@ -28,6 +28,7 @@
 - **AI Agent Integration**: Prompt AI agents for Q&A, search, scheduling tasks, or more advanced use cases.  
 - **Document Indexing**: Index local documents and notes for quick searching.  
 - **Discord Bot**: Run a Discord bot that can leverage your AI agents and indexing capabilities.
+- **Code Review**: Generate code review feedback by analyzing your project's directory structure and file contents.
 
 ---
 
@@ -78,10 +79,12 @@ Here are the primary commands and their definitions:
 
 | Command        | Usage Example                                                  | Description                                                                   |
 | -------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **assimilate** | `k assimilate --path /path/to/audio.wav`           | Assimilates a voice memo into your daily note (requires a local audio file). |
-| **transcribe** | `k transcribe --path /path/to/audio.wav`           | Transcribes the given audio file.                                            |
-| **ask**        | `k ask --agent_name search_agent --prompt "Hello!"` | Prompts an AI agent with a given text input.                                 |
-| **run**        | `k run discord`                                     | Runs one of the subcommands, e.g. `discord` or `indexer`.                    |
+| **assimilate** | `k assimilate --path /path/to/audio.wav`                      | Assimilates a voice memo into your daily note (requires a local audio file).  |
+| **transcribe** | `k transcribe --path /path/to/audio.wav`                      | Transcribes the given audio file.                                             |
+| **ask**        | `k ask --agent_name search_agent --prompt "Hello!"`          | Prompts an AI agent with a given text input.                                  |
+| **pr**         | `k pr [your prompt here] [--confirm] [--clipboard]`             | Generates pull request changes based on a prompt.                             |
+| **review**     | `k review [your prompt here] [--confirm]`                       | Generates code review feedback for your project directory.                   |
+| **run**        | `k run <subcommand> [args...]`                                  | Runs subcommands (e.g., `discord` or `indexer`).                              |
 
 #### Subcommands under `run`
 
@@ -103,9 +106,17 @@ Here are the primary commands and their definitions:
 
 3. **Ask an AI Agent**  
    `k ask --agent_name search_agent --prompt "What's the weather like in San Francisco?"`  
-   This sends the prompt to the specified agent. The agent’s response is printed to your console (and could be logged elsewhere, depending on your config).
+   This sends the prompt to the specified agent.
 
-4. **Run Discord Bot**  
+4. **Generate a Pull Request**  
+   `k pr [prompt] [--confirm] [--clipboard]`  
+   Generates a pull request prompt based on your changes.
+
+5. **Generate a Code Review**  
+   `k review [prompt] [--confirm]`  
+   Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback to the console.
+
+6. **Run Discord Bot**  
    `k run discord`  
    This starts the Discord bot. Ensure your environment variables contain your bot token.
 
@@ -121,8 +132,6 @@ Here are the primary commands and their definitions:
 
 - **Application-wide Settings**  
   Configured in `.env`, read by  `application/config` and injected into service constructors via the dependency injection (DI) container in `infrastructure/di`.
-
-You can further customize these to extend functionality or adapt to your specific environment, such as choosing a different transcriber service or search engine.
 
 ---
 
@@ -166,51 +175,7 @@ To run the tests:
    pytest
    ```
 
-Note: If you encounter a "bad interpreter" error (e.g. "/opt/homebrew/bin/pytest: bad interpreter: /opt/homebrew/opt/python@3.11/bin/python3.11: no such file or directory"), please recreate your virtual environment by running:
-   ```
-   rm -rf venv
-   python3 -m venv venv
-   source ./venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
 All tests located in the `tests` directory will be automatically discovered and executed.
-
----
-
-## Usage Examples (Detailed)
-
-1. **Transcribe an Audio File**  
-   `k transcribe --path ~/recordings/todays_notes.wav`  
-   This will produce a transcription for the audio file.
-
-2. **Assimilate a Voice Memo**  
-   `k assimilate --path ~/recordings/daily_update.wav`  
-   This adds the transcribed memo into your daily note (for example, in Obsidian).
-
-3. **Ask an AI Agent**  
-   `k ask --agent_name search_agent --prompt "What's the weather like in San Francisco?"`  
-   This sends the prompt to the specified agent. The agent’s response is printed to your console.
-
-4. **Run Discord Bot**  
-   `k run discord`  
-   This starts the Discord bot. Ensure your environment variables contain your bot token.
-
----
-
-## Configuration & Extending k
-
-Refer to the sections above for detailed instructions on how to configure the project settings and extend functionality with new commands, agents, or services.
-
-## Running the Application
-
-After installation and configuration, you can run the CLI using:
-
-```
-k --help
-```
-
-This will display the available commands and usage instructions.
 
 ---
 

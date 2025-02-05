@@ -74,3 +74,11 @@ commands:
       indexer:
         help: "Run the indexer"
         target: "@agency.index_documents_use_case.execute"
+
+  review:
+    help: "Generate code review feedback for the project"
+    target: "@agency.workflow.code_review.invoke"
+    arguments:
+      confirm:
+        help: "If set, show token count and require confirmation before proceeding"
+        flag: true
