@@ -1,6 +1,6 @@
-from application.agency import AgentDTO, AgentProtocol
+from application.agency import AgentDTO, WorkflowProtocol
 
-class Agent(AgentProtocol):
+class Agent(WorkflowProtocol):
     def __init__(self, agent_dto: AgentDTO):
         
         self.name = agent_dto.name

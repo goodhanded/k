@@ -1,11 +1,11 @@
 from datetime import datetime
-from application.agency import AgentProtocol
+from application.agency import WorkflowProtocol
 from application.search import SearchEngineProtocol
 from application.intelligence import LLMClientProtocol
-from application.agency.dtos import AgentResponseDTO
+from application.agency.dtos import WorkflowResultDTO
 from infrastructure.langchain import LangchainDocumentMapper
 
-class SearchAgent(AgentProtocol):
+class SearchAgent(WorkflowProtocol):
     def __init__(self, search_engine: SearchEngineProtocol, mapper: LangchainDocumentMapper, llm: LLMClientProtocol, model: str):
         self.search_engine = search_engine
         self.mapper = mapper
@@ -21,8 +21,8 @@ class SearchAgent(AgentProtocol):
         print('Searching...')
         search_result = self.search_engine.search(prompt)
 
-        responseDTO = AgentResponseDTO(
-            agent=self.name,
+        responseDTO = WorkflowResultDTO(
+            workflow=self.name,
             timestamp=datetime.now(),
             prompt=prompt,
             success=True,

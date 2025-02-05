@@ -24,8 +24,8 @@ services:
     arguments: 
       services: !tagged_iterator { tag: agent, index_by: alias }
 
-  agency.agent.pr:
-    class: infrastructure.agency.PRAgent
+  agency.workflows.pull_request:
+    class: infrastructure.agency.PullRequestWorkflow
     arguments: 
       prompt_generator: '@obsidian.prompt_generator'
       clipboard: '@pyperclip'

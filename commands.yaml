@@ -52,7 +52,7 @@ commands:
 
   pr:
     help: "Generate pull request changes based on a prompt. Use the --clipboard flag to copy the generated prompt to the clipboard instead of invoking the LLM."
-    target: "@agency.agent.pr.invoke"
+    target: "@agency.workflow.pull_request.invoke"
     arguments:
       prompt:
         help: "Text to generate pull request changes"

@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
-from application.agency import AgentProtocol, PromptGeneratorProtocol
+from application.agency import WorkflowProtocol, PromptGeneratorProtocol
 from application.filesystem import ClipboardProtocol
 from application.util import TokenCounterProtocol
 from domain.filesystem import FileCollection
@@ -21,7 +21,7 @@ class Response(BaseModel):
     modifications: list[FileChange] = Field(description="List of files modified.")
 
 
-class PRAgent(AgentProtocol):
+class PullRequestWorkflow(WorkflowProtocol):
     def __init__(
         self,
         prompt_generator: PromptGeneratorProtocol,

@@ -2,9 +2,7 @@ from .use_cases.prompt_agent import PromptAgentUseCase
 from .use_cases.run_discord_bot import RunDiscordBotUseCase
 from .use_cases.index_documents import IndexDocumentsUseCase
 from .use_cases.generate_prompt import GeneratePromptUseCase
-from .protocols.agent_factory import AgentFactoryProtocol
 from .protocols.indexer import IndexerProtocol
 from .protocols.prompt_generator import PromptGeneratorProtocol
 from .dtos.agent_dto import AgentDTO
-from .dtos.tool_dto import ToolDTO
-from .protocols.agent import AgentProtocol
+from .protocols.workflow import WorkflowProtocol

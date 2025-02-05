@@ -1,6 +1,6 @@
-from application.agency import AgentProtocol
+from application.agency import WorkflowProtocol
 
-class SchedulingAgent(AgentProtocol):
+class SchedulingAgent(WorkflowProtocol):
     def __init__(self):
         self.name = 'Scheduling Agent'
         self.model = 'Simple Scheduling Model'

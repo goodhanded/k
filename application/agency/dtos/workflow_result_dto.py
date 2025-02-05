@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from application.dto import DataTransferObject
 
 @dataclass
-class AgentResponseDTO(DataTransferObject):
+class WorkflowResultDTO(DataTransferObject):
     prompt: str
     response: str
-    agent: str
+    workflow: str
     timestamp: str
     success: bool
     errors: List[str] = field(default_factory=list)
