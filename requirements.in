@@ -14,5 +14,6 @@ pathspec
 pycord
 pydantic
 pyperclip
+pytest
 python-dotenv
 PyYAML

@@ -17,6 +17,7 @@
     - [Examples](#examples)
   - [Configuration](#configuration)
   - [Extending k](#extending-k)
+  - [Running Tests](#running-tests)
 
 ---
 
@@ -43,7 +44,7 @@
    - `git clone https://github.com/goodhanded/k.git`
    - `cd k`
 
-2. **Create and activate a virtual environment
+2. **Create and activate a virtual environment**
    - `python -m venv venv` (from project root)
    - `. ./venv/bin/activate`
 
@@ -145,3 +146,74 @@ You can further customize these to extend functionality or adapt to your specifi
    - Create a service class (for example, a new search engine or transcriber) in the `infrastructure/` layer.  
    - Update `services.yaml` and the DI container with the new service definition.
 
+---
+
+## Running Tests
+
+This project uses pytest as its testing framework. A basic test scaffold has been set up.
+
+To run the tests:
+
+1. Ensure you have pytest installed in your environment. You can install it using:
+
+   ```
+   pip install pytest
+   ```
+
+2. From the root directory of the project, run:
+
+   ```
+   pytest
+   ```
+
+Note: If you encounter a "bad interpreter" error (e.g. "/opt/homebrew/bin/pytest: bad interpreter: /opt/homebrew/opt/python@3.11/bin/python3.11: no such file or directory"), please recreate your virtual environment by running:
+   ```
+   rm -rf venv
+   python3 -m venv venv
+   source ./venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+All tests located in the `tests` directory will be automatically discovered and executed.
+
+---
+
+## Usage Examples (Detailed)
+
+1. **Transcribe an Audio File**  
+   `k transcribe --path ~/recordings/todays_notes.wav`  
+   This will produce a transcription for the audio file.
+
+2. **Assimilate a Voice Memo**  
+   `k assimilate --path ~/recordings/daily_update.wav`  
+   This adds the transcribed memo into your daily note (for example, in Obsidian).
+
+3. **Ask an AI Agent**  
+   `k ask --agent_name search_agent --prompt "What's the weather like in San Francisco?"`  
+   This sends the prompt to the specified agent. The agent’s response is printed to your console.
+
+4. **Run Discord Bot**  
+   `k run discord`  
+   This starts the Discord bot. Ensure your environment variables contain your bot token.
+
+---
+
+## Configuration & Extending k
+
+Refer to the sections above for detailed instructions on how to configure the project settings and extend functionality with new commands, agents, or services.
+
+## Running the Application
+
+After installation and configuration, you can run the CLI using:
+
+```
+k --help
+```
+
+This will display the available commands and usage instructions.
+
+---
+
+## Additional Information
+
+For more details on the project architecture, dependency injection, and service configuration, please refer to the project documentation and inline comments within the source code.

@@ -24,3 +24,5 @@ def load_yaml(file_path: str, subpath=None):
                 if content is None:
                     return None
             return content
+        else:
+            return all_content
