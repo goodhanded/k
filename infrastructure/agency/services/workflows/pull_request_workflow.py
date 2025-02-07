@@ -4,7 +4,7 @@ from application.agency import WorkflowProtocol, PromptGeneratorProtocol
 from application.filesystem import ClipboardProtocol
 from application.util import TokenCounterProtocol
 from domain.filesystem import FileCollection
-import os
+import os, sys
 from typing import Optional
 
 class FileChange(BaseModel):
@@ -65,7 +65,10 @@ class PullRequestWorkflow(WorkflowProtocol):
             raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
         return full_path
 
-    def invoke(self, prompt: str, clipboard: bool = False, confirm: bool = False):
+    def invoke(self, prompt: str, stdin: bool = False, clipboard: bool = False, confirm: bool = False):
+        if stdin:
+            prompt = sys.stdin.read()
+    
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         rules = self._load_rules()
         tree = file_collection.tree()

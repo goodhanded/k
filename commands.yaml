@@ -60,7 +60,10 @@ commands:
       prompt:
         help: "Text to generate pull request changes"
         positional: true
-        nargs: "+"
+        nargs: "?"
+      stdin:
+        help: "Read prompt from stdin instead of an argument"
+        flag: true
       clipboard:
         help: "If set, the PR prompt is sent to the clipboard instead of being processed by the LLM"
         flag: true
