@@ -2,10 +2,13 @@
 - Use type hints.
 - Keep imports sorted at the top of the file.
 - Limit classes to one per file.
-- Follow established conventions in __init__.py, adding references at the appropriate level as needed for python references. For example, if there is an `application/<package>/<component-type>/component.py` there should be an import statement in `application/<package>` but not in the component-type folder.
-- Keep service definitions up to date when modifying dependencies. Definitions are in services.yaml and follow a format similar to the symfony framework.
+- Follow established conventions in __init__.py, adding references at the appropriate level as needed for Python references. For example, if there is an `application/<package>/<component-type>/component.py` there should be an import statement in `application/<package>` but not in the component-type folder.
+- Keep service definitions up to date when modifying dependencies. Definitions are in services.yaml and follow a format similar to the Symfony framework.
 - Commands can be configured in commands.yaml as needed to add functionality to the CLI.
 - Update the README when appropriate.
 - Add or update unit tests.
 - Remove unaccessed imports.
 - Protocols and Use Case classes have "Protocol" and "UseCase" in their name, respectively, but do not have "_protocol" or "_use_case" in their file names.
+- Every package should include an __init__.py file that aggregates and exposes the public API of its modules. Update these files accordingly when adding new modules or components.
+- Follow the module resolution guidelines as defined in domain/util/module_resolution.py. Verify that all module paths referenced in services.yaml, commands.yaml, and elsewhere are valid to prevent errors, especially when invoking commands like 'k pr'.
+- Leave existing comments in place when rewriting code. Add additional comments and comment blocks to improve code clarity.
