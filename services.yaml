@@ -136,3 +136,7 @@ services:
 
   util.token_counter:
     class: infrastructure.util.TokenCounter
+
+  init.init_k_use_case:
+    class: application.init.InitKUseCase
+    arguments: []

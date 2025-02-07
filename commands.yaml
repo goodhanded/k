@@ -1,4 +1,7 @@
 commands:
+  init:
+    help: "Initialize .k directory with default configuration templates."
+    target: "@init.init_k_use_case.execute"
 
   assimilate:
     help: "Assimilate a voice memo into the daily note"

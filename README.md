@@ -64,7 +64,10 @@
    - In your shell configuration file (e.g., `.zshrc`), add `alias k='/path/to/k/venv/bin/python /path/to/k/k.py'`
    - Now you can simply call `k` instead of `python k.py`
 
-6. **Run the CLI:**
+6. **Initialize the .k Directory (Optional):**
+   - Run `k init` to create a fresh `.k` directory with default configuration templates. This is useful if the directory does not already exist or if you want to reset its contents.
+
+7. **Run the CLI:**
    - `k --help`
 
 ---
@@ -79,16 +82,15 @@ For subcommands:
 
 ### Commands Overview
 
-Here are the primary commands and their definitions:
-
 | Command        | Usage Example                                                  | Description                                                                   |
 | -------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **assimilate** | `k assimilate --path /path/to/audio.wav`                      | Assimilates a voice memo into your daily note (requires a local audio file).  |
-| **transcribe** | `k transcribe --path /path/to/audio.wav`                      | Transcribes the given audio file.                                             |
-| **ask**        | `k ask --agent_name search_agent --prompt "Hello!"`          | Prompts an AI agent with a given text input.                                  |
-| **pr**         | `k pr [your prompt here] [--confirm] [--clipboard]`             | Generates pull request changes based on a prompt.                             |
-| **review**     | `k review [your prompt here] [--confirm]`                       | Generates code review feedback for your project directory.                   |
-| **run**        | `k run <subcommand> [args...]`                                  | Runs subcommands (e.g., `discord` or `indexer`).                              |
+| **init**       | `k init`                                                     | Initializes the .k directory with default configuration templates.            |
+| **assimilate** | `k assimilate --path /path/to/audio.wav`                       | Assimilates a voice memo into your daily note (requires a local audio file).    |
+| **transcribe** | `k transcribe --path /path/to/audio.wav`                       | Transcribes the given audio file.                                             |
+| **ask**        | `k ask --agent_name search_agent --prompt "Hello!"`           | Prompts an AI agent with a given text input.                                  |
+| **pr**         | `k pr [your prompt here] [--confirm] [--clipboard]`              | Generates a pull request prompt based on your changes.                        |
+| **review**     | `k review [your prompt here] [--confirm]`                        | Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback to the console. |
+| **run**        | `k run <subcommand> [args...]`                                 | Runs subcommands (e.g., `discord` or `indexer`).                                |
 
 #### Subcommands under `run`
 
@@ -120,7 +122,11 @@ Here are the primary commands and their definitions:
    `k review [prompt] [--confirm]`  
    Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback to the console.
 
-6. **Run Discord Bot**  
+6. **Initialize .k Directory**  
+   `k init`  
+   Creates a new .k directory with default templates (excludes.txt, includes.txt, rules.txt). Use this command if the .k directory is missing or to reset its contents.
+
+7. **Run Discord Bot**  
    `k run discord`  
    This starts the Discord bot. Ensure your environment variables contain your bot token.
 
