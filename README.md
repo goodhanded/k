@@ -45,7 +45,7 @@
    - `git clone https://github.com/goodhanded/k.git`
    - `cd k`
 
-2. **Create and activate a virtual environment**
+2. **Create and Activate a Virtual Environment:**
    - `python -m venv venv` (from project root)
    - `. ./venv/bin/activate`
 
@@ -54,11 +54,15 @@
 
 4. **(Optional) Set Up Environment Variables:**
    - Depending on the integrations you plan to use (OpenAI, AWS, Discord), you may need to set environment variables such as `OPENAI_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DISCORD_BOT_TOKEN`, etc.
-   - Copy .env.example to .env to set these variables for local development
+   - **IMPORTANT:** Set the `K_PATH` environment variable to the absolute path of the project root directory. This variable is required for the application to correctly locate configuration files like `.env`, `commands.yaml`, and `services.yaml`. For example, add the following line to your shell configuration file (e.g., `.bashrc` or `.zshrc`):
+     
+     export K_PATH="/absolute/path/to/k"
+     
+   - Copy `.env.example` to `.env` and set these variables for local development
 
-5. **Add bash/zsh alias**
-   - In .zshrc, add `alias k='/path/to/k/venv/bin/python /path/to/k/k.py'`
-   - Now you can just call `k` rather than `python k.py` 
+5. **Add Bash/Zsh Alias:**
+   - In your shell configuration file (e.g., `.zshrc`), add `alias k='/path/to/k/venv/bin/python /path/to/k/k.py'`
+   - Now you can simply call `k` instead of `python k.py`
 
 6. **Run the CLI:**
    - `k --help`
@@ -124,14 +128,17 @@ Here are the primary commands and their definitions:
 
 ## Configuration
 
-- **commands.yaml**  
-  Defines CLI commands, their help text, the function to execute, and accepted arguments.
-
-- **services.yaml**  
-  Declares services like the transcriber, search engine, or any other integrations needed.
+- **K_PATH Environment Variable**  
+  Ensure that the `K_PATH` environment variable is set to the absolute path of the project root directory. This variable is critical for proper resolution of configuration files and resources within the application.
 
 - **Application-wide Settings**  
-  Configured in `.env`, read by  `application/config` and injected into service constructors via the dependency injection (DI) container in `infrastructure/di`.
+  Configured via the `.env` file, which is read by `application/config` and injected into service constructors through the dependency injection (DI) container in `infrastructure/di`.
+
+- **services.yaml**  
+  Declares services like the transcriber, search engine, or any other required integrations.
+
+- **commands.yaml**  
+  Defines CLI commands, their help text, the function to execute, and accepted arguments.
 
 ---
 
@@ -139,20 +146,20 @@ Here are the primary commands and their definitions:
 
 1. **Add a New Python Dependency**
    - Update `requirements.in` with the python dependency you want to add.
-   - Run `pip-compile requirements.in --strip-extras` to compile a new requirements.txt file.
-   - Run `pip install -r requirements.txt` to install the dependencies in the requirements.txt file.
+   - Run `pip-compile requirements.in --strip-extras` to compile a new `requirements.txt` file.
+   - Run `pip install -r requirements.txt` to install the dependencies.
 
 2. **Add a New Command**  
-   - Create or update a `use_case` in the appropriate `application/...` folder.  
-   - Reference that use case in `commands.yaml` by specifying a `target` that points to its DI container name (for example, `@agency.some_use_case.execute`).
+   - Create or update a use case in the appropriate `application/...` folder.  
+   - Reference that use case in `commands.yaml` by specifying a target that points to its DI container name (e.g., `@agency.some_use_case.execute`).
 
 3. **Add a New AI Agent**  
    - Implement the agent logic in `infrastructure/agency/services/agents`.  
-   - Register it via the DI container in `services.yaml`.
-   - Tag it with `{ name: agent, alias: <alias> }` to have the di container add it to the agent registry.
+   - Register it in the DI container via `services.yaml`.
+   - Tag it with `{ name: agent, alias: <alias> }` to include it in the agent registry.
 
 4. **Add a New Service**  
-   - Create a service class (for example, a new search engine or transcriber) in the `infrastructure/` layer.  
+   - Create a service class (e.g., a new search engine or transcriber) in the `infrastructure/` layer.  
    - Update `services.yaml` and the DI container with the new service definition.
 
 ---
