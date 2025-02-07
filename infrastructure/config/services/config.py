@@ -1,7 +1,13 @@
 import os
 from dotenv import load_dotenv
 
-ENV_PATH = '/Users/keith/Projects/k/.env'
+# Derive ENV_PATH from K_PATH if provided
+K_PATH = os.getenv("K_PATH")
+if K_PATH:
+    ENV_PATH = os.path.join(K_PATH, ".env")
+else:
+    raise ValueError("K_PATH environment variable must be set")
+
 
 class Config:
     """
@@ -11,9 +17,9 @@ class Config:
 
     def __init__(self, dotenv_path: str = ENV_PATH):
         """
-        Initialize the ConfigService, loading the .env file.
+        Initialize the Config service, loading the .env file.
         
-        :param dotenv_path: The path to the .env file (default is .env).
+        :param dotenv_path: The path to the .env file (default is ".env" or as specified by ENV_PATH).
         """
         # Load environment variables from dotenv_path, but do NOT override
         # already-set environment variables
@@ -23,10 +29,6 @@ class Config:
         """
         Return the value for environment variable `key`.
         If it's not found, return `default`.
-        
-        :param key: The environment variable name.
-        :param default: Value to return if `key` is not found.
-        :return: The environment variable or default value.
         """
         return os.getenv(key, default)
 
@@ -34,10 +36,6 @@ class Config:
         """
         Return the value for environment variable `key`.
         Raises an error if not found.
-        
-        :param key: The environment variable name.
-        :return: The environment variable value.
-        :raises ValueError: If `key` is not found or empty.
         """
         value = os.getenv(key)
         if not value:

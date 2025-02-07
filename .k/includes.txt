@@ -13,3 +13,4 @@
 *.sequelizerc
 *.cjs
 *.txt
+.env.example

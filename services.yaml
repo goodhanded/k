@@ -103,13 +103,17 @@ services:
     class: infrastructure.openai.OpenAIClient
     arguments: ['%OPENAI_API_KEY%']
 
+  config:
+    class: infrastructure.config.services.config.Config
+    arguments: []
+
   obsidian.prompt_generator:
     class: infrastructure.obsidian.ObsidianPromptGenerator
     arguments: ['@obsidian.vault', '%PROMPT_TEMPLATE_PATH%']
 
   obsidian.vault:
     class: infrastructure.obsidian.ObsidianVault
-    arguments: ['%OBSIDIAN_VAULT_PATH%']
+    arguments: ['%OBSIDIAN_VAULT_PATH%', '@config']
 
   pyperclip:
     class: infrastructure.pyperclip.Pyperclip

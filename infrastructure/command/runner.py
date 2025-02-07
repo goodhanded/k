@@ -1,13 +1,20 @@
 import argparse
 import json
 from textwrap import indent
+import os
 
 from domain.util.module_resolution import resolve_module
 from infrastructure.di import Container, load_definitions_from_yaml
 from infrastructure.util.yaml_loader import YamlLoader
 
-COMMANDS_YAML_PATH = "/Users/keith/Projects/k/commands.yaml"
-SERVICES_YAML_PATH = "/Users/keith/Projects/k/services.yaml"
+# Derive paths from K_PATH if set
+K_PATH = os.getenv("K_PATH")
+if K_PATH:
+    COMMANDS_YAML_PATH = os.path.join(K_PATH, "commands.yaml")
+    SERVICES_YAML_PATH = os.path.join(K_PATH, "services.yaml")
+else:
+    # raise an error
+    raise ValueError("K_PATH environment variable must be set")
 
 def build_subcommands(subparsers, commands_dict):
     for cmd_name, cmd_info in commands_dict.items():
@@ -190,7 +197,6 @@ def load_and_run():
     # 7) Print result if requested
     if print_result:
         if print_map:
-            # your existing logic...
             print(format_result(result, print_map))
         else:
             print(result)
