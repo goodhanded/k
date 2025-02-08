@@ -1,7 +1,9 @@
 commands:
   init:
-    help: "Initialize .k directory with default configuration templates."
+    help: "Initialize .k directory with configuration templates."
     target: "@init.init_k_use_case.execute"
+    arguments:
+      template: "Alias of the template to use for initialization (e.g., nodejs, nextjs, python, dotnet)"
 
   assimilate:
     help: "Assimilate a voice memo into the daily note"
