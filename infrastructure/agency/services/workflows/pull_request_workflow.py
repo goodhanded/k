@@ -7,9 +7,11 @@ from domain.filesystem import FileCollection
 import os, sys
 from typing import Optional
 
+
 class FileChange(BaseModel):
     path: str = Field(..., description="Relative path to the file within the project.")
     content: Optional[str] = Field(None, description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
+
 
 class Response(BaseModel):
     summary: str = Field(..., description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
@@ -17,12 +19,12 @@ class Response(BaseModel):
     removals: list[FileChange] = Field(..., description="List of files removed.")
     modifications: list[FileChange] = Field(..., description="List of files modified.")
 
+
 class PullRequestWorkflow(WorkflowProtocol):
-    def __init__(
-        self,
-        prompt_generator: PromptGeneratorProtocol,
-        clipboard: ClipboardProtocol,
-        token_counter: TokenCounterProtocol
+    def __init__(self,
+                 prompt_generator: PromptGeneratorProtocol,
+                 clipboard: ClipboardProtocol,
+                 token_counter: TokenCounterProtocol
     ) -> None:
         print(f"Initializing PR Agent with LLM model: o3-mini")
         llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
@@ -65,8 +67,22 @@ class PullRequestWorkflow(WorkflowProtocol):
             raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
         return full_path
 
-    def invoke(self, prompt: str, stdin: bool = False, clipboard: bool = False, confirm: bool = False):
-        if stdin:
+    def invoke(self, prompt: str, stdin: bool = False, paste: bool = False, clipboard: bool = False, confirm: bool = False):
+        """
+        Invokes the pull request workflow.
+
+        Parameters:
+          - prompt: The initial prompt input.
+          - stdin: If True, read prompt from stdin.
+          - paste: If True, read prompt input from the clipboard.
+          - clipboard: If True, copy the generated prompt to clipboard instead of calling the LLM.
+          - confirm: If True, show token count and require confirmation before processing.
+
+        The precedence is: if paste is True, it overrides stdin and the prompt argument.
+        """
+        if paste:
+            prompt = self.clipboard.get()
+        elif stdin:
             prompt = sys.stdin.read()
     
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
