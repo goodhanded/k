@@ -206,6 +206,6 @@ services:
       services: !tagged_iterator { tag: workflow_state, index_by: alias }
 
   agency.workflow_state.pull_request:
-    class: application.agency.PullRequestWorkflowState
+    class: infrastructure.agency.PullRequestWorkflowState
     tags:
       - { name: workflow_state, alias: pull_request }

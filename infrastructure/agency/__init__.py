@@ -13,4 +13,5 @@ from .nodes.load_include_exclude_rules import LoadIncludeExcludeRules
 from .nodes.load_project_rules import LoadProjectRules
 from .nodes.load_source_code import LoadSourceCode
 from .nodes.run_tests import RunTests
+from .nodes.git_status import GitStatus
 from .states.pull_request_workflow_state import PullRequestWorkflowState
