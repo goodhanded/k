@@ -23,10 +23,14 @@ class ImplementChangeset(WorkflowNodeProtocol):
         if "changeset" not in state:
             raise ValueError("Changeset not found in state.")
 
+        if "project_path" not in state:
+            raise ValueError("Project path not found in state.")
+
         changeset = state["changeset"]
+        project_path = state["project_path"]
 
         for file_change in changeset.additions + changeset.modifications:
-            abs_path = self._resolve_path(file_change.path)
+            abs_path = self._resolve_path(project_path, file_change.path)
             directory = os.path.dirname(abs_path)
             if directory and not os.path.exists(directory):
                 os.makedirs(directory, exist_ok=True)
@@ -35,7 +39,7 @@ class ImplementChangeset(WorkflowNodeProtocol):
                 f.write(file_change.content)
         
         for file_change in changeset.removals:
-            abs_path = self._resolve_path(file_change.path)
+            abs_path = self._resolve_path(project_path, file_change.path)
             if os.path.exists(abs_path):
                 print(f"Removing {abs_path}")
                 os.remove(abs_path)
@@ -46,3 +50,8 @@ class ImplementChangeset(WorkflowNodeProtocol):
 
         return {"progress": "Changeset implemented."}
     
+    def _resolve_path(self, project_path: str, relative_path: str) -> str:
+        full_path = os.path.abspath(os.path.join(project_path, relative_path))
+        if not full_path.startswith(os.path.abspath(project_path)):
+            raise ValueError(f"Unauthorized file path modification attempt: {relative_path}")
+        return full_path
