@@ -35,7 +35,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
             raise ValueError("Goal not found in state.")
 
         prompt_template = PullRequestPrompt()
-        prompt = prompt_template.generate(goal=state["goal"],
+        prompt = prompt_template.format(goal=state["goal"],
                                           rules=state["project_rules"],
                                           tree=state["directory_tree"],
                                           content=["source_code"])
