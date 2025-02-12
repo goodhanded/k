@@ -48,7 +48,10 @@ class Container:
                 raise ValueError(
                     f"Service '{service_name}' has no 'cls' or 'factory' defined."
                 )
-            instance = definition.cls(*resolved_pos_args, **resolved_kw_args)
+            if definition.inject_class:
+                instance = definition.cls
+            else:
+                instance = definition.cls(*resolved_pos_args, **resolved_kw_args)
 
         self.singletons[service_name] = instance
         self.resolving.remove(service_name)

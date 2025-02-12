@@ -25,7 +25,7 @@ services:
 
   agency.agent_registry:
     class: domain.registry.Registry
-    arguments: 
+    arguments:
       services: !tagged_iterator { tag: agent, index_by: alias }
 
   agency.prompt_generator:
@@ -34,7 +34,7 @@ services:
 
   agency.prompt_registry:
     class: domain.registry.Registry
-    arguments: 
+    arguments:
       services: !tagged_iterator { tag: prompt, index_by: alias }
 
   agency.prompt.pr:
@@ -207,5 +207,6 @@ services:
 
   agency.workflow_state.pull_request:
     class: infrastructure.agency.PullRequestWorkflowState
+    inject_class: true
     tags:
       - { name: workflow_state, alias: pull_request }

@@ -45,7 +45,8 @@ def load_definitions_from_yaml(file_path: str) -> Dict[str, ServiceDefinition]:
             pos_args=pos_args,
             kw_args=kw_args,
             tags=tags,
-            factory=factory
+            factory=factory,
+            inject_class=raw.get('inject_class', False)
         )
         definitions[service_name] = definition
 
