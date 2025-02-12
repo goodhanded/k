@@ -94,12 +94,4 @@ class CreatePullRequestUseCase:
 
         # Proceed with executing the pull request workflow
         state = {"goal": prompt}
-        result = self.workflow.run(state)
-        print("\nPull request creation complete.\n")
-        print("Summary:")
-        if isinstance(result, dict) and "changeset" in result:
-            changeset = result["changeset"]
-            summary = getattr(changeset, "summary", str(changeset))
-            print(summary)
-        else:
-            print(result)
+        self.workflow.run(state)

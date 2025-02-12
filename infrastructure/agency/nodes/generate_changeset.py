@@ -3,7 +3,7 @@ import os
 from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
-
+from langchain_community.callbacks.manager import get_openai_callback
 from application.agency import WorkflowNodeProtocol
 from adapters.prompts import PullRequestPrompt
 
@@ -45,9 +45,14 @@ class GenerateChangeset(WorkflowNodeProtocol):
 
         print("\nGenerating changeset. This may take a minute...\n")
 
-        changeset = structured_llm.invoke([prompt])
+        with get_openai_callback() as cb:
+            changeset = structured_llm.invoke([prompt])
 
-        print(changeset.summary)
+        print(f"{changeset.summary}\n")
+        print(f"Input Tokens: {cb.prompt_tokens}")
+        print(f"Output Tokens: {cb.completion_tokens}")
+        print(f"Total: {cb.total_tokens}")
+        print(f"Cost: {cb.total_cost}\n")
 
         return {"changeset": changeset, "progress": "Changeset generated."}
     
