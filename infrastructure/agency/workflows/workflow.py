@@ -9,7 +9,7 @@ class Workflow(WorkflowProtocol):
         self.name = name
         self.definition = definition
         self.state = state_registry.get(name)
-        self.graph = StateGraph(self.state)
+        state_graph = StateGraph(self.state)
 
         if "nodes" not in definition:
             raise ValueError("Workflow definition must contain a 'nodes' key.")
@@ -20,7 +20,7 @@ class Workflow(WorkflowProtocol):
             if not node_registry.exists(node_alias):
                 raise ValueError(f"Node {node_alias} is not registered.")
             node = node_registry.get(node_alias)
-            self.graph.add_node(node_alias, node)
+            state_graph.add_node(node_alias, node)
 
         if "edges" not in definition:
             raise ValueError("Workflow definition must contain an 'edges' key.")
@@ -33,12 +33,12 @@ class Workflow(WorkflowProtocol):
             if "condition" in edge:
                 if edge["from"] not in conditional_routes:
                     conditional_routes.append(edge["from"])
-                    self.graph.add_conditional_edges(edge["from"], self.route_conditionally(edge["from"]))
+                    state_graph.add_conditional_edges(edge["from"], self.route_conditionally(edge["from"]))
             else:
-                self.graph.add_edge(START if edge["from"] == "START" else edge["from"],
+                state_graph.add_edge(START if edge["from"] == "START" else edge["from"],
                                     END if edge["to"] == "END" else edge["to"])
 
-        self.graph.compile()
+        self.graph = state_graph.compile()
 
     def route_conditionally(self, from_node: str) -> callable:
         def condition(state: dict) -> str:

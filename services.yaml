@@ -170,6 +170,11 @@ services:
     tags:
       - { name: workflow_node, alias: load_file_collection }
 
+  agency.node.load_source_code:
+    class: infrastructure.agency.LoadSourceCode
+    tags:
+      - { name: workflow_node, alias: load_source_code }
+
   agency.node.load_directory_tree:
     class: infrastructure.agency.LoadDirectoryTree
     tags:

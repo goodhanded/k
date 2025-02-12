@@ -43,12 +43,12 @@ workflows:
         to: implement_changeset
 
       - from: implement_changeset
-        to: run_tests
-
-      - from: run_tests
-        to: generate_changeset
-        condition: "not state.tests_passed"
-
-      - from: run_tests
         to: END
-        condition: "state.tests_passed"
+
+      # - from: run_tests
+      #   to: generate_changeset
+      #   condition: "not state.tests_passed"
+
+      # - from: run_tests
+      #   to: END
+      #   condition: "state.tests_passed"
