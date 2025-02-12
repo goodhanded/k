@@ -16,7 +16,7 @@ class SearchAgent(WorkflowProtocol):
         self.description = 'This agent conducts a similarity search using FAISS.'
 
         
-    def invoke(self, prompt: str):
+    def run(self, prompt: str):
 
         print('Searching...')
         search_result = self.search_engine.search(prompt)

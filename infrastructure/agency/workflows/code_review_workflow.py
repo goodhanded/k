@@ -35,7 +35,7 @@ class CodeReviewWorkflow(WorkflowProtocol):
         except FileNotFoundError:
             return ""
 
-    def invoke(self, prompt: str = "", confirm: bool = False):
+    def run(self, prompt: str = "", confirm: bool = False):
         # Build file collection from project directory using include/exclude patterns
         file_collection = FileCollection.from_path(self.project_path, self.include_rule, self.exclude_rule)
         tree = file_collection.tree()

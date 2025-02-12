@@ -9,7 +9,7 @@ class TestAgentInvocation(unittest.TestCase):
         dto = AgentDTO(name="TestAgent", description="A test agent", model="TestModel")
         agent = Agent(dto)
         prompt = "Hello, world!"
-        response = agent.invoke(prompt)
+        response = agent.run(prompt)
         self.assertIn("TestAgent was prompted with: Hello, world!", response)
 
 

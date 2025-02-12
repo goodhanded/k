@@ -7,5 +7,5 @@ class Agent(WorkflowProtocol):
         self.model = agent_dto.model
         self.description = agent_dto.description
 
-    def invoke(self, prompt: str):
+    def run(self, prompt: str):
         return f'{self.name} was prompted with: {prompt}'

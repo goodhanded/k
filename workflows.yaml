@@ -1,0 +1,54 @@
+workflows:
+
+  pull_request:
+    nodes:
+      - get_project_path
+      - load_include_exclude_rules
+      - load_project_rules
+      - load_file_collection
+      - load_directory_tree
+      - load_source_control
+      - generate_changeset
+      - implement_changeset
+    edges:
+      - from: START
+        to: get_project_path
+
+        # two branches
+      - from: get_project_path
+        to: load_include_exclude_rules
+      - from: get_project_path
+        to: load_project_rules
+
+        # converge
+      - from: load_project_rules
+        to: load_file_collection
+      - from: load_include_exclude_rules
+        to: load_file_collection
+
+        # two branches
+      - from: load_file_collection
+        to: load_directory_tree
+      - from: load_file_collection
+        to: load_source_control
+
+        # converge
+      - from: load_directory_tree
+        to: generate_changeset
+      - from: load_source_control
+        to: generate_changeset
+
+        # implement
+      - from: generate_changeset
+        to: implement_changeset
+
+      - from: implement_changeset
+        to: run_tests
+
+      - from: run_tests
+        to: generate_changeset
+        condition: "not state.tests_passed"
+
+      - from: run_tests
+        to: END
+        condition: "state.tests_passed"

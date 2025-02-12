@@ -6,7 +6,7 @@ class SchedulingAgent(WorkflowProtocol):
         self.model = 'Simple Scheduling Model'
         self.description = 'This agent schedules appointments based on user input.'
         
-    def invoke(self, prompt: str):
+    def run(self, prompt: str):
         # Test output
         print(f'{self.name} is prompted with: {prompt}')
         return None

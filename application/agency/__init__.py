@@ -4,5 +4,7 @@ from .use_cases.index_documents import IndexDocumentsUseCase
 from .use_cases.generate_prompt import GeneratePromptUseCase
 from .protocols.indexer import IndexerProtocol
 from .protocols.prompt_generator import PromptGeneratorProtocol
+from .protocols.workflow import WorkflowProtocol
+from .protocols.workflow_node import WorkflowNodeProtocol
 from .dtos.agent_dto import AgentDTO
 from .protocols.workflow import WorkflowProtocol

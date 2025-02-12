@@ -67,6 +67,9 @@ services:
     tags:
       - { name: agent, alias: search }
 
+  agency.node.load_directory_tree:
+    class: infrastructure.agency.LoadDirectoryTree
+
   daily_voice_notes.assimilate_voice_note_use_case:
     class: application.daily_voice_notes.AssimilateVoiceNoteUseCase
     arguments: 
