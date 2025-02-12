@@ -19,6 +19,10 @@ services:
     class: application.agency.IndexDocumentsUseCase
     arguments: ['@faiss.indexer']
   
+  agency.create_pull_request_use_case:
+    class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
+    arguments: ['@pyperclip','@agency.workflow.pull_request']
+
   agency.agent_registry:
     class: domain.registry.Registry
     arguments: 
@@ -144,3 +148,64 @@ services:
   init.init_k_use_case:
     class: application.init.InitKUseCase
     arguments: []
+
+  # New workflow node service definitions
+  agency.node.get_project_path:
+    class: infrastructure.agency.GetProjectPath
+    tags:
+      - { name: workflow_node, alias: get_project_path }
+
+  agency.node.load_include_exclude_rules:
+    class: infrastructure.agency.LoadIncludeExcludeRules
+    tags:
+      - { name: workflow_node, alias: load_include_exclude_rules }
+
+  agency.node.load_project_rules:
+    class: infrastructure.agency.LoadProjectRules
+    tags:
+      - { name: workflow_node, alias: load_project_rules }
+
+  agency.node.load_file_collection:
+    class: infrastructure.agency.LoadFileCollection
+    tags:
+      - { name: workflow_node, alias: load_file_collection }
+
+  agency.node.load_directory_tree:
+    class: infrastructure.agency.LoadDirectoryTree
+    tags:
+      - { name: workflow_node, alias: load_directory_tree }
+
+  agency.node.git_status:
+    class: infrastructure.agency.GitStatus
+    tags:
+      - { name: workflow_node, alias: git_status }
+
+  agency.node.generate_changeset:
+    class: infrastructure.agency.GenerateChangeset
+    tags:
+      - { name: workflow_node, alias: generate_changeset }
+
+  agency.node.implement_changeset:
+    class: infrastructure.agency.ImplementChangeset
+    tags:
+      - { name: workflow_node, alias: implement_changeset }
+
+  agency.node.run_tests:
+    class: infrastructure.agency.RunTests
+    tags:
+      - { name: workflow_node, alias: run_tests }
+
+  agency.node_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: workflow_node, index_by: alias }
+
+  agency.state_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: workflow_state, index_by: alias }
+
+  agency.workflow_state.pull_request:
+    class: application.agency.PullRequestWorkflowState
+    tags:
+      - { name: workflow_state, alias: pull_request }

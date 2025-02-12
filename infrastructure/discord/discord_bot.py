@@ -1,11 +1,13 @@
 import discord
+from typing import TYPE_CHECKING
 from discord.ext import commands
 from infrastructure.config import Config
-from application.agency import PromptAgentUseCase
 
+if TYPE_CHECKING:
+    from application.agency import PromptAgentUseCase
 
 class DiscordBot:
-    def __init__(self, prompt_agent_use_case: PromptAgentUseCase):
+    def __init__(self, prompt_agent_use_case: 'PromptAgentUseCase'):
         self.config = Config()
         self.token = self.config.require('DISCORD_BOT_TOKEN')
 

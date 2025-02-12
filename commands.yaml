@@ -55,7 +55,7 @@ commands:
 
   pr:
     help: "Generate pull request changes based on a prompt. Use the --clipboard flag to copy the generated prompt to the clipboard instead of invoking the LLM."
-    target: "@agency.workflow.pull_request.invoke"
+    target: "@agency.create_pull_request_use_case.execute"
     arguments:
       prompt:
         help: "Text to generate pull request changes"
@@ -65,7 +65,7 @@ commands:
         help: "Read prompt from stdin instead of an argument"
         flag: true
       clipboard:
-        help: "If set, the PR prompt is sent to the clipboard instead of being processed by the LLM"
+        help: "Read prompt from the clipboard instead of an argument"
         flag: true
       confirm:
         help: "If set, show token count and require confirmation before proceeding"
