@@ -88,8 +88,8 @@ For subcommands:
 | **assimilate** | `k assimilate --path /path/to/audio.wav`                       | Assimilates a voice memo into your daily note (requires a local audio file).    |
 | **transcribe** | `k transcribe --path /path/to/audio.wav`                       | Transcribes the given audio file.                                             |
 | **ask**        | `k ask --agent_name search_agent --prompt "Hello!"`           | Prompts an AI agent with a given text input.                                  |
-| **pr**         | `k pr [your prompt here] [--confirm] [--clipboard]`              | Generates a pull request prompt based on your changes.                        |
-| **review**     | `k review [your prompt here] [--confirm]`                        | Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback to the console. |
+| **pr**         | `k pr [prompt] [--confirm] [--clipboard] [--paste]`              | Generates a pull request prompt based on your changes. If the --paste flag is used, the prompt is read from the clipboard instead of being provided as an argument or via stdin.                        |
+| **review**     | `k review [prompt] [--confirm]`                                | Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback to the console. |
 | **run**        | `k run <subcommand> [args...]`                                 | Runs subcommands (e.g., `discord` or `indexer`).                                |
 
 #### Subcommands under `run`
@@ -115,8 +115,8 @@ For subcommands:
    This sends the prompt to the specified agent.
 
 4. **Generate a Pull Request**  
-   `k pr [prompt] [--confirm] [--clipboard]`  
-   Generates a pull request prompt based on your changes.
+   `k pr [prompt] [--confirm] [--clipboard] [--paste]`  
+   Generates a pull request prompt based on your changes. If you use the --paste flag, the prompt will be read from the clipboard instead of being supplied as an argument or via stdin.
 
 5. **Generate a Code Review**  
    `k review [prompt] [--confirm]`  
@@ -124,7 +124,7 @@ For subcommands:
 
 6. **Initialize .k Directory**  
    `k init`  
-   Creates a new .k directory with default templates (excludes.txt, includes.txt, rules.txt). Use this command if the .k directory is missing or to reset its contents.
+   Creates a new .k directory with default templates (excludes.txt, includes.txt, rules.txt). Use this command if the directory does not already exist or to reset its contents.
 
 7. **Run Discord Bot**  
    `k run discord`  

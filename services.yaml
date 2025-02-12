@@ -287,3 +287,32 @@ services:
   # Token Counter
   util.token_counter:
     class: infrastructure.util.TokenCounter
+
+  init.k_template_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: k_template, index_by: alias }
+
+  init.template.nodejs:
+    class: templates.nodejs.NodeJSTemplate
+    tags:
+      - { name: k_template, alias: nodejs }
+
+  init.template.nextjs:
+    class: templates.nextjs.NextJSTemplate
+    tags:
+      - { name: k_template, alias: nextjs }
+
+  init.template.python:
+    class: templates.python.PythonTemplate
+    tags:
+      - { name: k_template, alias: python }
+
+  init.template.dotnet:
+    class: templates.dotnet.DotNetTemplate
+    tags:
+      - { name: k_template, alias: dotnet }
+
+  init.init_k_use_case:
+    class: application.init.InitKUseCase
+    arguments: ['@init.k_template_registry']
