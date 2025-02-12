@@ -59,8 +59,8 @@ commands:
       paste:
         help: "Read prompt from the clipboard instead of an argument or stdin"
         flag: true
-      clipboard:
-        help: "Read prompt from the clipboard instead of an argument"
+      copy:
+        help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
         flag: true
       confirm:
         help: "If set, show token count and require confirmation before proceeding"

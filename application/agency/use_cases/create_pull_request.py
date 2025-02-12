@@ -58,7 +58,12 @@ class CreatePullRequestUseCase:
         prompt_template = PullRequestPrompt()
         return prompt_template.format(goal=goal, rules=rules_text, tree=directory_tree, content=content_md)
 
-    def execute(self, prompt: str = "", stdin: bool = False, clipboard: bool = False, confirm: bool = False) -> None:
+    def execute(self,
+                prompt: str = None,
+                stdin: bool = False,
+                paste: bool = False,
+                copy: bool = False,
+                confirm: bool = False) -> None:
         """
         Executes the pull request creation process.
 
@@ -70,11 +75,13 @@ class CreatePullRequestUseCase:
         """
         if stdin:
             prompt = sys.stdin.read()
+        elif paste:
+            prompt = self.clipboard_service.get()
         if not prompt:
             print("No prompt provided. Aborting pull request creation.")
             return
 
-        if clipboard or confirm:
+        if copy or confirm:
             pr_prompt = self._generate_pr_prompt(prompt)
             if confirm:
                 from infrastructure.util.token_counter import TokenCounter
@@ -84,7 +91,7 @@ class CreatePullRequestUseCase:
                 if user_input != 'y':
                     print("Operation cancelled.")
                     return
-            if clipboard:
+            if copy:
                 try:
                     self.clipboard_service.set(pr_prompt)
                     print("PR prompt copied to clipboard. No LLM invocation performed.")

@@ -185,10 +185,6 @@ services:
     tags:
       - { name: workflow_node, alias: run_tests }
 
-  # Node: Load the directory tree
-  agency.node.load_directory_tree:
-    class: infrastructure.agency.LoadDirectoryTree
-
 ################################################################################################
 # Agents
 ################################################################################################
