@@ -42,7 +42,7 @@ class ImplementChangeset(WorkflowNodeProtocol):
             else:
                 print(f"File {abs_path} does not exist, cannot remove.")
 
-        print(f"\nSummary: {changeset.summary}\n")
+        print(f"\nDone.\n")
 
         return {"progress": "Changeset implemented."}
     

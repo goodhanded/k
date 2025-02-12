@@ -42,7 +42,12 @@ class GenerateChangeset(WorkflowNodeProtocol):
         
         llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
         structured_llm = llm.with_structured_output(Changeset)
+
+        print("\nGenerating changeset. This may take a minute...\n")
+
         changeset = structured_llm.invoke([prompt])
+
+        print(changeset.summary)
 
         return {"changeset": changeset, "progress": "Changeset generated."}
     
