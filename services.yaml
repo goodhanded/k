@@ -43,7 +43,7 @@ services:
   # Use Case: Init K
   init.init_k_use_case:
     class: application.init.InitKUseCase
-    arguments: []
+    arguments: ['@init.k_template_registry']
 
   # Use Case: Build Troubleshooting Prompt
   traceback.build_troubleshooting_prompt_use_case:
@@ -294,25 +294,22 @@ services:
       services: !tagged_iterator { tag: k_template, index_by: alias }
 
   init.template.nodejs:
-    class: templates.nodejs.NodeJSTemplate
+    class: infrastructure.init.NodeJSTemplate
     tags:
       - { name: k_template, alias: nodejs }
 
   init.template.nextjs:
-    class: templates.nextjs.NextJSTemplate
+    class: infrastructure.init.NextJSTemplate
     tags:
       - { name: k_template, alias: nextjs }
 
   init.template.python:
-    class: templates.python.PythonTemplate
+    class: infrastructure.init.PythonTemplate
     tags:
       - { name: k_template, alias: python }
 
   init.template.dotnet:
-    class: templates.dotnet.DotNetTemplate
+    class: infrastructure.init.DotNetTemplate
     tags:
       - { name: k_template, alias: dotnet }
 
-  init.init_k_use_case:
-    class: application.init.InitKUseCase
-    arguments: ['@init.k_template_registry']
