@@ -27,10 +27,15 @@ services:
     class: application.agency.IndexDocumentsUseCase
     arguments: ['@faiss.indexer']
   
-  # Use Case: Search Documents
+  # Use Case: Create a pull request
   agency.create_pull_request_use_case:
     class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
     arguments: ['@pyperclip','@agency.workflow.pull_request']
+
+  # Use Case: Run Tests
+  agency.run_tests_use_case:
+    class: application.agency.RunTestsUseCase
+    arguments: ['@agency.workflow.run_tests']
 
   # Use Case: Assimilate Voice Note
   daily_voice_notes.assimilate_voice_note_use_case:
@@ -98,6 +103,15 @@ services:
       prompt_generator: '@agency.prompt_generator'
       token_counter: '@util.token_counter'
 
+  # Workflow: Runs tests
+  agency.workflow.run_tests:
+    class: infrastructure.agency.Workflow
+    arguments: 
+      node_registry: '@agency.node_registry'
+      state_registry: '@agency.state_registry'
+      name: 'run_tests'
+      definition: '~/workflows.yaml:workflows.run_tests'
+
 ################################################################################################
 # Workflow States
 ################################################################################################
@@ -114,6 +128,13 @@ services:
     inject_class: true
     tags:
       - { name: workflow_state, alias: pull_request }
+
+  # State: Run Tests
+  agency.workflow_state.run_tests:
+    class: infrastructure.agency.RunTestsWorkflowState
+    inject_class: true
+    tags:
+      - { name: workflow_state, alias: run_tests }
 
 ################################################################################################
 # Workflow Nodes

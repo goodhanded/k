@@ -1,5 +1,15 @@
 workflows:
 
+  run_tests:
+    nodes:
+      - run_tests
+    edges:
+      - from: START
+        to: run_tests
+
+      - from: run_tests
+        to: END
+
   pull_request:
     nodes:
       - get_project_path

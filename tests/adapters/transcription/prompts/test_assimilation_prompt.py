@@ -18,6 +18,5 @@ class TestAssimilationPrompt(unittest.TestCase):
         self.assertIn("Here is the existing daily note content for today:", prompt)
         self.assertIn("Existing note content.", prompt)
 
-
 if __name__ == '__main__':
     unittest.main()

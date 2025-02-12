@@ -15,3 +15,4 @@ from .nodes.load_source_code import LoadSourceCode
 from .nodes.run_tests import RunTests
 from .nodes.git_status import GitStatus
 from .states.pull_request_workflow_state import PullRequestWorkflowState
+from .states.run_tests_workflow_state import RunTestsWorkflowState

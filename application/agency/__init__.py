@@ -2,6 +2,7 @@ from .use_cases.prompt_agent import PromptAgentUseCase
 from .use_cases.run_discord_bot import RunDiscordBotUseCase
 from .use_cases.index_documents import IndexDocumentsUseCase
 from .use_cases.generate_prompt import GeneratePromptUseCase
+from .use_cases.run_tests import RunTestsUseCase
 from .protocols.indexer import IndexerProtocol
 from .protocols.prompt_generator import PromptGeneratorProtocol
 from .protocols.workflow import WorkflowProtocol

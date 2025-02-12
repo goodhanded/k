@@ -75,6 +75,9 @@ commands:
       indexer:
         help: "Run the indexer"
         target: "@agency.index_documents_use_case.execute"
+      tests:
+        help: "Run the tests"
+        target: "@agency.run_tests_use_case.execute"
 
   review:
     help: "Generate code review feedback for the project"

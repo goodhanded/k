@@ -12,5 +12,5 @@ class RunTests(WorkflowNodeProtocol):
             result = subprocess.run(["pytest"], capture_output=True, text=True)
             tests_passed = (result.returncode == 0)
         except Exception as e:
-            tests_passed = False
+            return {"tests_passed": False, "test_output": str(e), "progress": "Tests failed to execute."}
         return {"tests_passed": tests_passed, "test_output": result.stdout, "progress": "Tests executed."}
