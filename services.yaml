@@ -1,5 +1,10 @@
 services:
  
+  ################################################################################################
+  # Application Use Cases
+  ################################################################################################
+
+  # Use Case: Generate Prompt
   agency.generate_prompt_use_case:
     class: application.agency.GeneratePromptUseCase
     arguments:
@@ -7,46 +12,77 @@ services:
       - '@obsidian.vault'
       - '%PROMPT_TEMPLATE_PATH%'
 
+  # Use Case: Index Documents
   agency.prompt_agent_use_case:
     class: application.agency.PromptAgentUseCase
     arguments: ['@agency.agent_registry']
 
+  # Use Case: Run Discord Bot
   agency.run_discord_bot_use_case:
     class: application.agency.RunDiscordBotUseCase
     arguments: ['@agency.prompt_agent_use_case']
 
+  # Use Case: Index Documents
   agency.index_documents_use_case:
     class: application.agency.IndexDocumentsUseCase
     arguments: ['@faiss.indexer']
   
+  # Use Case: Search Documents
   agency.create_pull_request_use_case:
     class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
     arguments: ['@pyperclip','@agency.workflow.pull_request']
 
-  agency.agent_registry:
-    class: domain.registry.Registry
-    arguments:
-      services: !tagged_iterator { tag: agent, index_by: alias }
+  # Use Case: Assimilate Voice Note
+  daily_voice_notes.assimilate_voice_note_use_case:
+    class: application.daily_voice_notes.AssimilateVoiceNoteUseCase
+    arguments: 
+      - '@transcription.transcriber'
+      - '@daily_voice_notes.document_consolidator'
+      - '%TRANSCRIPTS_BASE_PATH%'
 
-  agency.prompt_generator:
-    class: infrastructure.agency.PromptGenerator
-    arguments: ['@agency.prompt_registry']
+  # Use Case: Init K
+  init.init_k_use_case:
+    class: application.init.InitKUseCase
+    arguments: []
 
+  # Use Case: Build Troubleshooting Prompt
+  traceback.build_troubleshooting_prompt_use_case:
+    class: application.traceback.BuildTroubleshootingPromptUseCase
+    arguments: ['@traceback.prompt_builder']
+
+  # Use Case: Transcribe Audio
+  transcription.transcribe_audio_use_case:
+    class: application.transcription.TranscribeAudioUseCase
+    arguments: ['@transcription.transcriber']
+
+
+################################################################################################
+# Prompt Adapters
+################################################################################################
+
+  # Registry of all prompts
   agency.prompt_registry:
     class: domain.registry.Registry
     arguments:
       services: !tagged_iterator { tag: prompt, index_by: alias }
 
+  # Prompt: Pull Request
   agency.prompt.pr:
     class: adapters.prompts.PullRequestPrompt
     tags:
       - { name: prompt, alias: pr }
 
+  # Prompt: Code Review
   agency.prompt.code_review:
     class: adapters.prompts.CodeReviewPrompt
     tags:
       - { name: prompt, alias: code_review }
 
+################################################################################################
+# Workflows
+################################################################################################
+
+  # Workflow: Generates a changeset for a pull request
   agency.workflow.pull_request:
     class: infrastructure.agency.Workflow
     arguments: 
@@ -55,37 +91,142 @@ services:
       name: 'pull_request'
       definition: '~/workflows.yaml:workflows.pull_request'
 
+  # Workflow: Asks LLM for a code review
   agency.workflow.code_review:
     class: infrastructure.agency.CodeReviewWorkflow
     arguments:
       prompt_generator: '@agency.prompt_generator'
       token_counter: '@util.token_counter'
 
+################################################################################################
+# Workflow States
+################################################################################################
+
+  # Registry of all workflow states
+  agency.state_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: workflow_state, index_by: alias }
+
+  # State: Pull Request
+  agency.workflow_state.pull_request:
+    class: infrastructure.agency.PullRequestWorkflowState
+    inject_class: true
+    tags:
+      - { name: workflow_state, alias: pull_request }
+
+################################################################################################
+# Workflow Nodes
+################################################################################################
+
+  # Registry of all workflow nodes
+  agency.node_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: workflow_node, index_by: alias }
+
+  # Node: Get project path
+  agency.node.get_project_path:
+    class: infrastructure.agency.GetProjectPath
+    tags:
+      - { name: workflow_node, alias: get_project_path }
+
+  # Node: Load include/exclude rules
+  agency.node.load_include_exclude_rules:
+    class: infrastructure.agency.LoadIncludeExcludeRules
+    tags:
+      - { name: workflow_node, alias: load_include_exclude_rules }
+
+  # Node: Load project rules
+  agency.node.load_project_rules:
+    class: infrastructure.agency.LoadProjectRules
+    tags:
+      - { name: workflow_node, alias: load_project_rules }
+
+  # Node: Load file collection
+  agency.node.load_file_collection:
+    class: infrastructure.agency.LoadFileCollection
+    tags:
+      - { name: workflow_node, alias: load_file_collection }
+
+  # Node: Load source code
+  agency.node.load_source_code:
+    class: infrastructure.agency.LoadSourceCode
+    tags:
+      - { name: workflow_node, alias: load_source_code }
+
+  # Node: Load directory tree
+  agency.node.load_directory_tree:
+    class: infrastructure.agency.LoadDirectoryTree
+    tags:
+      - { name: workflow_node, alias: load_directory_tree }
+
+  # Node: Git status
+  agency.node.git_status:
+    class: infrastructure.agency.GitStatus
+    tags:
+      - { name: workflow_node, alias: git_status }
+
+  # Node: Generate changeset
+  agency.node.generate_changeset:
+    class: infrastructure.agency.GenerateChangeset
+    tags:
+      - { name: workflow_node, alias: generate_changeset }
+
+  # Node: Implement changeset
+  agency.node.implement_changeset:
+    class: infrastructure.agency.ImplementChangeset
+    tags:
+      - { name: workflow_node, alias: implement_changeset }
+
+  # Node: Run tests
+  agency.node.run_tests:
+    class: infrastructure.agency.RunTests
+    tags:
+      - { name: workflow_node, alias: run_tests }
+
+  # Node: Load the directory tree
+  agency.node.load_directory_tree:
+    class: infrastructure.agency.LoadDirectoryTree
+
+################################################################################################
+# Agents
+################################################################################################
+
+  # Registry of all agents
+  agency.agent_registry:
+    class: domain.registry.Registry
+    arguments:
+      services: !tagged_iterator { tag: agent, index_by: alias }
+
+  # Agent: Scheduling
   agency.agent.scheduling:
     class: infrastructure.agency.SchedulingAgent
     tags:
       - { name: agent, alias: scheduling }
 
+  # Agent: Search
   agency.agent.search:
     class: infrastructure.agency.SearchAgent
     arguments: ['@faiss.search_engine','langchain.document_mapper','@openai.client','o1']
     tags:
       - { name: agent, alias: search }
 
-  agency.node.load_directory_tree:
-    class: infrastructure.agency.LoadDirectoryTree
+################################################################################################
+# Infrastructure Services
+################################################################################################
 
-  daily_voice_notes.assimilate_voice_note_use_case:
-    class: application.daily_voice_notes.AssimilateVoiceNoteUseCase
-    arguments: 
-      - '@transcription.transcriber'
-      - '@daily_voice_notes.document_consolidator'
-      - '%TRANSCRIPTS_BASE_PATH%'
+  # Prompt Generator
+  agency.prompt_generator:
+    class: infrastructure.agency.PromptGenerator
+    arguments: ['@agency.prompt_registry']
 
+  # Document Consolidator
   daily_voice_notes.document_consolidator:
     class: infrastructure.daily_voice_notes.DailyNoteConsolidator
     arguments: ['@openai.client','@obsidian.vault']
 
+  # FAISS Indexer
   faiss.indexer:
     class: infrastructure.faiss.FAISSIndexer
     arguments:
@@ -96,122 +237,53 @@ services:
       chunk_overlap: 100
       save_path: '%FAISS_INDEX_PATH%'
 
+  # FAISS Search Engine
   faiss.search_engine:
     class: infrastructure.faiss.FAISSSearchEngine
     arguments: ['%FAISS_INDEX_PATH%', 1]
 
+  # Langchain Document Mapper
   langchain.document_mapper:
     class: infrastructure.langchain.LangchainDocumentMapper
 
+  # Langchain Obsidian Document Loader
   langchain.obsidian_document_loader:
     class: infrastructure.langchain.ObsidianDocumentLoader
     arguments: ['@langchain.document_mapper','%OBSIDIAN_VAULT_PATH%']
 
+  # OpenAI Client
   openai.client:
     class: infrastructure.openai.OpenAIClient
     arguments: ['%OPENAI_API_KEY%']
 
+  # Configuration Service
   config:
     class: infrastructure.config.services.config.Config
-    arguments: []
 
+  # Obsidian Prompt Generator
   obsidian.prompt_generator:
     class: infrastructure.obsidian.ObsidianPromptGenerator
     arguments: ['@obsidian.vault', '%PROMPT_TEMPLATE_PATH%']
 
+  # Obsidian Vault
   obsidian.vault:
     class: infrastructure.obsidian.ObsidianVault
     arguments: ['%OBSIDIAN_VAULT_PATH%', '@config']
 
+  # Pyperclip
   pyperclip:
     class: infrastructure.pyperclip.Pyperclip
 
-  traceback.build_troubleshooting_prompt_use_case:
-    class: application.traceback.BuildTroubleshootingPromptUseCase
-    arguments: ['@traceback.prompt_builder']
-
+  # Traceback Prompt Builder
   traceback.prompt_builder:
     class: infrastructure.traceback.TracebackPromptBuilder
     arguments: ['@pyperclip']
 
-  transcription.transcribe_audio_use_case:
-    class: application.transcription.TranscribeAudioUseCase
-    arguments: ['@transcription.transcriber']
-
+  # Transcriber
   transcription.transcriber:
     class: infrastructure.amazon.AmazonTranscribe
     arguments: ['%TRANSCRIPTS_BUCKET%', '%AWS_PATH%']
 
+  # Token Counter
   util.token_counter:
     class: infrastructure.util.TokenCounter
-
-  init.init_k_use_case:
-    class: application.init.InitKUseCase
-    arguments: []
-
-  # New workflow node service definitions
-  agency.node.get_project_path:
-    class: infrastructure.agency.GetProjectPath
-    tags:
-      - { name: workflow_node, alias: get_project_path }
-
-  agency.node.load_include_exclude_rules:
-    class: infrastructure.agency.LoadIncludeExcludeRules
-    tags:
-      - { name: workflow_node, alias: load_include_exclude_rules }
-
-  agency.node.load_project_rules:
-    class: infrastructure.agency.LoadProjectRules
-    tags:
-      - { name: workflow_node, alias: load_project_rules }
-
-  agency.node.load_file_collection:
-    class: infrastructure.agency.LoadFileCollection
-    tags:
-      - { name: workflow_node, alias: load_file_collection }
-
-  agency.node.load_source_code:
-    class: infrastructure.agency.LoadSourceCode
-    tags:
-      - { name: workflow_node, alias: load_source_code }
-
-  agency.node.load_directory_tree:
-    class: infrastructure.agency.LoadDirectoryTree
-    tags:
-      - { name: workflow_node, alias: load_directory_tree }
-
-  agency.node.git_status:
-    class: infrastructure.agency.GitStatus
-    tags:
-      - { name: workflow_node, alias: git_status }
-
-  agency.node.generate_changeset:
-    class: infrastructure.agency.GenerateChangeset
-    tags:
-      - { name: workflow_node, alias: generate_changeset }
-
-  agency.node.implement_changeset:
-    class: infrastructure.agency.ImplementChangeset
-    tags:
-      - { name: workflow_node, alias: implement_changeset }
-
-  agency.node.run_tests:
-    class: infrastructure.agency.RunTests
-    tags:
-      - { name: workflow_node, alias: run_tests }
-
-  agency.node_registry:
-    class: domain.registry.Registry
-    arguments:
-      services: !tagged_iterator { tag: workflow_node, index_by: alias }
-
-  agency.state_registry:
-    class: domain.registry.Registry
-    arguments:
-      services: !tagged_iterator { tag: workflow_state, index_by: alias }
-
-  agency.workflow_state.pull_request:
-    class: infrastructure.agency.PullRequestWorkflowState
-    inject_class: true
-    tags:
-      - { name: workflow_state, alias: pull_request }
