@@ -8,6 +8,9 @@ class Registry:
 
     def get(self, item_id):
         return self.services.get(item_id)
+    
+    def exists(self, item_id):
+        return item_id in self.services
 
     def __iter__(self):
         return iter(self.services.values())

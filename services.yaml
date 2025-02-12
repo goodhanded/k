@@ -44,11 +44,12 @@ services:
       - { name: prompt, alias: code_review }
 
   agency.workflow.pull_request:
-    class: infrastructure.agency.PullRequestWorkflow
+    class: infrastructure.agency.Workflow
     arguments: 
-      prompt_generator: '@agency.prompt_generator'
-      clipboard: '@pyperclip'
-      token_counter: '@util.token_counter'
+      node_registry: '@agency.node_registry'
+      state_registry: '@agency.state_registry'
+      name: 'pull_request'
+      definition: '~/workflows.yaml:workflows.pull_request'
 
   agency.workflow.code_review:
     class: infrastructure.agency.CodeReviewWorkflow

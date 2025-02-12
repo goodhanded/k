@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph, START, END
 from typing import TypedDict
 
 class Workflow(WorkflowProtocol):
-    def __init__(self, state_registry: Registry, name: str, definition: dict) -> None:
+    def __init__(self, node_registry: Registry, state_registry: Registry, name: str, definition: dict) -> None:
 
         self.name = name
         self.definition = definition
@@ -14,10 +14,13 @@ class Workflow(WorkflowProtocol):
         if "nodes" not in definition:
             raise ValueError("Workflow definition must contain a 'nodes' key.")
 
-        for node in definition["nodes"]:
-            if not isinstance(node, str):
+        for node_alias in definition["nodes"]:
+            if not isinstance(node_alias, str):
                 raise ValueError("Node must be a string.")
-            self.graph.add_node(node)
+            if not node_registry.exists(node_alias):
+                raise ValueError(f"Node {node_alias} is not registered.")
+            node = node_registry.get(node_alias)
+            self.graph.add_node(node_alias, node)
 
         if "edges" not in definition:
             raise ValueError("Workflow definition must contain an 'edges' key.")
