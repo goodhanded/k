@@ -7,7 +7,7 @@ workflows:
       - load_project_rules
       - load_file_collection
       - load_directory_tree
-      - load_source_control
+      - load_source_code
       - generate_changeset
       - implement_changeset
     edges:
@@ -30,12 +30,12 @@ workflows:
       - from: load_file_collection
         to: load_directory_tree
       - from: load_file_collection
-        to: load_source_control
+        to: load_source_code
 
         # converge
       - from: load_directory_tree
         to: generate_changeset
-      - from: load_source_control
+      - from: load_source_code
         to: generate_changeset
 
         # implement
