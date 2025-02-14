@@ -45,6 +45,9 @@ class GenerateChangeset(WorkflowNodeProtocol):
 
         print("\nGenerating changeset. This may take a minute...\n")
 
+        # print(f"Prompt: {prompt}\n")
+        # return {"prompt": prompt, "progress": "Code advice generated."}
+
         with get_openai_callback() as cb:
             changeset = structured_llm.invoke([prompt])
 

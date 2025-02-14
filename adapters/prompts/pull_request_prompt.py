@@ -30,7 +30,7 @@ The existing source code follows:
 
 ---------
 
-{kwargs.get('source_cde')}
+{kwargs.get('source_code')}
 
 ---------
 
