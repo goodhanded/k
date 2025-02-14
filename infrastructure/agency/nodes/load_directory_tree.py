@@ -25,7 +25,5 @@ class LoadDirectoryTree(WorkflowNodeProtocol):
 
         tree = file_collection.tree()
 
-        print(tree)
-
         # Load directory tree
         return {"directory_tree": tree, "progress": "Directory tree loaded."}
