@@ -330,3 +330,7 @@ services:
     tags:
       - { name: k_template, alias: dotnet }
 
+  init.template.wiki:
+    class: infrastructure.init.WikiTemplate
+    tags:
+      - { name: k_template, alias: wiki }
