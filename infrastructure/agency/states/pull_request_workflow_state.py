@@ -15,7 +15,7 @@ class PullRequestWorkflowState(TypedDict):
       - project_rules: The project-specific rules (from .k/rules.txt).
       - file_collection: The file collection (DocumentCollection) loaded from the project.
       - directory_tree: A text representation of the directory tree.
-      - source_control: Source control information (e.g. git status output).
+      - source_code: Source code.
       - changeset: The generated changeset (structured as a dict).
       - tests_passed: Boolean flag indicating whether tests passed.
     """
@@ -26,6 +26,6 @@ class PullRequestWorkflowState(TypedDict):
     project_rules: str
     file_collection: DocumentCollection
     directory_tree: str
-    source_control: str
+    source_code: str
     changeset: dict
     tests_passed: bool

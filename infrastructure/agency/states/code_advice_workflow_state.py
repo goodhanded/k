@@ -13,7 +13,7 @@ class CodeAdviceWorkflowState(TypedDict):
       - exclude_rules: The exclude pattern string.
       - file_collection: The file collection (DocumentCollection) loaded from the project.
       - directory_tree: A text representation of the directory tree.
-      - source_control: Source control information (e.g. git status output).
+      - source_code: Source code.
       - advice: The generated advice.
       - tests_passed: Boolean flag indicating whether tests passed.
     """
@@ -23,5 +23,5 @@ class CodeAdviceWorkflowState(TypedDict):
     exclude_rules: str
     file_collection: DocumentCollection
     directory_tree: str
-    source_control: str
+    source_code: str
     advice: str

@@ -26,11 +26,14 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
         prompt_template = CodeAdvicePrompt()
         prompt = prompt_template.format(prompt=state["prompt"],
                                         tree=state["directory_tree"],
-                                        source_code=["source_code"])
+                                        source_code=state["source_code"])
         
         llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
 
         print("\nGenerating code advice. This may take a minute...\n")
+
+        print(f"Prompt: {prompt}\n")
+        return {"prompt": prompt, "progress": "Code advice generated."}
 
         with get_openai_callback() as cb:
             response = llm.invoke([prompt])
