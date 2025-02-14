@@ -102,6 +102,15 @@ services:
       name: 'pull_request'
       definition: '~/workflows.yaml:workflows.pull_request'
 
+  # Workflow: Generates advice for a codebase
+  agency.workflow.code_advice:
+    class: infrastructure.agency.Workflow
+    arguments: 
+      node_registry: '@agency.node_registry'
+      state_registry: '@agency.state_registry'
+      name: 'code_advice'
+      definition: '~/workflows.yaml:workflows.code_advice'
+
   # Workflow: Runs tests
   agency.workflow.run_tests:
     class: infrastructure.agency.Workflow
