@@ -1,3 +1,6 @@
+
+General Guidance:
+
 - Adhere to Clean Architecture principles, as written by Robert Martin.
 - Use type hints.
 - Keep imports sorted at the top of the file.
@@ -12,3 +15,15 @@
 - Every package should include an __init__.py file that aggregates and exposes the public API of its modules. Update these files accordingly when adding new modules or components.
 - Follow the module resolution guidelines as defined in domain/util/module_resolution.py. Verify that all module paths referenced in services.yaml, commands.yaml, and elsewhere are valid to prevent errors, especially when invoking commands like 'k pr'.
 - Leave existing comments in place when rewriting code. Add additional comments and comment blocks to improve code clarity.
+
+About Clean Architecture:
+
+This project contains directories representing four layers: Domain, Application, Adapters, and Infrastructure. Domain is at the core and Infrastructure is the outer layer. The layers should follow the dependency rule, with outer layers depending on inner layers only, and never the other way around. Use inversion of control in order to comply with the dependency rule by creating protocols (interfaces) at the Application layer which are implemented in the Infrastructure layer. 
+
+About Dependency Injection:
+
+This project uses a custom dependency injection container inspired by the Symfony framework. Service defintions are created in services.yaml. Look at container.py to see how these definitions get parsed. The syntax of the service definition file allows for environment variables and yaml definitions to be injected into services. Registries are commonly used to inject collections of like services as dependencies. These are assembled using tags, where the registry definition defines a tag to be used to identify services going into the collection, and the individual services in the definition are configured using the defined tag. Aliases are used for retrieving specific services from the registries. 
+
+About Workflows:
+
+This project enables the creation of workflows using Langgraph. Workflows are configured using a custom declarative syntax in workflows.yaml. Node names used in workflows.yaml correspond with the aliases that the node services have been tagged with in their respective definitions in services.yaml. This enables workflows to be created by composing and reusing pre-existing nodes. You should aim to maximize reusability when making any modifications to these workflows. Stick to established conventions.
