@@ -32,8 +32,8 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
 
         print("\nGenerating code advice. This may take a minute...\n")
 
-        print(f"Prompt: {prompt}\n")
-        return {"prompt": prompt, "progress": "Code advice generated."}
+        # print(f"Prompt: {prompt}\n")
+        # return {"prompt": prompt, "progress": "Code advice generated."}
 
         with get_openai_callback() as cb:
             response = llm.invoke([prompt])
