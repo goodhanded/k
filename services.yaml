@@ -29,7 +29,7 @@ services:
   
   # Use Case: Create a pull request
   agency.create_pull_request_use_case:
-    class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
+    class: application.agency.CreatePullRequestUseCase
     arguments: ['@pyperclip','@agency.workflow.pull_request']
 
   # Use Case: Get Code Advice
