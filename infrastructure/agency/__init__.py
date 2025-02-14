@@ -3,6 +3,7 @@ from .agents.scheduling_agent import SchedulingAgent
 from .agents.search_agent import SearchAgent
 from .agent import Agent
 from .prompt_generator import PromptGenerator
+from .nodes.generate_code_advice import GenerateCodeAdvice
 from .nodes.generate_changeset import GenerateChangeset
 from .nodes.get_project_path import GetProjectPath
 from .nodes.implement_changeset import ImplementChangeset
@@ -15,3 +16,4 @@ from .nodes.run_tests import RunTests
 from .nodes.git_status import GitStatus
 from .states.pull_request_workflow_state import PullRequestWorkflowState
 from .states.run_tests_workflow_state import RunTestsWorkflowState
+from .states.code_advice_workflow_state import CodeAdviceWorkflowState
