@@ -9,9 +9,9 @@ Current Directory Tree:
 -------------------
 {kwargs.get('tree')}
 
-Extracted File Contents:
+Extracted File Content:
 -------------------
-{kwargs.get('content')}
+{kwargs.get('source_code')}
 
 Provide a concise and constructive code review highlighting potential improvements, code smells, and best practices.
 """

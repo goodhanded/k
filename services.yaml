@@ -32,6 +32,11 @@ services:
     class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
     arguments: ['@pyperclip','@agency.workflow.pull_request']
 
+  # Use Case: Get Code Advice
+  agency.get_code_advice_use_case:
+    class: application.agency.GetCodeAdviceUseCase
+    arguments: ['@agency.workflow.code_advice']
+
   # Use Case: Run Tests
   agency.run_tests_use_case:
     class: application.agency.RunTestsUseCase
@@ -97,13 +102,6 @@ services:
       name: 'pull_request'
       definition: '~/workflows.yaml:workflows.pull_request'
 
-  # Workflow: Asks LLM for a code review
-  agency.workflow.code_review:
-    class: infrastructure.agency.CodeReviewWorkflow
-    arguments:
-      prompt_generator: '@agency.prompt_generator'
-      token_counter: '@util.token_counter'
-
   # Workflow: Runs tests
   agency.workflow.run_tests:
     class: infrastructure.agency.Workflow
@@ -122,6 +120,13 @@ services:
     class: domain.registry.Registry
     arguments:
       services: !tagged_iterator { tag: workflow_state, index_by: alias }
+
+  # State: Code Advice
+  agency.workflow_state.code_advice:
+    class: infrastructure.agency.CodeAdviceWorkflowState
+    inject_class: true
+    tags:
+      - { name: workflow_state, alias: code_advice }
 
   # State: Pull Request
   agency.workflow_state.pull_request:
@@ -188,6 +193,12 @@ services:
     class: infrastructure.agency.GitStatus
     tags:
       - { name: workflow_node, alias: git_status }
+
+  # Node: Generate code advice
+  agency.node.generate_code_advice:
+    class: infrastructure.agency.GenerateCodeAdvice
+    tags:
+      - { name: workflow_node, alias: generate_code_advice }
 
   # Node: Generate changeset
   agency.node.generate_changeset:

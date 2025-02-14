@@ -38,7 +38,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
         prompt = prompt_template.format(goal=state["goal"],
                                           rules=state["project_rules"],
                                           tree=state["directory_tree"],
-                                          content=["source_code"])
+                                          source_code=["source_code"])
         
         llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
         structured_llm = llm.with_structured_output(Changeset)

@@ -79,10 +79,8 @@ commands:
         help: "Run the tests"
         target: "@agency.run_tests_use_case.execute"
 
-  review:
-    help: "Generate code review feedback for the project"
-    target: "@agency.workflow.code_review.invoke"
+  advise:
+    help: "Generate code advice for the project"
+    target: "@agency.get_code_advice_use_case.execute"
     arguments:
-      confirm:
-        help: "If set, show token count and require confirmation before proceeding"
-        flag: true
+      prompt: "Text to send to the workflow"

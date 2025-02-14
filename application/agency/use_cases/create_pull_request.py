@@ -56,7 +56,7 @@ class CreatePullRequestUseCase:
         directory_tree = file_collection.tree()
         content_md = file_collection.to_markdown()
         prompt_template = PullRequestPrompt()
-        return prompt_template.format(goal=goal, rules=rules_text, tree=directory_tree, content=content_md)
+        return prompt_template.format(goal=goal, rules=rules_text, tree=directory_tree, source_code=content_md)
 
     def execute(self,
                 prompt: str = None,

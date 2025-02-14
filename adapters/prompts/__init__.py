@@ -1,2 +1,3 @@
 from .pull_request_prompt import PullRequestPrompt
 from .code_review_prompt import CodeReviewPrompt
+from .code_advice_prompt import CodeAdvicePrompt

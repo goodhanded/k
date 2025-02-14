@@ -26,11 +26,11 @@ Following is a complete directory tree of the project:
 
 ---------
 
-The existing content follows:
+The existing source code follows:
 
 ---------
 
-{kwargs.get('content')}
+{kwargs.get('source_cde')}
 
 ---------
 

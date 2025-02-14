@@ -1,13 +1,37 @@
 workflows:
 
-  run_tests:
+  code_advice:
     nodes:
-      - run_tests
+      - get_project_path
+      - load_include_exclude_rules
+      - load_file_collection
+      - load_directory_tree
+      - load_source_code
+      - generate_code_advice
+
     edges:
       - from: START
-        to: run_tests
+        to: get_project_path
 
-      - from: run_tests
+      - from: get_project_path
+        to: load_include_exclude_rules
+
+      - from: load_include_exclude_rules
+        to: load_file_collection
+
+      - from: load_file_collection
+        to: load_directory_tree
+      - from: load_file_collection
+        to: load_source_code
+
+        # converge
+      - from: load_directory_tree
+        to: generate_code_advice
+      - from: load_source_code
+        to: generate_code_advice
+
+        # get code advice
+      - from: generate_code_advice
         to: END
 
   pull_request:
@@ -62,3 +86,13 @@ workflows:
       # - from: run_tests
       #   to: END
       #   condition: "state.tests_passed"
+
+  run_tests:
+    nodes:
+      - run_tests
+    edges:
+      - from: START
+        to: run_tests
+
+      - from: run_tests
+        to: END

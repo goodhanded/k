@@ -1,7 +1,6 @@
 from application.agency import WorkflowProtocol
 from domain.registry import Registry
 from langgraph.graph import StateGraph, START, END
-from typing import TypedDict
 
 class Workflow(WorkflowProtocol):
     def __init__(self, node_registry: Registry, state_registry: Registry, name: str, definition: dict) -> None:
