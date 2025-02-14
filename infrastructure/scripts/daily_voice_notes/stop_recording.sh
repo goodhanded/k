@@ -3,6 +3,7 @@
 PID_DIR="/Users/keith/VoiceMemos"
 PID_FILE="$PID_DIR/ffmpeg_pid"
 LOG_FILE="$PID_DIR/stop_recording.log"
+K_PATH="/Users/keith/Projects/k"
 
 # Sample PID file:
 # 1234
@@ -24,4 +25,4 @@ fi
 cd /Users/keith/Projects/k || exit
 
 # Run the Python script to transcribe and assimilate the voice memo
-/Users/keith/Projects/k/venv/bin/python /Users/keith/Projects/k/k.py assimilate "$RECORDING_PATH" >> "$LOG_FILE" 2>&1
+K_PATH=$K_PATH /Users/keith/Projects/k/venv/bin/python /Users/keith/Projects/k/k.py assimilate "$RECORDING_PATH" >> "$LOG_FILE" 2>&1

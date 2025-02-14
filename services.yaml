@@ -44,6 +44,7 @@ services:
       - '@transcription.transcriber'
       - '@daily_voice_notes.document_consolidator'
       - '%TRANSCRIPTS_BASE_PATH%'
+      - '@util.datetime'
 
   # Use Case: Init K
   init.init_k_use_case:
@@ -304,6 +305,10 @@ services:
   # Token Counter
   util.token_counter:
     class: infrastructure.util.TokenCounter
+
+  # Datetime Service
+  util.datetime:
+    class: infrastructure.util.DatetimeService
 
   init.k_template_registry:
     class: domain.registry.Registry
