@@ -30,10 +30,12 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
         
         llm = ChatOpenAI(model="o3-mini", reasoning_effort="high")
 
-        print("\nGenerating changeset. This may take a minute...\n")
+        print("\nGenerating code advice. This may take a minute...\n")
 
         with get_openai_callback() as cb:
-            advice = llm.invoke([prompt])
+            response = llm.invoke([prompt])
+
+        advice = response.content
 
         print(f"{advice}\n")
         print(f"Input Tokens: {cb.prompt_tokens}")
