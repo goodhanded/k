@@ -89,6 +89,13 @@ services:
     tags:
       - { name: prompt, alias: code_review }
 
+  # Prompt: Code Advice
+  agency.prompt.code_advice:
+    class: adapters.prompts.CodeAdvicePrompt
+    tags:
+      - { name: prompt, alias: code_advice }
+
+
 ################################################################################################
 # Workflows
 ################################################################################################
@@ -206,6 +213,7 @@ services:
   # Node: Generate code advice
   agency.node.generate_code_advice:
     class: infrastructure.agency.GenerateCodeAdvice
+    arguments: ['@agency.prompt.code_advice']
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 

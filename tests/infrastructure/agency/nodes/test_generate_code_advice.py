@@ -34,9 +34,8 @@ class DummyCodeAdvicePrompt:
 class TestGenerateCodeAdvice(unittest.TestCase):
     @patch("infrastructure.agency.nodes.generate_code_advice.ChatOpenAI", return_value=DummyLLM())
     @patch("infrastructure.agency.nodes.generate_code_advice.get_openai_callback", return_value=DummyCallback())
-    @patch("infrastructure.agency.nodes.generate_code_advice.CodeAdvicePrompt", return_value=DummyCodeAdvicePrompt())
-    def test_generate_code_advice(self, mock_prompt, mock_callback, mock_llm):
-        node = GenerateCodeAdvice()
+    def test_generate_code_advice(self, mock_get_callback, mock_chat):
+        node = GenerateCodeAdvice(DummyCodeAdvicePrompt())
         state = {
             "prompt": "Test code advice prompt",
             "directory_tree": "dummy tree",
