@@ -212,6 +212,7 @@ services:
   # Node: Generate changeset
   agency.node.generate_changeset:
     class: infrastructure.agency.GenerateChangeset
+    arguments: ['@pyperclip']
     tags:
       - { name: workflow_node, alias: generate_changeset }
 

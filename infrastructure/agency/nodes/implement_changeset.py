@@ -27,6 +27,10 @@ class ImplementChangeset(WorkflowNodeProtocol):
             raise ValueError("Project path not found in state.")
 
         changeset = state["changeset"]
+
+        if not changeset:
+            return {"progress": "No changeset to implement."}
+
         project_path = state["project_path"]
 
         for file_change in changeset.additions + changeset.modifications:

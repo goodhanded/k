@@ -10,3 +10,4 @@ pnpm-lock.yaml
 package-lock.json
 .pytest_cache
 effective_agents
+.terraform
