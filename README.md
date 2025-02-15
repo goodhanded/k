@@ -18,6 +18,8 @@
   - [Configuration](#configuration)
   - [Extending k](#extending-k)
   - [Running Tests](#running-tests)
+  - [Additional Information](#additional-information)
+  - [Using k to update itself](#using-k-to-update-itself)
 
 ---
 
@@ -207,5 +209,20 @@ All tests in the `tests` directory will be automatically discovered and executed
 ## Additional Information
 
 For more details on the project architecture, dependency injection, and service configuration, please refer to the inline comments in the source code.
+
+---
+
+## Using k to update itself
+
+Occasionally, bugs may occur that prevent followup pull request calls from succeeding. If you encounter such issues while attempting to update k, consider the following process:
+
+1. Create a new work-in-progress (WIP) branch and commit your changes there.
+2. Switch back to the main branch.
+3. In a separate clone of the repository (for example, in a directory named `k-working`), pull the WIP branch.
+4. Use the stable k from the main branch to incrementally update the k-working project.
+
+This approach ensures that you can continue making updates even if k experiences intermittent issues.
+
+---
 
 Happy Coding!
