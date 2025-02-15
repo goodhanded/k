@@ -6,6 +6,11 @@ from application.agency.dtos import WorkflowResultDTO
 from infrastructure.langchain import LangchainDocumentMapper
 
 class SearchAgent(WorkflowProtocol):
+    """
+    Search Agent
+
+    This agent conducts a similarity search using a search engine (like FAISS). It's not very useful at the moment.
+    """
     def __init__(self, search_engine: SearchEngineProtocol, mapper: LangchainDocumentMapper, llm: LLMClientProtocol, model: str):
         self.search_engine = search_engine
         self.mapper = mapper
@@ -13,7 +18,7 @@ class SearchAgent(WorkflowProtocol):
 
         self.name = 'Search Agent'
         self.model = model
-        self.description = 'This agent conducts a similarity search using FAISS.'
+        self.description = 'This agent conducts a similarity search using a search engine (like FAISS).'
 
         
     def run(self, prompt: str):

@@ -1,6 +1,11 @@
 from application.agency import WorkflowProtocol
 
 class SchedulingAgent(WorkflowProtocol):
+    """
+    Scheduling Agent
+
+    This doesn't actually do anything yet. It's just a placeholder for now.
+    """
     def __init__(self):
         self.name = 'Scheduling Agent'
         self.model = 'Simple Scheduling Model'
