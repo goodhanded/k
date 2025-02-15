@@ -1,22 +1,28 @@
 import os
-
 from typing import Optional
 
 from application.agency import WorkflowNodeProtocol
 
+# Workflow Node: LoadIncludeExcludeRules
+# This node loads file inclusion and exclusion rules from .k/includes.txt and .k/excludes.txt,
+# concatenates each rule file's lines with a '|' delimiter, and returns the patterns.
 class LoadIncludeExcludeRules(WorkflowNodeProtocol):
     """
-    Load include rules.
+    Workflow node that loads include and exclude patterns used to filter files in the project.
+
+    It reads the contents of '.k/includes.txt' and '.k/excludes.txt' (if present),
+    converts the list of rules into a single pattern string, and adds these to the workflow state.
     """
 
     def __call__(self, state: dict) -> dict:
         """
-        Load include rules.
+        Load include and exclude rules from the .k directory.
 
-        Args:
-            state (dict): State dictionary.
+        Steps:
+          1. Load inclusion patterns from .k/includes.txt.
+          2. Load exclusion patterns from .k/excludes.txt.
+          3. Return both patterns along with a progress message.
         """
-        
         include_rules = self._load_pattern(os.path.join(".k", "includes.txt")) or ""
         exclude_rules = self._load_pattern(os.path.join(".k", "excludes.txt")) or ""
 
@@ -24,9 +30,12 @@ class LoadIncludeExcludeRules(WorkflowNodeProtocol):
     
     def _load_pattern(self, file_path: str) -> Optional[str]:
         """
-        Helper method to load pattern string from a text file.
-        Each rule is on its own line; this method concatenates them using the | delimiter.
-        Returns the concatenated pattern if file exists and is not empty, otherwise None.
+        Helper method to load and concatenate pattern lines from a file.
+
+        Reads the given file, strips empty lines, and concatenates them with '|'
+        which can be used as a regex pattern for matching.
+        Returns:
+            The concatenated pattern string, or None if the file does not exist.
         """
         try:
             with open(file_path, "r", encoding="utf-8") as f:

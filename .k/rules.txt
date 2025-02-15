@@ -22,7 +22,7 @@ This project contains directories representing four layers: Domain, Application,
 
 About Dependency Injection:
 
-This project uses a custom dependency injection container inspired by the Symfony framework. Service defintions are created in services.yaml. Look at container.py to see how these definitions get parsed. The syntax of the service definition file allows for environment variables and yaml definitions to be injected into services. Registries are commonly used to inject collections of like services as dependencies. These are assembled using tags, where the registry definition defines a tag to be used to identify services going into the collection, and the individual services in the definition are configured using the defined tag. Aliases are used for retrieving specific services from the registries. 
+This project uses a custom dependency injection container inspired by the Symfony framework. Service defintions are created in services.yaml. Look at container.py to see how these definitions get parsed. The syntax of the service definition file allows for environment variables and yaml definitions to be injected into services. Registries are commonly used to inject collections of like services as dependencies. These are assembled using tags, where the registry definition defines a tag to be used to identify services going into the collection, and the individual services in the definition are configured using the defined tag. Aliases are used for retrieving specific services from the registries. Lean heavily on this dependency injection. You should always inject dependencies and register them in the service container, rather than importing dependencies directly, unless it is infeasible to do so.
 
 About Workflows:
 

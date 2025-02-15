@@ -2,22 +2,30 @@ import os
 
 from application.agency import WorkflowNodeProtocol
 
+# Workflow Node: LoadProjectRules
+# This node loads project-specific guidelines and rules from the .k/rules.txt file,
+# allowing the workflow to incorporate project conventions or constraints.
 class LoadProjectRules(WorkflowNodeProtocol):
     """
-    Load project rules from the rules.txt file in the .k directory.
+    Workflow node that loads project rules from the '.k/rules.txt' file.
+
+    The loaded rules can be used to guide subsequent operations in the workflow.
     """
     def __call__(self, state: dict) -> dict:
         """
-        Load project rules from the rules.txt file in the .k directory.
+        Load and return project rules from .k/rules.txt.
 
-        Args:
-            state (dict): State dictionary.
+        Returns:
+            dict: Contains 'project_rules' with the content of rules.txt and a progress message.
         """
 
-        # Load directory tree
         return {"project_rules": self._load_rules(), "progress": "Project rules loaded."}
     
     def _load_rules(self) -> str:
+        """
+        Reads the project rules from the .k/rules.txt file.
+        If the file is not found, returns an empty string.
+        """
         try:
             with open(os.path.join(".k", "rules.txt"), "r", encoding="utf-8") as f:
                 return f.read()

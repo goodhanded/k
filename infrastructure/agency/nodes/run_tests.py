@@ -2,12 +2,23 @@ import subprocess
 
 from application.agency import WorkflowNodeProtocol
 
-
+# Workflow Node: RunTests
+# This node executes the project's test suite using pytest,
+# captures the output and exit status, and updates the workflow state with the test results.
 class RunTests(WorkflowNodeProtocol):
     """
-    Executes the test suite using pytest and sets the test outcome in the state.
+    Workflow node that runs the test suite and records the results.
+
+    It executes 'pytest' as a subprocess, captures output and exit code,
+    and returns whether tests passed along with the test output.
     """
     def __call__(self, state: dict) -> dict:
+        """
+        Executes the test suite:
+          1. Runs 'pytest' and captures standard output.
+          2. Determines if tests passed based on return code.
+          3. Returns a state dictionary with test results and a progress message.
+        """
         try:
             result = subprocess.run(["pytest"], capture_output=True, text=True)
             tests_passed = (result.returncode == 0)

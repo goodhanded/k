@@ -1,27 +1,30 @@
 import os
 
-from typing import Optional
-
 from application.agency import WorkflowNodeProtocol
 from domain.filesystem import FileCollection
 
+# Workflow Node: LoadSourceCode
+# This node converts the previously loaded FileCollection into a markdown representation,
+# aggregating the source code of the files in the project.
 class LoadSourceCode(WorkflowNodeProtocol):
     """
-    Load source code from the file collection.
+    Workflow node that extracts source code from the file collection.
+
+    Converts the FileCollection into a markdown formatted string, which can be
+    used for review or comparative analysis.
     """
 
     def __call__(self, state: dict) -> dict:
         """
-        Load source code from the file collection.
+        Generate a markdown representation of the project's source code.
 
-        Args:
-            state (dict): State dictionary.
+        Requires 'file_collection' in the state.
+        Returns:
+            dict: Contains 'source_code' as a markdown string and a progress message.
         """
-        
         if "file_collection" not in state:
             raise ValueError("File collection not found in state.")
 
         file_collection = state["file_collection"]
 
         return {"source_code": file_collection.to_markdown(), "progress": "Source code loaded."}
-    
