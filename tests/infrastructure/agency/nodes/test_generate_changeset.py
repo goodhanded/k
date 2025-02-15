@@ -6,8 +6,10 @@ from infrastructure.agency.nodes.generate_changeset import GenerateChangeset, Ch
 class DummyClipboard:
     def __init__(self):
         self.content = ""
+
     def get(self):
         return self.content
+
     def set(self, content: str):
         self.content = content
 
@@ -17,8 +19,10 @@ class DummyCallback:
     completion_tokens = 5
     total_tokens = 15
     total_cost = 0.01
+
     def __enter__(self):
         return self
+
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
@@ -26,8 +30,10 @@ class DummyCallback:
 class DummyLLM:
     def __init__(self, *args, **kwargs):
         pass
+
     def with_structured_output(self, output_model):
         return self
+
     def invoke(self, prompts):
         return Changeset(summary="Test summary", additions=[], removals=[], modifications=[])
 
@@ -42,7 +48,7 @@ class TestGenerateChangeset(unittest.TestCase):
     @patch("infrastructure.agency.nodes.generate_changeset.ChatOpenAI", new=DummyLLM)
     def test_generate_changeset_execute_llm(self, mock_callback):
         dummy_clipboard = DummyClipboard()
-        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt())
+        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt(), model="dummy-model")
         state = {
             "goal": "dummy goal",
             "project_rules": "dummy rules",
@@ -60,7 +66,7 @@ class TestGenerateChangeset(unittest.TestCase):
     @patch("builtins.input", return_value="irrelevant")
     def test_generate_changeset_copy_prompt(self, mock_input):
         dummy_clipboard = DummyClipboard()
-        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt())
+        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt(), model="dummy-model")
         state = {
             "goal": "dummy goal copy",
             "project_rules": "dummy rules",

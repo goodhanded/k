@@ -13,8 +13,10 @@ class DummyCallback:
     completion_tokens = 5
     total_tokens = 15
     total_cost = 0.01
+
     def __enter__(self):
         return self
+
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
@@ -22,6 +24,7 @@ class DummyCallback:
 class DummyLLM:
     def __init__(self, *args, **kwargs):
         pass
+
     def invoke(self, prompts):
         return DummyResponse("dummy advice")
 
@@ -35,7 +38,7 @@ class TestGenerateCodeAdvice(unittest.TestCase):
     @patch("infrastructure.agency.nodes.generate_code_advice.ChatOpenAI", return_value=DummyLLM())
     @patch("infrastructure.agency.nodes.generate_code_advice.get_openai_callback", return_value=DummyCallback())
     def test_generate_code_advice(self, mock_get_callback, mock_chat):
-        node = GenerateCodeAdvice(DummyCodeAdvicePrompt())
+        node = GenerateCodeAdvice(DummyCodeAdvicePrompt(), model="dummy-model")
         state = {
             "prompt": "Test code advice prompt",
             "directory_tree": "dummy tree",

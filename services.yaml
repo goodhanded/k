@@ -213,14 +213,14 @@ services:
   # Node: Generate code advice
   agency.node.generate_code_advice:
     class: infrastructure.agency.GenerateCodeAdvice
-    arguments: ['@agency.prompt.code_advice']
+    arguments: ['@agency.prompt.code_advice', '%GENERATE_CODE_ADVICE_MODEL%']
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 
   # Node: Generate changeset
   agency.node.generate_changeset:
     class: infrastructure.agency.GenerateChangeset
-    arguments: ['@pyperclip', '@agency.prompt.pr']
+    arguments: ['@pyperclip', '@agency.prompt.pr', '%GENERATE_CHANGESET_MODEL%']
     tags:
       - { name: workflow_node, alias: generate_changeset }
 

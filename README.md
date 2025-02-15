@@ -154,16 +154,27 @@ For subcommands:
 ## Configuration
 
 - **K_PATH Environment Variable**  
-  Ensure that the `K_PATH` environment variable is set to the absolute path of the project root directory. This variable is critical for proper resolution of configuration files and resources within the application.
+  Ensure that the `K_PATH` environment variable is set to the absolute path of the project root directory. This variable is critical for proper resolution of configuration files like `.env`, `commands.yaml`, and `services.yaml`.
 
 - **Application-wide Settings**  
   Configured via the `.env` file, which is read by `application/config` and injected into service constructors via the dependency injection container in `infrastructure/di`.
 
-- **services.yaml**  
-  Declares services like the transcriber, search engine, and other integrations.
+### Environment Variables
 
-- **commands.yaml**  
-  Defines CLI commands, their help text, execution targets, and accepted arguments.
+The application uses several environment variables which must be defined in your `.env` file. You can create your own `.env` by copying the provided `.env.example` and modifying the values as needed:
+
+- `K_PATH`: The root directory of the project. It is used to derive paths for configuration files and resources.
+- `TRANSCRIPTS_BUCKET`: The name of the AWS S3 bucket used for storing audio transcripts.
+- `AWS_PATH`: The path to the AWS CLI executable, used to verify AWS credentials and handle AWS SSO login.
+- `PROMPT_TEMPLATE_PATH`: The file path to the prompt templates used by the application.
+- `TRANSCRIPTS_BASE_PATH`: The directory where audio transcript files are stored.
+- `OBSIDIAN_VAULT_PATH`: The directory path of your Obsidian vault containing your notes.
+- `FAISS_INDEX_PATH`: The directory path where the FAISS index is stored for document search functionality.
+- `OBSIDIAN_CALENDAR_FOLDER`: (Optional) The name of the calendar folder in your Obsidian vault for daily notes; defaults to "Calendar".
+- `OPENAI_API_KEY`: Your API key for accessing OpenAI's GPT models.
+- `DISCORD_BOT_TOKEN`: The token for the Discord bot if using Discord integration.
+- `GENERATE_CHANGESET_MODEL`: The model identifier (e.g., "o3-mini") used for generating pull request changesets.
+- `GENERATE_CODE_ADVICE_MODEL`: The model identifier (e.g., "o3-mini") used for generating code advice.
 
 ---
 
