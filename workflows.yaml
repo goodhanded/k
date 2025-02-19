@@ -79,14 +79,6 @@ workflows:
       - from: implement_changeset
         to: END
 
-      # - from: run_tests
-      #   to: generate_changeset
-      #   condition: "not state.tests_passed"
-
-      # - from: run_tests
-      #   to: END
-      #   condition: "state.tests_passed"
-
   run_tests:
     nodes:
       - run_tests
@@ -95,4 +87,48 @@ workflows:
         to: run_tests
 
       - from: run_tests
+        to: END
+
+  project_plan:
+    nodes:
+      - get_project_path
+      - load_include_exclude_rules
+      - load_project_rules
+      - load_file_collection
+      - load_directory_tree
+      - load_source_code
+      - generate_user_stories
+      - parse_user_stories
+    edges:
+      - from: START
+        to: get_project_path
+
+      # two branches
+      - from: get_project_path
+        to: load_include_exclude_rules
+      - from: get_project_path
+        to: load_project_rules
+
+      # converge
+      - from: load_project_rules
+        to: load_file_collection
+      - from: load_include_exclude_rules
+        to: load_file_collection
+
+      # two branches
+      - from: load_file_collection
+        to: load_directory_tree
+      - from: load_file_collection
+        to: load_source_code
+
+      # converge
+      - from: load_directory_tree
+        to: generate_user_stories
+      - from: load_source_code
+        to: generate_user_stories
+
+      # parse user stories
+      - from: generate_user_stories
+        to: parse_user_stories
+      - from: parse_user_stories
         to: END

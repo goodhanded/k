@@ -84,3 +84,14 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
+
+  plan:
+    help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."
+    target: "@agency.create_project_plan_use_case.execute"
+    arguments:
+      prompt:
+        help: "Text to generate project plan user stories"
+        positional: true
+      copy:
+        help: "Copy the generated plan prompt to the clipboard instead of invoking the LLM"
+        flag: true

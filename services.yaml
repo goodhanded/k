@@ -37,6 +37,11 @@ services:
     class: application.agency.GetCodeAdviceUseCase
     arguments: ['@agency.workflow.code_advice']
 
+  # Use Case: Create Project Plan
+  agency.create_project_plan_use_case:
+    class: application.agency.CreateProjectPlanUseCase
+    arguments: ['@agency.workflow.project_plan']
+
   # Use Case: Run Tests
   agency.run_tests_use_case:
     class: application.agency.RunTestsUseCase
@@ -95,6 +100,11 @@ services:
     tags:
       - { name: prompt, alias: code_advice }
 
+  # Prompt: Project Plan
+  agency.prompt.project_plan:
+    class: adapters.prompts.ProjectPlanPrompt
+    tags:
+      - { name: prompt, alias: project_plan }
 
 ################################################################################################
 # Workflows
@@ -127,6 +137,15 @@ services:
       name: 'run_tests'
       definition: '~/workflows.yaml:workflows.run_tests'
 
+  # Workflow: Project Plan
+  agency.workflow.project_plan:
+    class: infrastructure.agency.Workflow
+    arguments: 
+      node_registry: '@agency.node_registry'
+      state_registry: '@agency.state_registry'
+      name: 'project_plan'
+      definition: '~/workflows.yaml:workflows.project_plan'
+
 ################################################################################################
 # Workflow States
 ################################################################################################
@@ -157,6 +176,13 @@ services:
     inject_class: true
     tags:
       - { name: workflow_state, alias: run_tests }
+
+  # State: Project Plan
+  agency.workflow_state.project_plan:
+    class: infrastructure.agency.ProjectPlanWorkflowState
+    inject_class: true
+    tags:
+      - { name: workflow_state, alias: project_plan }
 
 ################################################################################################
 # Workflow Nodes
@@ -235,6 +261,19 @@ services:
     class: infrastructure.agency.RunTests
     tags:
       - { name: workflow_node, alias: run_tests }
+
+  # Node: Generate User Stories
+  agency.node.generate_user_stories:
+    class: infrastructure.agency.nodes.generate_user_stories.GenerateUserStories
+    arguments: ['@pyperclip', '@agency.prompt.project_plan', '%GENERATE_USER_STORIES_MODEL%']
+    tags:
+      - { name: workflow_node, alias: generate_user_stories }
+
+  # Node: Parse User Stories
+  agency.node.parse_user_stories:
+    class: infrastructure.agency.nodes.parse_user_stories.ParseUserStories
+    tags:
+      - { name: workflow_node, alias: parse_user_stories }
 
 ################################################################################################
 # Agents

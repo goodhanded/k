@@ -5,6 +5,7 @@ from .use_cases.generate_prompt import GeneratePromptUseCase
 from .use_cases.run_tests import RunTestsUseCase
 from .use_cases.get_code_advice import GetCodeAdviceUseCase
 from .use_cases.create_pull_request import CreatePullRequestUseCase
+from .use_cases.create_project_plan import CreateProjectPlanUseCase
 from .protocols.indexer import IndexerProtocol
 from .protocols.prompt_generator import PromptGeneratorProtocol
 from .protocols.workflow import WorkflowProtocol
