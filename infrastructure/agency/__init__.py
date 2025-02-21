@@ -1,4 +1,5 @@
 from .workflow import Workflow
+from .workflow_factory import WorkflowFactory
 from .agents.scheduling_agent import SchedulingAgent
 from .agents.search_agent import SearchAgent
 from .agent import Agent

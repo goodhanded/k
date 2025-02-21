@@ -110,41 +110,37 @@ services:
 # Workflows
 ################################################################################################
 
-  # Workflow: Generates a changeset for a pull request
-  agency.workflow.pull_request:
-    class: infrastructure.agency.Workflow
+  # Workflow Factory
+  agency.workflow_factory:
+    class: infrastructure.agency.WorkflowFactory
     arguments: 
       node_registry: '@agency.node_registry'
       state_registry: '@agency.state_registry'
-      name: 'pull_request'
-      definition: '~/workflows.yaml:workflows.pull_request'
+      workflows: '~/workflows.yaml:workflows'
+
+  # Workflow: Generates a changeset for a pull request
+  agency.workflow.pull_request:
+    class: infrastructure.agency.Workflow
+    factory: ['@agency.workflow_factory', 'create']
+    arguments: ['pull_request']
 
   # Workflow: Generates advice for a codebase
   agency.workflow.code_advice:
     class: infrastructure.agency.Workflow
-    arguments: 
-      node_registry: '@agency.node_registry'
-      state_registry: '@agency.state_registry'
-      name: 'code_advice'
-      definition: '~/workflows.yaml:workflows.code_advice'
+    factory: ['@agency.workflow_factory', 'create']
+    arguments: ['code_advice']
 
   # Workflow: Runs tests
   agency.workflow.run_tests:
     class: infrastructure.agency.Workflow
-    arguments: 
-      node_registry: '@agency.node_registry'
-      state_registry: '@agency.state_registry'
-      name: 'run_tests'
-      definition: '~/workflows.yaml:workflows.run_tests'
+    factory: ['@agency.workflow_factory', 'create']
+    arguments: ['run_tests']
 
   # Workflow: Project Plan
   agency.workflow.project_plan:
     class: infrastructure.agency.Workflow
-    arguments: 
-      node_registry: '@agency.node_registry'
-      state_registry: '@agency.state_registry'
-      name: 'project_plan'
-      definition: '~/workflows.yaml:workflows.project_plan'
+    factory: ['@agency.workflow_factory', 'create']
+    arguments: ['project_plan']
 
 ################################################################################################
 # Workflow States

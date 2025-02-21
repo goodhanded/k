@@ -175,6 +175,7 @@ The application uses several environment variables which must be defined in your
 - `DISCORD_BOT_TOKEN`: The token for the Discord bot if using Discord integration.
 - `GENERATE_CHANGESET_MODEL`: The model identifier (e.g., "o3-mini") used for generating pull request changesets.
 - `GENERATE_CODE_ADVICE_MODEL`: The model identifier (e.g., "o3-mini") used for generating code advice.
+- `GENERATE_USER_STORIES_MODEL`: The model identifier (e.g., "o3-mini") used for generating user stories.
 
 ---
 
@@ -196,6 +197,20 @@ The application uses several environment variables which must be defined in your
 4. **Add a New Service**
    - Create the service class (e.g., a new transcriber or search engine) in the `infrastructure/` layer.
    - Update `services.yaml` and register the service in the dependency injection container.
+
+5. **Add a New Workflow**
+   - Define a new workflow in `workflows.yaml` using the declarative syntax provided. Include a unique workflow key (e.g., `my_new_workflow`) along with its list of nodes and edge connections.
+   - Ensure that all nodes referenced in the workflow are registered in `services.yaml` under the Workflow Nodes section.
+   - Register the new workflow in `services.yaml` using the Workflow Factory, for example:
+     ```yaml
+     agency.workflow.my_new_workflow:
+       class: infrastructure.agency.Workflow
+       factory: ['@agency.workflow_factory', 'create']
+       arguments: ['my_new_workflow']
+     ```
+   - If necessary, create or update a corresponding workflow state definition and register it in `services.yaml` under Workflow States.
+   - **Important:** Always ensure that workflows, states, nodes, and configuration files remain aligned to prevent inconsistencies.
+   - Add or update unit tests to validate the functionality of the new workflow.
 
 ---
 
