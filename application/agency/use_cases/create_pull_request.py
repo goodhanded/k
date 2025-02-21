@@ -23,7 +23,8 @@ class CreatePullRequestUseCase:
                 stdin: bool = False,
                 paste: bool = False,
                 copy: bool = False,
-                confirm: bool = False) -> None:
+                confirm: bool = False,
+                tree: bool = False) -> None:
         """
         Executes the pull request creation process.
         
@@ -45,6 +46,7 @@ class CreatePullRequestUseCase:
         state = {
             "goal": prompt,
             "confirmation_required": confirm,
-            "copy_prompt": copy
+            "copy_prompt": copy,
+            "print_tree": tree
         }
         self.workflow.run(state)

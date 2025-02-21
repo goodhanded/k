@@ -32,3 +32,4 @@ class PullRequestWorkflowState(TypedDict):
     tests_passed: bool
     confirmation_required: bool
     copy_prompt: bool
+    print_tree: bool

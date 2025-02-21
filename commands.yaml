@@ -65,6 +65,9 @@ commands:
       confirm:
         help: "If set, show token count and require confirmation before proceeding"
         flag: true
+      tree:
+        help: "If set, print the directory tree to the console"
+        flag: true
 
   run:
     help: "Run a subcommand"
@@ -84,6 +87,12 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
+      confirm:
+        help: "If set, show token count and require confirmation before proceeding"
+        flag: true
+      tree:
+        help: "If set, print the directory tree to the console"
+        flag: true
 
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."

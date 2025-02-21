@@ -12,3 +12,4 @@ package-lock.json
 effective_agents
 .terraform
 .k/*
+tests/*

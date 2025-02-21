@@ -18,9 +18,15 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
             source_code=state.get("source_code", "")
         )
 
+        if state.get("confirmation_required", False):
+            user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()
+            if user_input != 'y':
+                print("Operation cancelled by user.")
+                return {"changeset": None, "progress": "Operation cancelled."}
+
         llm = ChatOpenAI(model=self.model, reasoning_effort="high")
 
-        print(f"Generating advice. This could take a minute...")
+        print(f"\nGenerating advice. This could take a minute...")
 
         with get_openai_callback() as cb:
             response = llm.invoke([prompt])

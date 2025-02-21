@@ -37,14 +37,8 @@ class GenerateChangeset(WorkflowNodeProtocol):
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
         )
-
-        from infrastructure.util.token_counter import TokenCounter
-        token_counter = TokenCounter()
-        token_count = token_counter.count_tokens(prompt)
-        state["token_count"] = token_count
         
         if state.get("confirmation_required", False):
-            print(f"Estimated input tokens: {token_count}")
             user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()
             if user_input != 'y':
                 print("Operation cancelled by user.")
