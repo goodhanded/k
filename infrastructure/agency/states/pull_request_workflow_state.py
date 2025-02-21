@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import List, TypedDict
 from domain.filesystem.entities.document_collection import DocumentCollection
 
 
@@ -19,6 +19,7 @@ class PullRequestWorkflowState(TypedDict):
       - tests_passed: Boolean flag indicating whether tests passed.
       - confirmation_required: Boolean flag indicating if user confirmation is required.
       - copy_prompt: Boolean flag indicating if the generated prompt should be copied to the clipboard instead of invoking the LLM.
+      - history: List of dictionaries representing the history of the workflow.
     """
     goal: str
     project_path: str
@@ -32,3 +33,4 @@ class PullRequestWorkflowState(TypedDict):
     tests_passed: bool
     confirmation_required: bool
     copy_prompt: bool
+    history: List[dict]

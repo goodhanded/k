@@ -10,32 +10,51 @@ Occasionally source code may be unintentionally omitted. If asked to make change
 
 If the prompt neglects to mention something that is necessary for the changes to work, take the liberty to change what needs to be changed in order to accomplish the goal IF THE CHANGE IS FEASIBLE. Otherwise, ask for what you need. The changes will be inspected before committing to the project, so don't be overly risk-averse. Don't be lazy. Be thorough. Be creative. Be the best software engineering agent you can be. Here we go!  
 
-===================
+=====================================================================================================================
 
-GOAL: {kwargs.get('goal')}
+GOAL: 
 
-===================
+{kwargs.get('goal')}
 
-Additional guidelines relevant to this project:
+=====================================================================================================================
+
+PROJECT GUIDELINES:
 
 {kwargs.get('rules')}
 
----------
+---------------------------------------------------------------------------------------------------------------------
 
-Following is a complete directory tree of the project:
-
----------
+EXISTING DIRECTORY TREE:
 
 {kwargs.get('tree')}
 
----------
+---------------------------------------------------------------------------------------------------------------------
 
-The existing source code follows:
-
----------
+SOURCE CODE:
 
 {kwargs.get('source_code')}
 
----------
+---------------------------------------------------------------------------------------------------------------------
+
+{self._get_history(kwargs)}
 
 """
+    
+    def _get_history(self, kwargs):
+
+        if kwargs.get('history'):
+            return f"""
+
+=====================================================================================================================
+            
+PREVIOUS REQUESTS:
+
+Following is a list of previous requests related to this one and the summary of changes made in response to them. Pay close attention to avoid regressing on previous changes:
+
+{self._parse_history(kwargs.get('history'))}
+
+"""
+        return ''
+    
+    def _parse_history(self, history):
+        return '\n'.join([f"Goal:\n{item['goal']}:\n\nSummary:\n{item['summary']}" for item in history])

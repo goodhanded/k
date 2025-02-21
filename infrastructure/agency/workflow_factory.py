@@ -1,14 +1,18 @@
+import sqlite3
+
 from application.agency import WorkflowProtocol
 from domain.registry import Registry
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.sqlite import SqliteSaver
 
 from .workflow import Workflow
 
 class WorkflowFactory(WorkflowProtocol):
-    def __init__(self, node_registry: Registry, state_registry: Registry, workflows: dict) -> None:
+    def __init__(self, node_registry: Registry, state_registry: Registry, workflows: dict, checkpoints_db: str) -> None:
         self.node_registry = node_registry
         self.state_registry = state_registry
         self.workflows = workflows
+        self.db_connection = sqlite3.connect(checkpoints_db)
 
     def create(self, workflow_name: str) -> WorkflowProtocol:
 
@@ -43,7 +47,10 @@ class WorkflowFactory(WorkflowProtocol):
                 state_graph.add_edge(START if edge["from"] == "START" else edge["from"],
                                     END if edge["to"] == "END" else edge["to"])
 
-        return Workflow(state_graph.compile())
+        saver = SqliteSaver(self.db_connection)
+        saver.setup()
+
+        return Workflow(state_graph.compile(checkpointer=saver))
 
     def route_conditionally(self, from_node: str) -> callable:
         def condition(state: dict) -> str:

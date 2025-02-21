@@ -13,6 +13,8 @@ aiohttp==3.11.11
     #   langchain-community
 aiosignal==1.3.2
     # via aiohttp
+aiosqlite==0.20.0
+    # via langgraph-checkpoint-sqlite
 annotated-types==0.7.0
     # via pydantic
 anyio==4.8.0
@@ -116,7 +118,11 @@ langchain-text-splitters==0.3.5
 langgraph==0.2.69
     # via -r requirements.in
 langgraph-checkpoint==2.0.10
-    # via langgraph
+    # via
+    #   langgraph
+    #   langgraph-checkpoint-sqlite
+langgraph-checkpoint-sqlite==2.0.4
+    # via -r requirements.in
 langgraph-sdk==0.1.51
     # via langgraph
 langsmith==0.3.3
@@ -246,6 +252,7 @@ traitlets==5.14.3
     #   matplotlib-inline
 typing-extensions==4.12.2
     # via
+    #   aiosqlite
     #   anyio
     #   langchain-core
     #   openai

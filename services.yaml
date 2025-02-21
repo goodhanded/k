@@ -117,6 +117,7 @@ services:
       node_registry: '@agency.node_registry'
       state_registry: '@agency.state_registry'
       workflows: '~/workflows.yaml:workflows'
+      checkpoints_db: '%CHECKPOINTS_DB%'
 
   # Workflow: Generates a changeset for a pull request
   agency.workflow.pull_request:

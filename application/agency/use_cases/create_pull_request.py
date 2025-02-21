@@ -45,6 +45,6 @@ class CreatePullRequestUseCase:
         state = {
             "goal": prompt,
             "confirmation_required": confirm,
-            "copy_prompt": copy
+            "copy_prompt": copy,
         }
         self.workflow.run(state)
