@@ -1,5 +1,7 @@
-from .templates.dotnet import DotNetTemplate
-from .templates.nextjs import NextJSTemplate
-from .templates.nodejs import NodeJSTemplate
-from .templates.python import PythonTemplate
-from .templates.wiki import WikiTemplate
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the infrastructure.init package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

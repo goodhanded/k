@@ -1,2 +1,7 @@
-from .agent_dto import AgentDTO
-from .workflow_result_dto import WorkflowResultDTO
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the application.agency.dtos package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

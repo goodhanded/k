@@ -1,2 +1,7 @@
-from .protocols.search_engine import SearchEngineProtocol
-from .protocols.document_loader import DocumentLoaderProtocol
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the application.search package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

@@ -1,1 +1,7 @@
-from .protocols.llm_client import LLMClientProtocol
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the application.intelligence package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

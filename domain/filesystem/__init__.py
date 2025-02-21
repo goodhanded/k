@@ -1,7 +1,7 @@
-from .entities.file import File
-from .entities.audio_file import AudioFile
-from .entities.markdown_file import MarkdownFile
-from .entities.document import Document
-from .entities.document_collection import DocumentCollection
-from .entities.file_collection import FileCollection
-from .enums.ext import Ext
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the domain.filesystem package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

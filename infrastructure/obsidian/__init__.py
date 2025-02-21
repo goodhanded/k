@@ -1,2 +1,7 @@
-from .vault import ObsidianVault
-from .prompt_generator import ObsidianPromptGenerator
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the infrastructure.obsidian package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

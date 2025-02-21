@@ -1,2 +1,7 @@
-from .entities.search_result import SearchResult
-from .entities.index_result import IndexResult
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the domain.search package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

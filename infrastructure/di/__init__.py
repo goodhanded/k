@@ -1,3 +1,7 @@
-from .container import Container
-from .service_definition import ServiceDefinition
-from .load_definitions import load_definitions_from_yaml
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the infrastructure.di package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

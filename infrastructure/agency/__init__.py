@@ -1,23 +1,7 @@
-from .workflow import Workflow
-from .workflow_factory import WorkflowFactory
-from .agents.scheduling_agent import SchedulingAgent
-from .agents.search_agent import SearchAgent
-from .agent import Agent
-from .prompt_generator import PromptGenerator
-from .nodes.generate_code_advice import GenerateCodeAdvice
-from .nodes.generate_changeset import GenerateChangeset
-from .nodes.get_project_path import GetProjectPath
-from .nodes.implement_changeset import ImplementChangeset
-from .nodes.load_directory_tree import LoadDirectoryTree
-from .nodes.load_file_collection import LoadFileCollection
-from .nodes.load_include_exclude_rules import LoadIncludeExcludeRules
-from .nodes.load_project_rules import LoadProjectRules
-from .nodes.load_source_code import LoadSourceCode
-from .nodes.generate_user_stories import GenerateUserStories
-from .nodes.parse_user_stories import ParseUserStories
-from .nodes.run_tests import RunTests
-from .nodes.git_status import GitStatus
-from .states.pull_request_workflow_state import PullRequestWorkflowState
-from .states.run_tests_workflow_state import RunTestsWorkflowState
-from .states.code_advice_workflow_state import CodeAdviceWorkflowState
-from .states.project_plan_workflow_state import ProjectPlanWorkflowState
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the infrastructure.agency package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

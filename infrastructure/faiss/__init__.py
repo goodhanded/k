@@ -1,2 +1,7 @@
-from .indexer import FAISSIndexer
-from .search_engine import FAISSSearchEngine
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the infrastructure.faiss package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

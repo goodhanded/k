@@ -1,4 +1,7 @@
-from .pull_request_prompt import PullRequestPrompt
-from .code_review_prompt import CodeReviewPrompt
-from .code_advice_prompt import CodeAdvicePrompt
-from .project_plan_prompt import ProjectPlanPrompt
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the adapters.prompts package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)

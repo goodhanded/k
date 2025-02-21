@@ -1,3 +1,7 @@
-from .entities.note import Note
-from .entities.note_collection import NoteCollection
-from .entities.voice_memo import VoiceMemo
+import pkgutil
+import importlib
+
+# Dynamically import all submodules in the domain.notes package
+__all__ = [name for _, name, _ in pkgutil.iter_modules(__path__)]
+for module in __all__:
+    importlib.import_module("." + module, package=__name__)
