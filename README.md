@@ -17,6 +17,7 @@
     - [Examples](#examples)
   - [Configuration](#configuration)
   - [Extending k](#extending-k)
+  - [Workflow Format](#workflow-format)
   - [Running Tests](#running-tests)
   - [Additional Information](#additional-information)
   - [Using k to update itself](#using-k-to-update-itself)
@@ -199,8 +200,29 @@ The application uses several environment variables which must be defined in your
    - Update `services.yaml` and register the service in the dependency injection container.
 
 5. **Add a New Workflow**
-   - Define a new workflow in `workflows.yaml` using the declarative syntax provided. Include a unique workflow key (e.g., `my_new_workflow`) along with its list of nodes and edge connections.
-   - Ensure that all nodes referenced in the workflow are registered in `services.yaml` under the Workflow Nodes section.
+   - Define a new workflow in `workflows.yaml` using the declarative syntax provided. Workflows are now defined using a simplified edge notation. Each workflow is represented as an ordered list of transitions between nodes, where each transition is specified on a new line in the format:
+     
+     `FROM_NODE -> TO_NODE`
+     
+     with the special tokens `START` and `END` denoting the beginning and termination of the workflow.
+
+     For example, the pull request workflow is defined as:
+     ```yaml
+     pull_request:
+       - START -> get_project_path
+       - get_project_path -> load_include_exclude_rules
+       - get_project_path -> load_project_rules
+       - load_project_rules -> load_file_collection
+       - load_include_exclude_rules -> load_file_collection
+       - load_file_collection -> load_directory_tree
+       - load_file_collection -> load_source_code
+       - load_directory_tree -> generate_changeset
+       - load_source_code -> generate_changeset
+       - generate_changeset -> implement_changeset
+       - implement_changeset -> END
+     ```
+
+   - Ensure that all node aliases referenced in your workflow are registered in `services.yaml` under the Workflow Nodes section. Inconsistencies—for example using an alias like `load_include_rules` when only `load_include_exclude_rules` is registered—will result in runtime errors.
    - Register the new workflow in `services.yaml` using the Workflow Factory, for example:
      ```yaml
      agency.workflow.my_new_workflow:
@@ -211,6 +233,33 @@ The application uses several environment variables which must be defined in your
    - If necessary, create or update a corresponding workflow state definition and register it in `services.yaml` under Workflow States.
    - **Important:** Always ensure that workflows, states, nodes, and configuration files remain aligned to prevent inconsistencies.
    - Add or update unit tests to validate the functionality of the new workflow.
+
+---
+
+## Workflow Format
+
+Workflows in k are now defined in the `workflows.yaml` file using a simplified edge notation. Each workflow is represented as an ordered list of transitions between nodes. Each entry is a string in the following format:
+
+  FROM_NODE -> TO_NODE
+
+Special tokens **START** and **END** denote the beginning and termination of a workflow, respectively. For example, the pull request workflow is defined as:
+
+```yaml
+pull_request:
+  - START -> get_project_path
+  - get_project_path -> load_include_exclude_rules
+  - get_project_path -> load_project_rules
+  - load_project_rules -> load_file_collection
+  - load_include_exclude_rules -> load_file_collection
+  - load_file_collection -> load_directory_tree
+  - load_file_collection -> load_source_code
+  - load_directory_tree -> generate_changeset
+  - load_source_code -> generate_changeset
+  - generate_changeset -> implement_changeset
+  - implement_changeset -> END
+```
+
+It is essential to ensure that every node alias used in the workflow is registered in `services.yaml` under the Workflow Nodes section. Inconsistencies, such as using an unregistered alias (e.g., `load_include_rules` instead of the correct `load_include_exclude_rules`), will lead to runtime errors. This new format promotes clarity and modular composition of workflows.
 
 ---
 

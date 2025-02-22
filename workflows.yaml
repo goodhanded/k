@@ -1,134 +1,41 @@
 workflows:
-
   code_advice:
-    nodes:
-      - get_project_path
-      - load_include_exclude_rules
-      - load_file_collection
-      - load_directory_tree
-      - load_source_code
-      - generate_code_advice
-
-    edges:
-      - from: START
-        to: get_project_path
-
-      - from: get_project_path
-        to: load_include_exclude_rules
-
-      - from: load_include_exclude_rules
-        to: load_file_collection
-
-      - from: load_file_collection
-        to: load_directory_tree
-      - from: load_file_collection
-        to: load_source_code
-
-        # converge
-      - from: load_directory_tree
-        to: generate_code_advice
-      - from: load_source_code
-        to: generate_code_advice
-
-        # get code advice
-      - from: generate_code_advice
-        to: END
+    - START -> get_project_path
+    - get_project_path -> load_include_exclude_rules
+    - load_include_exclude_rules -> load_file_collection
+    - load_file_collection -> load_directory_tree
+    - load_file_collection -> load_source_code
+    - load_directory_tree -> generate_code_advice
+    - load_source_code -> generate_code_advice
+    - generate_code_advice -> END
 
   pull_request:
-    nodes:
-      - get_project_path
-      - load_include_exclude_rules
-      - load_project_rules
-      - load_file_collection
-      - load_directory_tree
-      - load_source_code
-      - generate_changeset
-      - implement_changeset
-    edges:
-      - from: START
-        to: get_project_path
-
-        # two branches
-      - from: get_project_path
-        to: load_include_exclude_rules
-      - from: get_project_path
-        to: load_project_rules
-
-        # converge
-      - from: load_project_rules
-        to: load_file_collection
-      - from: load_include_exclude_rules
-        to: load_file_collection
-
-        # two branches
-      - from: load_file_collection
-        to: load_directory_tree
-      - from: load_file_collection
-        to: load_source_code
-
-        # converge
-      - from: load_directory_tree
-        to: generate_changeset
-      - from: load_source_code
-        to: generate_changeset
-
-        # implement
-      - from: generate_changeset
-        to: implement_changeset
-
-      - from: implement_changeset
-        to: END
+    - START -> get_project_path
+    - get_project_path -> load_include_exclude_rules
+    - get_project_path -> load_project_rules
+    - load_project_rules -> load_file_collection
+    - load_include_exclude_rules -> load_file_collection
+    - load_file_collection -> load_directory_tree
+    - load_file_collection -> load_source_code
+    - load_directory_tree -> generate_changeset
+    - load_source_code -> generate_changeset
+    - generate_changeset -> implement_changeset
+    - implement_changeset -> END
 
   run_tests:
-    nodes:
-      - run_tests
-    edges:
-      - from: START
-        to: run_tests
-
-      - from: run_tests
-        to: END
+    - START -> run_tests
+    - run_tests -> END
 
   project_plan:
-    nodes:
-      - get_project_path
-      - load_include_exclude_rules
-      - load_project_rules
-      - load_file_collection
-      - load_directory_tree
-      - load_source_code
-      - generate_user_stories
-      - parse_user_stories
-    edges:
-      - from: START
-        to: get_project_path
-
-      # two branches
-      - from: get_project_path
-        to: load_include_exclude_rules
-      - from: get_project_path
-        to: load_project_rules
-
-      # converge
-      - from: load_project_rules
-        to: load_file_collection
-      - from: load_include_exclude_rules
-        to: load_file_collection
-
-      # two branches
-      - from: load_file_collection
-        to: load_directory_tree
-      - from: load_file_collection
-        to: load_source_code
-
-      # converge
-      - from: load_directory_tree
-        to: generate_user_stories
-      - from: load_source_code
-        to: generate_user_stories
-
-      # parse user stories
-      - from: generate_user_stories
-        to: parse_user_stories
-      - from: parse_user_stories
-        to: END
+    - START -> get_project_path
+    - get_project_path -> load_include_exclude_rules
+    - get_project_path -> load_project_rules
+    - load_project_rules -> load_file_collection
+    - load_include_rules -> load_file_collection
+    - load_include_exclude_rules -> load_file_collection
+    - load_file_collection -> load_directory_tree
+    - load_file_collection -> load_source_code
+    - load_directory_tree -> generate_user_stories
+    - load_source_code -> generate_user_stories
+    - generate_user_stories -> parse_user_stories
+    - parse_user_stories -> END
