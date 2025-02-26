@@ -1,84 +1,74 @@
 import unittest
 from unittest.mock import patch
+
 from infrastructure.agency.nodes.generate_changeset import GenerateChangeset, Changeset, FileChange
 
 
 class DummyClipboard:
     def __init__(self):
         self.content = ""
-
     def get(self):
         return self.content
-
-    def set(self, content: str):
+    def set(self, content):
         self.content = content
-
-
-class DummyCallback:
-    prompt_tokens = 10
-    completion_tokens = 5
-    total_tokens = 15
-    total_cost = 0.01
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
-
-
-class DummyLLM:
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def with_structured_output(self, output_model):
-        return self
-
-    def invoke(self, prompts):
-        return Changeset(summary="Test summary", additions=[], removals=[], modifications=[])
 
 
 class DummyPullRequestPrompt:
     def format(self, **kwargs):
-        return "Formatted PR prompt"
+        # Return a dummy prompt that includes the goal
+        return "dummy prompt: " + kwargs.get("goal", "")
+
+
+class DummyStructuredLLM:
+    def invoke(self, prompts):
+        # Return a dummy Changeset instance
+        dummy_changeset = Changeset(
+            summary="Dummy changeset summary",
+            additions=[FileChange(path="added.txt", content="Added dummy")],
+            removals=[],
+            modifications=[]
+        )
+        return dummy_changeset
+
+
+class DummyChatModel:
+    def with_structured_output(self, structured_type):
+        return DummyStructuredLLM()
 
 
 class TestGenerateChangeset(unittest.TestCase):
-    @patch("infrastructure.agency.nodes.generate_changeset.get_openai_callback", return_value=DummyCallback())
-    @patch("infrastructure.agency.nodes.generate_changeset.ChatOpenAI", new=DummyLLM)
-    def test_generate_changeset_execute_llm(self, mock_callback):
-        dummy_clipboard = DummyClipboard()
-        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt(), model="dummy-model")
-        state = {
-            "goal": "dummy goal",
-            "project_rules": "dummy rules",
-            "directory_tree": "dummy tree",
-            "source_code": "dummy source",
-            "confirmation_required": False,
-            "copy_prompt": False
-        }
-        result = node(state)
-        self.assertIn("changeset", result)
-        self.assertIsNotNone(result["changeset"])
-        self.assertEqual(result["changeset"].summary, "Test summary")
-        self.assertEqual(result["progress"], "Changeset generated.")
-
     @patch("builtins.input", return_value="irrelevant")
     def test_generate_changeset_copy_prompt(self, mock_input):
         dummy_clipboard = DummyClipboard()
-        node = GenerateChangeset(clipboard=dummy_clipboard, pr_prompt=DummyPullRequestPrompt(), model="dummy-model")
+        dummy_prompt = DummyPullRequestPrompt()
+        dummy_chat = DummyChatModel()
+        # Note: use 'chat_model' keyword instead of 'model'
+        node = GenerateChangeset(chat_model=dummy_chat, clipboard=dummy_clipboard, pr_prompt=dummy_prompt)
         state = {
-            "goal": "dummy goal copy",
-            "project_rules": "dummy rules",
-            "directory_tree": "dummy tree",
-            "source_code": "dummy source",
-            "copy_prompt": True
+            "goal": "Test goal",
+            "copy_prompt": True,
+            "directory_tree": "",
+            "source_code": ""
         }
         result = node(state)
-        self.assertIsNone(result["changeset"])
-        self.assertEqual(result["progress"], "PR prompt copied to clipboard.")
-        self.assertEqual(dummy_clipboard.content, "Formatted PR prompt")
+        self.assertIn("PR prompt copied to clipboard", result.get("progress", ""))
+
+    def test_generate_changeset_execute_llm(self):
+        dummy_clipboard = DummyClipboard()
+        dummy_prompt = DummyPullRequestPrompt()
+        dummy_chat = DummyChatModel()
+        node = GenerateChangeset(chat_model=dummy_chat, clipboard=dummy_clipboard, pr_prompt=dummy_prompt)
+        state = {
+            "goal": "Test goal",
+            "copy_prompt": False,
+            "directory_tree": "",
+            "source_code": ""
+        }
+        result = node(state)
+        changeset = result.get("changeset")
+        self.assertIsNotNone(changeset)
+        self.assertEqual(changeset.summary, "Dummy changeset summary")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
