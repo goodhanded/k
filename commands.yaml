@@ -52,6 +52,9 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
+      copy:
+        help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
+        flag: true
       tree:
         help: "If set, print the directory tree to the console"
         flag: true

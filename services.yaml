@@ -179,7 +179,10 @@ services:
   # Node: Generate code advice
   agency.node.generate_code_advice:
     class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
-    arguments: ['@langchain.chat_anthropic', '@agency.prompt.code_advice']
+    arguments: 
+      chat_model: '@langchain.chat_anthropic'
+      prompt: '@agency.prompt.pr'
+      clipboard: '@pyperclip'
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 
