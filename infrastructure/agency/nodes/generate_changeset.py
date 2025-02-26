@@ -50,14 +50,14 @@ class GenerateChangeset(WorkflowNodeProtocol):
         if self.callback:
             with self.callback() as cb:
                 changeset = structured_llm.invoke([prompt])
-
+            
             print(f"Input Tokens: {cb.prompt_tokens}")
             print(f"Output Tokens: {cb.completion_tokens}")
             print(f"Total: {cb.total_tokens}")
             print(f"Cost: {cb.total_cost}\n")
         else:
             changeset = structured_llm.invoke([prompt])
-
+        
         print(f"{changeset.summary}\n")
         
         return {"changeset": changeset, "progress": "Changeset generated."}

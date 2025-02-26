@@ -34,10 +34,10 @@ class FakePrompt:
         # For testing, simply incorporate the 'goal' value in the returned string
         goal = kwargs.get("goal", "")
         # Even if other kwargs are present, simply include them in the string for verification if needed
-        project_rules = kwargs.get("project_rules", "")
-        directory_tree = kwargs.get("directory_tree", "")
+        rules = kwargs.get("rules", "")
+        tree = kwargs.get("tree", "")
         source_code = kwargs.get("source_code", "")
-        return f"Formatted prompt with goal: {goal}; rules: {project_rules}; tree: {directory_tree}; source: {source_code}"
+        return f"Formatted prompt with goal: {goal}; rules: {rules}; tree: {tree}; source: {source_code}"
 
 
 def test_generate_changeset_normal():
@@ -79,7 +79,7 @@ def test_generate_changeset_copy_prompt():
     # When copy_prompt is True, the node should not invoke the LLM; changeset is None
     assert result["changeset"] is None
     assert result["progress"] == "PR prompt copied to clipboard."
-    expected_prompt = prompt.format(goal="Fix bug", project_rules="Rules", directory_tree="Directory Tree", source_code="Source")
+    expected_prompt = prompt.format(goal="Fix bug", rules="Rules", tree="Directory Tree", source_code="Source")
     print(f"Expected prompt: {expected_prompt}")
     print(f"Actual clipboard content: {clipboard.content}")
     assert clipboard.content == expected_prompt
