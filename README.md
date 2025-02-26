@@ -89,7 +89,8 @@ For subcommands:
 | Command      | Usage Example                                                 | Description                                                                                     |
 |--------------|---------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
 | **init**     | `k init`                                                      | Initializes the .k directory with default configuration templates.                              |
-| **get**      | `k get openai models`                                           | Retrieves a list of available OpenAI models.                                                    |
+| **get**      | `k get openai models`                                         | Retrieves a list of available OpenAI models.                                                    |
+|              | `k get anthropic models`                                      | Retrieves a list of available Anthropic models with descriptions.                               |
 | **traceback**| `k traceback`                                                 | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts. |
 | **pr**       | `k pr [prompt] [--clipboard] [--paste] [--tree]`                | Generates a pull request changeset based on your modifications.                                 |
 | **advise**   | `k advise --prompt "Refactor authentication module." [--tree]`  | Provides detailed code advice and suggestions for improvements.                                 |
@@ -142,6 +143,7 @@ The application uses several environment variables which must be defined in your
 - `OBSIDIAN_VAULT_PATH`: Path to your Obsidian vault for notes.
 - `FAISS_INDEX_PATH`: Directory for the FAISS index used in search.
 - `OPENAI_API_KEY`: API key for accessing OpenAI's GPT models.
+- `ANTHROPIC_API_KEY`: API key for accessing Anthropic's Claude models.
 - `DISCORD_BOT_TOKEN`: (Not used in current version.)
 - `GENERATE_CHANGESET_MODEL`: Model identifier (e.g., "o3-mini") used for generating pull request changesets.
 - `GENERATE_CODE_ADVICE_MODEL`: Model identifier (e.g., "o3-mini") used for generating code advice.
