@@ -22,9 +22,6 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
 
         print("\nGenerating advice. This may take a minute...\n")
 
-        # with get_openai_callback() as cb:
-        #     response = self.chat_model.invoke([prompt])
-
         if self.callback:
             with self.callback() as cb:
                 response = self.chat_model.invoke([prompt])

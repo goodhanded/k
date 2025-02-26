@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
+from langchain_core.language_models import BaseChatModel
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 from application.filesystem.protocols.clipboard import ClipboardProtocol
 from application.templating.protocols.template import TemplateProtocol
@@ -13,6 +13,7 @@ class UserStory(BaseModel):
     technical_considerations: list[str] = Field(..., description="List of technical considerations")
     steps_to_implement: list[str] = Field(..., description="Comprehensive and detailed list of steps to implement the user story. Include references to specific classes that need to be changed or created and what needs to be done in each step.")
 
+
 class UserStoriesPlan(BaseModel):
     summary: str = Field(..., description="Summary of the project plan")
     user_stories: list[UserStory] = Field(..., description="List of user stories in order of priority")
@@ -23,15 +24,16 @@ class GenerateUserStories(WorkflowNodeProtocol):
     Workflow node that generates user stories based on the provided goal.
     It uses an LLM to produce a structured list of user stories.
     """
-    def __init__(self, clipboard: ClipboardProtocol, prompt_adapter: TemplateProtocol, model: str):
+    def __init__(self,chat_model: BaseChatModel, clipboard: ClipboardProtocol, prompt: TemplateProtocol, callback: callable = None) -> None:
+        self.chat_model = chat_model
         self.clipboard = clipboard
-        self.prompt_adapter = prompt_adapter
-        self.model = model
+        self.prompt = prompt
+        self.callback = callback
 
     def __call__(self, state: dict) -> dict:
         if "goal" not in state:
             raise ValueError("Goal not found in state.")
-        prompt = self.prompt_adapter.format(
+        prompt = self.prompt.format(
             goal=state["goal"],
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
@@ -45,12 +47,19 @@ class GenerateUserStories(WorkflowNodeProtocol):
                 print(f"Failed to copy prompt to clipboard: {e}")
             return {"user_stories": None, "progress": "Plan prompt copied to clipboard."}
 
-        llm = ChatOpenAI(model=self.model, reasoning_effort="high")
-
         print("\nGenerating user stories. This may take a minute...\n")
 
-        with get_openai_callback() as cb:
-            user_stories_plan = llm.with_structured_output(UserStoriesPlan).invoke([prompt])
+        if self.callback:
+            with self.callback() as cb:
+                user_stories_plan = self.chat_model.with_structured_output(UserStoriesPlan).invoke([prompt])
+
+            print(f"Input Tokens: {cb.prompt_tokens}")
+            print(f"Output Tokens: {cb.completion_tokens}")
+            print(f"Total: {cb.total_tokens}")
+            print(f"Cost: {cb.total_cost}\n")
+        else:
+            user_stories_plan = self.chat_model.with_structured_output(UserStoriesPlan).invoke([prompt])
+
         print(f"Done. User Stories Summary: {user_stories_plan.summary}")
-        state["user_stories"] = user_stories_plan
+
         return {"user_stories": user_stories_plan, "progress": "User stories generated."}

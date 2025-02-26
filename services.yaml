@@ -86,13 +86,7 @@ services:
     class: infrastructure.agency.workflow.Workflow
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['code_advice']
-
-  # Workflow: Runs tests
-  agency.workflow.run_tests:
-    class: infrastructure.agency.workflow.Workflow
-    factory: ['@agency.workflow_factory', 'create']
-    arguments: ['run_tests']
-
+  
   # Workflow: Project Plan
   agency.workflow.project_plan:
     class: infrastructure.agency.workflow.Workflow
@@ -185,9 +179,7 @@ services:
   # Node: Generate code advice
   agency.node.generate_code_advice:
     class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
-    arguments:
-      chat_model: '@langchain.chat_anthropic'
-      prompt: '@agency.prompt.code_advice'
+    arguments: ['@langchain.chat_anthropic', '@agency.prompt.code_advice']
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 
@@ -198,7 +190,7 @@ services:
       chat_model: '@langchain.chat_openai'
       clipboard: '@pyperclip'
       prompt: '@agency.prompt.pr'
-      callback: 'langchain_community.callbacks.manager.get_openai_callback'
+      callback: '@openai.callback'
     tags:
       - { name: workflow_node, alias: generate_changeset }
 
@@ -217,7 +209,11 @@ services:
   # Node: Generate User Stories
   agency.node.generate_user_stories:
     class: infrastructure.agency.nodes.generate_user_stories.GenerateUserStories
-    arguments: ['@pyperclip', '@agency.prompt.project_plan', '%GENERATE_USER_STORIES_MODEL%']
+    arguments: 
+      chat_model: '@langchain.chat_openai'
+      clipboard: '@pyperclip'
+      prompt: '@agency.prompt.project_plan'
+      callback: '@openai.callback'
     tags:
       - { name: workflow_node, alias: generate_user_stories }
 
@@ -289,3 +285,6 @@ services:
     arguments:
       model: 'claude-3-7-sonnet-latest'
       max_tokens: 64000
+
+  openai.callback:
+    class: infrastructure.agency.callbacks.openai.OpenAICallback
