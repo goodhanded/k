@@ -291,3 +291,8 @@ services:
 
   openai.callback:
     class: infrastructure.agency.callbacks.openai.OpenAICallback
+
+  openai.client:
+    class: infrastructure.openai.client.OpenAIClient
+    arguments:
+      api_key: '%OPENAI_API_KEY%'
