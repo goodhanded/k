@@ -1,9 +1,6 @@
 import os
 
-from typing import Optional
-
-from application.agency import WorkflowNodeProtocol
-from domain.filesystem import FileCollection
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: LoadDirectoryTree
 # This node creates a textual tree representation of the project's directory structure

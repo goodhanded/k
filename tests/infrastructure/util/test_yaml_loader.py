@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from infrastructure.util import YamlLoader
+from infrastructure.util.yaml_loader import YamlLoader
 
 
 class TestYamlLoader(unittest.TestCase):

@@ -1,10 +1,10 @@
 import argparse
 import json
-from textwrap import indent
 import os
 
-from domain.util.module_resolution import resolve_module
-from infrastructure.di import Container, load_definitions_from_yaml
+from infrastructure.di.module_resolution import resolve_module
+from infrastructure.di.container import Container
+from infrastructure.di.load_definitions import load_definitions_from_yaml
 from infrastructure.util.yaml_loader import YamlLoader
 
 # Derive paths from K_PATH if set

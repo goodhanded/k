@@ -1,4 +1,4 @@
-from application.templating import TemplateProtocol
+from application.templating.protocols.template import TemplateProtocol
 
 class CodeReviewPrompt(TemplateProtocol):
     def format(self, **kwargs) -> str:

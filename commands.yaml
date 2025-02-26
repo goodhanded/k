@@ -5,12 +5,6 @@ commands:
     arguments:
       template: "Alias of the template to use for initialization (e.g., nodejs, nextjs, python, dotnet)"
 
-  assimilate:
-    help: "Assimilate a voice memo into the daily note"
-    target: "@daily_voice_notes.assimilate_voice_note_use_case.execute"
-    arguments:
-      path: "Local audio file path"
-
   get:
     help: "Get some resource"
     subcommands:
@@ -31,20 +25,7 @@ commands:
     aliases: ["tb"]
     help: "Build a troubleshooting prompt from a traceback on the clipboard"
     target: "@traceback.build_troubleshooting_prompt_use_case.execute"
-
-  transcribe:
-    help: "Transcribe an audio file"
-    target: "@transcription.transcribe_audio_use_case.execute"
-    arguments:
-      path: "Local audio file path"
-
-  ask:
-    help: "Prompt an AI agent"
-    target: "@agency.prompt_agent_use_case.execute"
-    arguments:
-      agent_name: "The name of the agent to invoke"
-      prompt: "Text to send to the agent"
-
+  
   pr:
     help: "Generate pull request changes based on a prompt. Use the --clipboard flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
@@ -62,34 +43,15 @@ commands:
       copy:
         help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
         flag: true
-      confirm:
-        help: "If set, show token count and require confirmation before proceeding"
-        flag: true
       tree:
         help: "If set, print the directory tree to the console"
         flag: true
-
-  run:
-    help: "Run a subcommand"
-    subcommands:
-      discord:
-        help: "Run the discord bot"
-        target: "@agency.run_discord_bot_use_case.execute"
-      indexer:
-        help: "Run the indexer"
-        target: "@agency.index_documents_use_case.execute"
-      tests:
-        help: "Run the tests"
-        target: "@agency.run_tests_use_case.execute"
 
   advise:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
-      confirm:
-        help: "If set, show token count and require confirmation before proceeding"
-        flag: true
       tree:
         help: "If set, print the directory tree to the console"
         flag: true

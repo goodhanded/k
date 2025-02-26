@@ -1,1 +1,0 @@
-from .prompts.assimilation import assimilation_prompt

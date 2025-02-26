@@ -1,6 +1,6 @@
 import os
 import json
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 
 class ParseUserStories(WorkflowNodeProtocol):

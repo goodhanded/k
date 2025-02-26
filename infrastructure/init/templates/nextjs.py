@@ -1,4 +1,4 @@
-from application.init import KTemplateProtocol
+from application.init.k_template import KTemplateProtocol
 
 
 class NextJSTemplate(KTemplateProtocol):

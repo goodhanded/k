@@ -1,1 +1,0 @@
-from .protocols.config import ConfigProtocol

@@ -1,9 +1,4 @@
-from sys import stdin
-
-from application.filesystem.protocols.clipboard import ClipboardProtocol
-from application.agency.protocols.prompt_generator import PromptGeneratorProtocol
 from application.agency.protocols.workflow import WorkflowProtocol
-
 
 class CreateProjectPlanUseCase:
     """

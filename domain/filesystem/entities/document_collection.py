@@ -1,6 +1,7 @@
 import os
 from typing import List
-from domain.filesystem import File, Document
+from domain.filesystem.entities.file import File
+from domain.filesystem.entities.document import Document
 from pathspec import PathSpec
 
 class DocumentCollection:

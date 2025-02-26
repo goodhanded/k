@@ -1,7 +1,6 @@
-import importlib
 from typing import Any, Dict, Set
 
-from infrastructure.config import Config
+from infrastructure.config.services.config import Config
 
 from .service_definition import ServiceDefinition
 from .tagged_iterator import TaggedIterator

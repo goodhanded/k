@@ -1,11 +1,6 @@
 import os
 
-from typing import Optional
-from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
-
-from application.agency import WorkflowNodeProtocol
-from adapters.prompts import PullRequestPrompt
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: ImplementChangeset
 # This node applies the changeset to the project files by processing file additions, modifications, and removals.

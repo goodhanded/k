@@ -1,5 +1,5 @@
 from uuid import uuid4
-from domain.filesystem import File
+from domain.filesystem.entities.file import File
 
 class Document:
     """

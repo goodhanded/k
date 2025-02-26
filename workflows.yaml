@@ -22,10 +22,6 @@ workflows:
     - generate_changeset -> implement_changeset
     - implement_changeset -> END
 
-  run_tests:
-    - START -> run_tests
-    - run_tests -> END
-
   project_plan:
     - START -> get_project_path
     - get_project_path -> load_include_exclude_rules

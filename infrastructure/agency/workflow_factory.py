@@ -1,5 +1,5 @@
-from application.agency import WorkflowProtocol
-from domain.registry import Registry
+from application.agency.protocols.workflow import WorkflowProtocol
+from domain.registry.entities.registry import Registry
 from langgraph.graph import StateGraph, START, END
 
 from .workflow import Workflow

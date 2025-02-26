@@ -1,6 +1,6 @@
 import os
 
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: GetProjectPath
 # This node retrieves the current project's absolute path (the working directory)

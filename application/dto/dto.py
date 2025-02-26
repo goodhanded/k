@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
 from typing import (
-    TypeVar, Type, Union, Optional, List, Dict, Any,
+    TypeVar, Type, Union, List, Dict, Any,
     get_origin, get_args
 )
 

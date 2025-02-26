@@ -1,25 +1,19 @@
-import os
-from typing import Optional
 from pydantic import BaseModel, Field
 from langchain_core.language_models import BaseChatModel
-from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
-from application.agency import WorkflowNodeProtocol
-from application.filesystem import ClipboardProtocol
-from application.templating import TemplateProtocol
-
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
+from application.filesystem.protocols.clipboard import ClipboardProtocol
+from application.templating.protocols.template import TemplateProtocol
 
 class FileChange(BaseModel):
-    path: str = Field(..., description="Relative path to the file within the project.")
-    content: Optional[str] = Field(None, description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
-
+    path: str = Field(description="Relative path to the file within the project.")
+    content: str = Field(description="Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc.")
 
 class Changeset(BaseModel):
-    summary: str = Field(..., description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
-    additions: list[FileChange] = Field(..., description="List of files added.")
-    removals: list[FileChange] = Field(..., description="List of files removed.")
-    modifications: list[FileChange] = Field(..., description="List of files modified.")
-
+    summary: str = Field(description="Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file.")
+    additions: list[FileChange] = Field(description="List of files added.")
+    removals: list[FileChange] = Field(description="List of files removed.")
+    modifications: list[FileChange] = Field(description="List of files modified.")
 
 class GenerateChangeset(WorkflowNodeProtocol):
     """
@@ -41,12 +35,6 @@ class GenerateChangeset(WorkflowNodeProtocol):
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
         )
-        
-        if state.get("confirmation_required", False):
-            user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()
-            if user_input != 'y':
-                print("Operation cancelled by user.")
-                return {"changeset": None, "progress": "Operation cancelled."}
         
         if state.get("copy_prompt", False):
             try:

@@ -1,6 +1,6 @@
 import importlib
 from typing import Dict
-from infrastructure.util import YamlLoader
+from infrastructure.util.yaml_loader import YamlLoader
 
 from .service_definition import ServiceDefinition
 

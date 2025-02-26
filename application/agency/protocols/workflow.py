@@ -1,5 +1,5 @@
 from typing import Protocol
-from ..dtos import WorkflowResultDTO
+from ..dtos.workflow_result_dto import WorkflowResultDTO
 
 class WorkflowProtocol(Protocol):
   def run(self, prompt: str) -> WorkflowResultDTO:

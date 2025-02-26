@@ -13,9 +13,9 @@
   - [Installation](#installation)
   - [Usage](#usage)
     - [Commands Overview](#commands-overview)
-      - [Subcommands under `run`](#subcommands-under-run)
     - [Examples](#examples)
   - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
   - [Extending k](#extending-k)
   - [Workflow Format](#workflow-format)
   - [Running Tests](#running-tests)
@@ -90,65 +90,38 @@ For subcommands:
 | Command               | Usage Example                                                | Description                                                                                                           |
 |-----------------------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | **init**              | `k init`                                                     | Initializes the .k directory with default configuration templates.                                                  |
-| **assimilate**        | `k assimilate --path /path/to/audio.wav`                       | Assimilates a voice memo into your daily note (requires a local audio file).                                          |
-| **transcribe**        | `k transcribe --path /path/to/audio.wav`                       | Transcribes the given audio file.                                                                                     |
-| **ask**               | `k ask --agent_name search_agent --prompt "Hello!"`           | Prompts an AI agent with a given text input.                                                                          |
 | **advise**            | `k advise --prompt "Optimize my database queries."`         | Generates detailed code advice for the project based on your prompt.                                                  |
 | **traceback (tb)**    | `k traceback`                                                | Builds a troubleshooting prompt from a traceback present in the clipboard, including related source code excerpts.      |
-| **pr**                | `k pr [prompt] [--confirm] [--clipboard] [--paste]`              | Generates a pull request prompt based on your changes. If the --paste flag is used, the prompt is read from the clipboard instead of being supplied as an argument or via stdin. |
-| **review**            | `k review [prompt] [--confirm]`                                | Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback.      |
-| **run**               | `k run <subcommand> [args...]`                                 | Runs subcommands (e.g., `discord`, `indexer`, `tests`).                                                               |
-
-#### Subcommands under `run`
-
-- **discord**  
-  Runs the Discord bot, allowing you to interact with AI agents via Discord.
-
-- **indexer**  
-  Indexes documents in your configured storage for quick searching and retrieval.
-
-- **tests**    
-  Executes the project test suite using pytest.
+| **pr**                | `k pr [prompt] [--clipboard] [--paste]`              | Generates a pull request prompt based on your changes. If the --paste flag is used, the prompt is read from the clipboard instead of being supplied as an argument or via stdin. |
+| **review**            | `k review [prompt]`                                | Constructs a code review prompt using the current directory tree and file contents, then prints the LLM's feedback.      |
 
 ---
 
 ### Examples
 
-1. **Transcribe an Audio File**  
-   `k transcribe --path ~/recordings/todays_notes.wav`  
-   This will produce a transcription for the audio file.
-
-2. **Assimilate a Voice Memo**  
-   `k assimilate --path ~/recordings/daily_update.wav`  
-   This adds the transcribed memo into your daily note (for example, in Obsidian).
-
-3. **Ask an AI Agent**  
+1. **Ask an AI Agent**  
    `k ask --agent_name search_agent --prompt "What's the weather like in San Francisco?"`  
    This sends the prompt to the specified agent.
 
-4. **Generate a Pull Request**  
-   `k pr [prompt] [--confirm] [--clipboard] [--paste]`  
+2. **Generate a Pull Request**  
+   `k pr [prompt] [--clipboard] [--paste]`  
    Generates a pull request prompt based on your changes. Use the --paste flag to read the prompt from the clipboard if desired.
 
-5. **Generate a Code Review**  
-   `k review [prompt] [--confirm]`  
+3. **Generate a Code Review**  
+   `k review [prompt]`  
    Constructs a code review prompt using the current directory structure and file contents, then outputs the LLM's feedback.
 
-6. **Generate Code Advice**  
+4. **Generate Code Advice**  
    `k advise --prompt "Refactor my authentication module for better performance."`  
    Generates detailed code advice and suggestions for improving your project based on the provided prompt.
 
-7. **Build Troubleshooting Prompt**  
+5. **Build Troubleshooting Prompt**  
    Copy a traceback to your clipboard, then run `k traceback`  
    This extracts file references and source code snippets from the traceback to build a comprehensive troubleshooting prompt.
 
-8. **Initialize .k Directory**  
+6. **Initialize .k Directory**  
    `k init`  
    Creates a new .k directory with default templates (excludes.txt, includes.txt, rules.txt). Use this command if the directory does not already exist or to reset its contents.
-
-9. **Run Discord Bot**  
-   `k run discord`  
-   Launches the Discord bot. Ensure your environment variables include your Discord bot token.
 
 ---
 

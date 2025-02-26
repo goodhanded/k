@@ -1,6 +1,6 @@
 from typing import List
 from dataclasses import dataclass, field
-from application.dto import DataTransferObject
+from application.dto.dto import DataTransferObject
 
 @dataclass
 class WorkflowResultDTO(DataTransferObject):

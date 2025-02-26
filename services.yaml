@@ -3,74 +3,31 @@ services:
   ################################################################################################
   # Application Use Cases
   ################################################################################################
-
-  # Use Case: Generate Prompt
-  agency.generate_prompt_use_case:
-    class: application.agency.GeneratePromptUseCase
-    arguments:
-      - '@pyperclip'
-      - '@obsidian.vault'
-      - '%PROMPT_TEMPLATE_PATH%'
-
-  # Use Case: Index Documents
-  agency.prompt_agent_use_case:
-    class: application.agency.PromptAgentUseCase
-    arguments: ['@agency.agent_registry']
-
-  # Use Case: Run Discord Bot
-  agency.run_discord_bot_use_case:
-    class: application.agency.RunDiscordBotUseCase
-    arguments: ['@agency.prompt_agent_use_case']
-
-  # Use Case: Index Documents
-  agency.index_documents_use_case:
-    class: application.agency.IndexDocumentsUseCase
-    arguments: ['@faiss.indexer']
   
   # Use Case: Create a pull request
   agency.create_pull_request_use_case:
-    class: application.agency.CreatePullRequestUseCase
+    class: application.agency.use_cases.create_pull_request.CreatePullRequestUseCase
     arguments: ['@pyperclip','@agency.workflow.pull_request']
 
   # Use Case: Get Code Advice
   agency.get_code_advice_use_case:
-    class: application.agency.GetCodeAdviceUseCase
+    class: application.agency.use_cases.get_code_advice.GetCodeAdviceUseCase
     arguments: ['@agency.workflow.code_advice']
 
   # Use Case: Create Project Plan
   agency.create_project_plan_use_case:
-    class: application.agency.CreateProjectPlanUseCase
+    class: application.agency.use_cases.create_project_plan.CreateProjectPlanUseCase
     arguments: ['@agency.workflow.project_plan']
-
-  # Use Case: Run Tests
-  agency.run_tests_use_case:
-    class: application.agency.RunTestsUseCase
-    arguments: ['@agency.workflow.run_tests']
-
-  # Use Case: Assimilate Voice Note
-  daily_voice_notes.assimilate_voice_note_use_case:
-    class: application.daily_voice_notes.AssimilateVoiceNoteUseCase
-    arguments: 
-      - '@transcription.transcriber'
-      - '@daily_voice_notes.document_consolidator'
-      - '%TRANSCRIPTS_BASE_PATH%'
-      - '@util.datetime'
 
   # Use Case: Init K
   init.init_k_use_case:
-    class: application.init.InitKUseCase
+    class: application.init.init_k.InitKUseCase
     arguments: ['@init.k_template_registry']
 
   # Use Case: Build Troubleshooting Prompt
   traceback.build_troubleshooting_prompt_use_case:
-    class: application.traceback.BuildTroubleshootingPromptUseCase
+    class: application.traceback.use_cases.build_troubleshooting_prompt.BuildTroubleshootingPromptUseCase
     arguments: ['@traceback.prompt_builder']
-
-  # Use Case: Transcribe Audio
-  transcription.transcribe_audio_use_case:
-    class: application.transcription.TranscribeAudioUseCase
-    arguments: ['@transcription.transcriber']
-
 
 ################################################################################################
 # Prompt Adapters
@@ -78,31 +35,31 @@ services:
 
   # Registry of all prompts
   agency.prompt_registry:
-    class: domain.registry.Registry
+    class: domain.registry.entities.registry.Registry
     arguments:
       services: !tagged_iterator { tag: prompt, index_by: alias }
 
   # Prompt: Pull Request
   agency.prompt.pr:
-    class: adapters.prompts.PullRequestPrompt
+    class: adapters.prompts.pull_request_prompt.PullRequestPrompt
     tags:
       - { name: prompt, alias: pr }
 
   # Prompt: Code Review
   agency.prompt.code_review:
-    class: adapters.prompts.CodeReviewPrompt
+    class: adapters.prompts.code_review_prompt.CodeReviewPrompt
     tags:
       - { name: prompt, alias: code_review }
 
   # Prompt: Code Advice
   agency.prompt.code_advice:
-    class: adapters.prompts.CodeAdvicePrompt
+    class: adapters.prompts.code_advice_prompt.CodeAdvicePrompt
     tags:
       - { name: prompt, alias: code_advice }
 
   # Prompt: Project Plan
   agency.prompt.project_plan:
-    class: adapters.prompts.ProjectPlanPrompt
+    class: adapters.prompts.project_plan_prompt.ProjectPlanPrompt
     tags:
       - { name: prompt, alias: project_plan }
 
@@ -112,7 +69,7 @@ services:
 
   # Workflow Factory
   agency.workflow_factory:
-    class: infrastructure.agency.WorkflowFactory
+    class: infrastructure.agency.workflow_factory.WorkflowFactory
     arguments: 
       node_registry: '@agency.node_registry'
       state_registry: '@agency.state_registry'
@@ -120,25 +77,25 @@ services:
 
   # Workflow: Generates a changeset for a pull request
   agency.workflow.pull_request:
-    class: infrastructure.agency.Workflow
+    class: infrastructure.agency.workflow.Workflow
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['pull_request']
 
   # Workflow: Generates advice for a codebase
   agency.workflow.code_advice:
-    class: infrastructure.agency.Workflow
+    class: infrastructure.agency.workflow.Workflow
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['code_advice']
 
   # Workflow: Runs tests
   agency.workflow.run_tests:
-    class: infrastructure.agency.Workflow
+    class: infrastructure.agency.workflow.Workflow
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['run_tests']
 
   # Workflow: Project Plan
   agency.workflow.project_plan:
-    class: infrastructure.agency.Workflow
+    class: infrastructure.agency.workflow.Workflow
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['project_plan']
 
@@ -148,34 +105,27 @@ services:
 
   # Registry of all workflow states
   agency.state_registry:
-    class: domain.registry.Registry
+    class: domain.registry.entities.registry.Registry
     arguments:
       services: !tagged_iterator { tag: workflow_state, index_by: alias }
 
   # State: Code Advice
   agency.workflow_state.code_advice:
-    class: infrastructure.agency.CodeAdviceWorkflowState
+    class: infrastructure.agency.states.code_advice_workflow_state.CodeAdviceWorkflowState
     inject_class: true
     tags:
       - { name: workflow_state, alias: code_advice }
 
   # State: Pull Request
   agency.workflow_state.pull_request:
-    class: infrastructure.agency.PullRequestWorkflowState
+    class: infrastructure.agency.states.pull_request_workflow_state.PullRequestWorkflowState
     inject_class: true
     tags:
       - { name: workflow_state, alias: pull_request }
 
-  # State: Run Tests
-  agency.workflow_state.run_tests:
-    class: infrastructure.agency.RunTestsWorkflowState
-    inject_class: true
-    tags:
-      - { name: workflow_state, alias: run_tests }
-
   # State: Project Plan
   agency.workflow_state.project_plan:
-    class: infrastructure.agency.ProjectPlanWorkflowState
+    class: infrastructure.agency.states.project_plan_workflow_state.ProjectPlanWorkflowState
     inject_class: true
     tags:
       - { name: workflow_state, alias: project_plan }
@@ -186,75 +136,75 @@ services:
 
   # Registry of all workflow nodes
   agency.node_registry:
-    class: domain.registry.Registry
+    class: domain.registry.entities.registry.Registry
     arguments:
       services: !tagged_iterator { tag: workflow_node, index_by: alias }
 
   # Node: Get project path
   agency.node.get_project_path:
-    class: infrastructure.agency.GetProjectPath
+    class: infrastructure.agency.nodes.get_project_path.GetProjectPath
     tags:
       - { name: workflow_node, alias: get_project_path }
 
   # Node: Load include/exclude rules
   agency.node.load_include_exclude_rules:
-    class: infrastructure.agency.LoadIncludeExcludeRules
+    class: infrastructure.agency.nodes.load_include_exclude_rules.LoadIncludeExcludeRules
     tags:
       - { name: workflow_node, alias: load_include_exclude_rules }
 
   # Node: Load project rules
   agency.node.load_project_rules:
-    class: infrastructure.agency.LoadProjectRules
+    class: infrastructure.agency.nodes.load_project_rules.LoadProjectRules
     tags:
       - { name: workflow_node, alias: load_project_rules }
 
   # Node: Load file collection
   agency.node.load_file_collection:
-    class: infrastructure.agency.LoadFileCollection
+    class: infrastructure.agency.nodes.load_file_collection.LoadFileCollection
     tags:
       - { name: workflow_node, alias: load_file_collection }
 
   # Node: Load source code
   agency.node.load_source_code:
-    class: infrastructure.agency.LoadSourceCode
+    class: infrastructure.agency.nodes.load_source_code.LoadSourceCode
     tags:
       - { name: workflow_node, alias: load_source_code }
 
   # Node: Load directory tree
   agency.node.load_directory_tree:
-    class: infrastructure.agency.LoadDirectoryTree
+    class: infrastructure.agency.nodes.load_directory_tree.LoadDirectoryTree
     tags:
       - { name: workflow_node, alias: load_directory_tree }
 
   # Node: Git status
   agency.node.git_status:
-    class: infrastructure.agency.GitStatus
+    class: infrastructure.agency.nodes.git_status.GitStatus
     tags:
       - { name: workflow_node, alias: git_status }
 
   # Node: Generate code advice
   agency.node.generate_code_advice:
-    class: infrastructure.agency.GenerateCodeAdvice
+    class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
     arguments: ['@agency.prompt.code_advice', '%GENERATE_CODE_ADVICE_MODEL%']
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 
   # Node: Generate changeset
   agency.node.generate_changeset:
-    class: infrastructure.agency.GenerateChangeset
+    class: infrastructure.agency.nodes.generate_changeset.GenerateChangeset
     arguments: ['@langchain.chat_openai', '@pyperclip', '@agency.prompt.pr']
     tags:
       - { name: workflow_node, alias: generate_changeset }
 
   # Node: Implement changeset
   agency.node.implement_changeset:
-    class: infrastructure.agency.ImplementChangeset
+    class: infrastructure.agency.nodes.implement_changeset.ImplementChangeset
     tags:
       - { name: workflow_node, alias: implement_changeset }
 
   # Node: Run tests
   agency.node.run_tests:
-    class: infrastructure.agency.RunTests
+    class: infrastructure.agency.nodes.run_tests.RunTests
     tags:
       - { name: workflow_node, alias: run_tests }
 
@@ -272,146 +222,65 @@ services:
       - { name: workflow_node, alias: parse_user_stories }
 
 ################################################################################################
-# Agents
-################################################################################################
-
-  # Registry of all agents
-  agency.agent_registry:
-    class: domain.registry.Registry
-    arguments:
-      services: !tagged_iterator { tag: agent, index_by: alias }
-
-  # Agent: Scheduling
-  agency.agent.scheduling:
-    class: infrastructure.agency.SchedulingAgent
-    tags:
-      - { name: agent, alias: scheduling }
-
-  # Agent: Search
-  agency.agent.search:
-    class: infrastructure.agency.SearchAgent
-    arguments: ['@faiss.search_engine','langchain.document_mapper','@openai.client','o1']
-    tags:
-      - { name: agent, alias: search }
-
-################################################################################################
 # Infrastructure Services
 ################################################################################################
-
-  # Prompt Generator
-  agency.prompt_generator:
-    class: infrastructure.agency.PromptGenerator
-    arguments: ['@agency.prompt_registry']
-
-  # Document Consolidator
-  daily_voice_notes.document_consolidator:
-    class: infrastructure.daily_voice_notes.DailyNoteConsolidator
-    arguments: ['@openai.client','@obsidian.vault']
-
-  # FAISS Indexer
-  faiss.indexer:
-    class: infrastructure.faiss.FAISSIndexer
-    arguments:
-      document_loader: '@langchain.obsidian_document_loader'
-      mapper: '@langchain.document_mapper'
-      docs_path: '%OBSIDIAN_VAULT_PATH%'
-      chunk_size: 1000
-      chunk_overlap: 100
-      save_path: '%FAISS_INDEX_PATH%'
-
-  # FAISS Search Engine
-  faiss.search_engine:
-    class: infrastructure.faiss.FAISSSearchEngine
-    arguments: ['%FAISS_INDEX_PATH%', 1]
-
-  # Langchain Document Mapper
-  langchain.document_mapper:
-    class: infrastructure.langchain.LangchainDocumentMapper
-
-  # Langchain Obsidian Document Loader
-  langchain.obsidian_document_loader:
-    class: infrastructure.langchain.ObsidianDocumentLoader
-    arguments: ['@langchain.document_mapper','%OBSIDIAN_VAULT_PATH%']
-
-  # OpenAI Client
-  openai.client:
-    class: infrastructure.openai.OpenAIClient
-    arguments: ['%OPENAI_API_KEY%']
 
   # Configuration Service
   config:
     class: infrastructure.config.services.config.Config
 
-  # Obsidian Prompt Generator
-  obsidian.prompt_generator:
-    class: infrastructure.obsidian.ObsidianPromptGenerator
-    arguments: ['@obsidian.vault', '%PROMPT_TEMPLATE_PATH%']
-
-  # Obsidian Vault
-  obsidian.vault:
-    class: infrastructure.obsidian.ObsidianVault
-    arguments: ['%OBSIDIAN_VAULT_PATH%', '@config']
-
   # Pyperclip
   pyperclip:
-    class: infrastructure.pyperclip.Pyperclip
+    class: infrastructure.pyperclip.pyperclip.Pyperclip
 
   # Traceback Prompt Builder
   traceback.prompt_builder:
-    class: infrastructure.traceback.TracebackPromptBuilder
+    class: infrastructure.traceback.prompt_builder.TracebackPromptBuilder
     arguments: ['@pyperclip']
-
-  # Transcriber
-  transcription.transcriber:
-    class: infrastructure.amazon.AmazonTranscribe
-    arguments: ['%TRANSCRIPTS_BUCKET%', '%AWS_PATH%']
-
-  # Token Counter
-  util.token_counter:
-    class: infrastructure.util.TokenCounter
 
   # Datetime Service
   util.datetime:
-    class: infrastructure.util.DatetimeService
+    class: infrastructure.util.datetime_service.DatetimeService
 
   init.k_template_registry:
-    class: domain.registry.Registry
+    class: domain.registry.entities.registry.Registry
     arguments:
       services: !tagged_iterator { tag: k_template, index_by: alias }
 
   init.template.nodejs:
-    class: infrastructure.init.NodeJSTemplate
+    class: infrastructure.init.templates.nodejs.NodeJSTemplate
     tags:
       - { name: k_template, alias: nodejs }
 
   init.template.nextjs:
-    class: infrastructure.init.NextJSTemplate
+    class: infrastructure.init.templates.nextjs.NextJSTemplate
     tags:
       - { name: k_template, alias: nextjs }
 
   init.template.python:
-    class: infrastructure.init.PythonTemplate
+    class: infrastructure.init.templates.python.PythonTemplate
     tags:
       - { name: k_template, alias: python }
 
   init.template.dotnet:
-    class: infrastructure.init.DotNetTemplate
+    class: infrastructure.init.templates.dotnet.DotNetTemplate
     tags:
       - { name: k_template, alias: dotnet }
 
   init.template.wiki:
-    class: infrastructure.init.WikiTemplate
+    class: infrastructure.init.templates.wiki.WikiTemplate
     tags:
       - { name: k_template, alias: wiki }
 
   langchain.chat_openai:
     class: langchain_openai.ChatOpenAI
     arguments:
-      model: '%GENERATE_CHANGESET_MODEL%'
+      model: 'o3-mini'
       reasoning_effort: 'high'
 
   langchain.chat_anthropic:
     class: langchain_anthropic.ChatAnthropic
     arguments:
-      model: '%GENERATE_CHANGESET_MODEL%'
-      reasoning_effort: 'high'
+      model: 'claude-3-7-sonnet-latest'
+      max_tokens: 64000
+      # thinking: { type: 'enabled', budget_tokens: 64000 } # This is currently not working due to forced tooling limitations

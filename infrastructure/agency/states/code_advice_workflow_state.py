@@ -25,5 +25,4 @@ class CodeAdviceWorkflowState(TypedDict):
     directory_tree: str
     source_code: str
     advice: str
-    confirmation_required: bool
     print_tree: bool

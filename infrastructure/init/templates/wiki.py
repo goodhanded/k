@@ -1,4 +1,4 @@
-from application.init import KTemplateProtocol
+from application.init.k_template import KTemplateProtocol
 
 class WikiTemplate(KTemplateProtocol):
     def get_excludes(self) -> str:

@@ -1,6 +1,6 @@
 import subprocess
 
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: GitStatus
 # This node executes the 'git status' command to retrieve the current source control status

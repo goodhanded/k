@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
-from application.agency import WorkflowNodeProtocol
-from application.filesystem import ClipboardProtocol
-from application.templating import TemplateProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
+from application.filesystem.protocols.clipboard import ClipboardProtocol
+from application.templating.protocols.template import TemplateProtocol
 
 
 class UserStory(BaseModel):

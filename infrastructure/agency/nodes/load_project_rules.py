@@ -1,6 +1,6 @@
 import os
 
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: LoadProjectRules
 # This node loads project-specific guidelines and rules from the .k/rules.txt file,

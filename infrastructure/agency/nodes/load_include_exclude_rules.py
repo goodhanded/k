@@ -1,7 +1,7 @@
 import os
 from typing import Optional
 
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: LoadIncludeExcludeRules
 # This node loads file inclusion and exclusion rules from .k/includes.txt and .k/excludes.txt,

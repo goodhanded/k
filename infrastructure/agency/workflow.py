@@ -1,4 +1,4 @@
-from application.agency import WorkflowProtocol
+from application.agency.protocols.workflow import WorkflowProtocol
 from langgraph.graph.state import CompiledStateGraph
 
 class Workflow(WorkflowProtocol):

@@ -1,6 +1,6 @@
 from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 
 class GenerateCodeAdvice(WorkflowNodeProtocol):
@@ -17,12 +17,6 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
         )
-
-        if state.get("confirmation_required", False):
-            user_input = input("Proceed with sending prompt? (y/n): ").strip().lower()
-            if user_input != 'y':
-                print("Operation cancelled by user.")
-                return {"changeset": None, "progress": "Operation cancelled."}
 
         llm = ChatOpenAI(model=self.model, reasoning_effort="high")
 

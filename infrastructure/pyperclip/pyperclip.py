@@ -1,6 +1,6 @@
 import pyperclip
 
-from application.filesystem import ClipboardProtocol
+from application.filesystem.protocols.clipboard import ClipboardProtocol
 
 class Pyperclip(ClipboardProtocol):
   def get(self) -> str:

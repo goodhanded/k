@@ -1,2 +1,0 @@
-from .protocols.transcriber import TranscriberProtocol
-from .use_cases.transcribe_audio import TranscribeAudioUseCase

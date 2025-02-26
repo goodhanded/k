@@ -17,7 +17,6 @@ class PullRequestWorkflowState(TypedDict):
       - source_code: Source code.
       - changeset: The generated changeset (structured as a dict).
       - tests_passed: Boolean flag indicating whether tests passed.
-      - confirmation_required: Boolean flag indicating if user confirmation is required.
       - copy_prompt: Boolean flag indicating if the generated prompt should be copied to the clipboard instead of invoking the LLM.
     """
     goal: str
@@ -30,6 +29,5 @@ class PullRequestWorkflowState(TypedDict):
     source_code: str
     changeset: dict
     tests_passed: bool
-    confirmation_required: bool
     copy_prompt: bool
     print_tree: bool

@@ -1,5 +1,5 @@
 from typing import TypedDict, Optional
-from domain.filesystem import DocumentCollection
+from domain.filesystem.entities.document_collection import DocumentCollection
 
 class ProjectPlanWorkflowState(TypedDict):
     """

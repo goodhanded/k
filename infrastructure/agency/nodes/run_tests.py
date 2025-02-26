@@ -1,6 +1,6 @@
 import subprocess
 
-from application.agency import WorkflowNodeProtocol
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
 # Workflow Node: RunTests
 # This node executes the project's test suite using pytest,

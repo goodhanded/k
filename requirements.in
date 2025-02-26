@@ -1,10 +1,7 @@
 # To update this file, run:
 # pip-compile requirements.in --strip-extras --output-file requirements.txt
 boto3
-discord
 faiss-cpu
-ffmpeg-python
-ipython
 langchain
 langchain-community
 langchain-openai
@@ -12,7 +9,6 @@ langchain-anthropic
 langgraph
 openai
 pathspec
-pycord
 pydantic
 pyperclip
 pytest

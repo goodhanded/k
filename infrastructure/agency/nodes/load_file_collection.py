@@ -1,5 +1,5 @@
-from application.agency import WorkflowNodeProtocol
-from domain.filesystem import FileCollection
+from application.agency.protocols.workflow_node import WorkflowNodeProtocol
+from domain.filesystem.entities.file_collection import FileCollection
 
 # Workflow Node: LoadFileCollection
 # This node constructs a collection of project files based on the current working directory,

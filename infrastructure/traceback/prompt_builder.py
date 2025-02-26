@@ -3,7 +3,7 @@ import re
 import sys
 import os
 
-from application.filesystem import ClipboardProtocol
+from application.filesystem.protocols.clipboard import ClipboardProtocol
 
 class TracebackPromptBuilder:
     """

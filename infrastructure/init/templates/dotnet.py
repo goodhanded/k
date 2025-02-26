@@ -1,5 +1,4 @@
-from application.init import KTemplateProtocol
-
+from application.init.k_template import KTemplateProtocol
 
 class DotNetTemplate(KTemplateProtocol):
     def get_excludes(self) -> str:
