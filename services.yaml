@@ -242,7 +242,7 @@ services:
   # Node: Generate changeset
   agency.node.generate_changeset:
     class: infrastructure.agency.GenerateChangeset
-    arguments: ['@pyperclip', '@agency.prompt.pr', '%GENERATE_CHANGESET_MODEL%']
+    arguments: ['@langchain.chat_openai', '@pyperclip', '@agency.prompt.pr']
     tags:
       - { name: workflow_node, alias: generate_changeset }
 
@@ -403,3 +403,15 @@ services:
     class: infrastructure.init.WikiTemplate
     tags:
       - { name: k_template, alias: wiki }
+
+  langchain.chat_openai:
+    class: langchain_openai.ChatOpenAI
+    arguments:
+      model: '%GENERATE_CHANGESET_MODEL%'
+      reasoning_effort: 'high'
+
+  langchain.chat_anthropic:
+    class: langchain_anthropic.ChatAnthropic
+    arguments:
+      model: '%GENERATE_CHANGESET_MODEL%'
+      reasoning_effort: 'high'

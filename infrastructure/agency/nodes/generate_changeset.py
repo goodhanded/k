@@ -1,9 +1,12 @@
 import os
 from typing import Optional
 from pydantic import BaseModel, Field
+from langchain_core.language_models import BaseChatModel
 from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
 from application.agency import WorkflowNodeProtocol
+from application.filesystem import ClipboardProtocol
+from application.templating import TemplateProtocol
 
 
 class FileChange(BaseModel):
@@ -22,10 +25,11 @@ class GenerateChangeset(WorkflowNodeProtocol):
     """
     Workflow node that generates a pull request changeset.
     """
-    def __init__(self, clipboard, pr_prompt, model: str):
+    def __init__(self, chat_model: BaseChatModel, clipboard: ClipboardProtocol, pr_prompt: TemplateProtocol, model_name: str):
+        self.chat_model = chat_model
         self.clipboard = clipboard
         self.pr_prompt = pr_prompt
-        self.model = model
+        self.model_name = model_name
 
     def __call__(self, state: dict) -> dict:
         if "goal" not in state:
@@ -52,8 +56,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
                 print(f"Failed to copy prompt to clipboard: {e}")
             return {"changeset": None, "progress": "PR prompt copied to clipboard."}
         
-        llm = ChatOpenAI(model=self.model, reasoning_effort="high")
-        structured_llm = llm.with_structured_output(Changeset)
+        structured_llm = self.chat_model.with_structured_output(Changeset)
         
         print("\nGenerating changeset. This may take a minute...\n")
         with get_openai_callback() as cb:

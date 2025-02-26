@@ -8,6 +8,7 @@ ipython
 langchain
 langchain-community
 langchain-openai
+langchain-anthropic
 langgraph
 openai
 pathspec
