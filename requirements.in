@@ -1,5 +1,6 @@
 # To update this file, run:
 # pip-compile requirements.in --strip-extras --output-file requirements.txt
+anthropic
 boto3
 faiss-cpu
 langchain

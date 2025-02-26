@@ -20,6 +20,18 @@ commands:
               columns:
                 - id
               order_by: id
+      anthropic:
+        help: "Get an Anthropic resource"
+        subcommands:
+          models:
+            help: "Get the list of available Anthropic models"
+            target: "@anthropic.client.get_models"
+            print_result: true
+            print_map:
+              format: table
+              columns:
+                - id
+              order_by: id
 
   traceback:
     aliases: ["tb"]
