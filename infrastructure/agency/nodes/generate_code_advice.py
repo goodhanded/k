@@ -1,35 +1,43 @@
-from langchain_openai import ChatOpenAI
 from langchain_community.callbacks.manager import get_openai_callback
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
+from application.templating.protocols.template import TemplateProtocol
+from langchain_core.language_models import BaseChatModel
 
 
 class GenerateCodeAdvice(WorkflowNodeProtocol):
-    def __init__(self, code_advice_prompt, model: str):
-        self.code_advice_prompt = code_advice_prompt
-        self.model = model
+    def __init__(self, chat_model: BaseChatModel, prompt: TemplateProtocol, callback: callable = None) -> None:
+        self.prompt = prompt
+        self.chat_model = chat_model
+        self.callback = callback
 
     def __call__(self, state: dict) -> dict:
         if "prompt" not in state:
             raise ValueError("Prompt not found in state.")
 
-        prompt = self.code_advice_prompt.format(
+        prompt = self.prompt.format(
             prompt=state["prompt"],
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
         )
 
-        llm = ChatOpenAI(model=self.model, reasoning_effort="high")
+        print("\nGenerating advice. This may take a minute...\n")
 
-        print(f"\nGenerating advice. This could take a minute...")
+        # with get_openai_callback() as cb:
+        #     response = self.chat_model.invoke([prompt])
 
-        with get_openai_callback() as cb:
-            response = llm.invoke([prompt])
+        if self.callback:
+            with self.callback() as cb:
+                response = self.chat_model.invoke([prompt])
+            
+            print(f"Input Tokens: {cb.prompt_tokens}")
+            print(f"Output Tokens: {cb.completion_tokens}")
+            print(f"Total Tokens: {cb.total_tokens}")
+            print(f"Cost: {cb.total_cost}\n")
+
+        else:
+            response = self.chat_model.invoke([prompt])
         
         advice = response.content
         print(f"{advice}\n")
-        print(f"Input Tokens: {cb.prompt_tokens}")
-        print(f"Output Tokens: {cb.completion_tokens}")
-        print(f"Total: {cb.total_tokens}")
-        print(f"Cost: {cb.total_cost}\n")
         
         return {"advice": advice, "progress": "Advice generated."}

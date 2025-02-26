@@ -185,14 +185,20 @@ services:
   # Node: Generate code advice
   agency.node.generate_code_advice:
     class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
-    arguments: ['@agency.prompt.code_advice', '%GENERATE_CODE_ADVICE_MODEL%']
+    arguments:
+      chat_model: '@langchain.chat_anthropic'
+      prompt: '@agency.prompt.code_advice'
     tags:
       - { name: workflow_node, alias: generate_code_advice }
 
   # Node: Generate changeset
   agency.node.generate_changeset:
     class: infrastructure.agency.nodes.generate_changeset.GenerateChangeset
-    arguments: ['@langchain.chat_openai', '@pyperclip', '@agency.prompt.pr']
+    arguments: 
+      chat_model: '@langchain.chat_openai'
+      clipboard: '@pyperclip'
+      prompt: '@agency.prompt.pr'
+      callback: 'langchain_community.callbacks.manager.get_openai_callback'
     tags:
       - { name: workflow_node, alias: generate_changeset }
 
@@ -283,4 +289,3 @@ services:
     arguments:
       model: 'claude-3-7-sonnet-latest'
       max_tokens: 64000
-      # thinking: { type: 'enabled', budget_tokens: 64000 } # This is currently not working due to forced tooling limitations
