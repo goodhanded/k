@@ -39,7 +39,7 @@ commands:
     target: "@traceback.build_troubleshooting_prompt_use_case.execute"
   
   pr:
-    help: "Generate pull request changes based on a prompt. Use the --clipboard flag to copy the generated prompt to the clipboard instead of invoking the LLM."
+    help: "Generate pull request changes based on a prompt. Use the --copy flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
     arguments:
       prompt:
