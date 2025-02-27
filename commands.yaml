@@ -42,10 +42,7 @@ commands:
     help: "Generate pull request changes based on a prompt. Use the --copy flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
     arguments:
-      prompt:
-        help: "Text to generate pull request changes"
-        positional: true
-        nargs: "?"
+      prompt: "Text to generate pull request changes"
       stdin:
         help: "Read prompt from stdin instead of an argument"
         flag: true
@@ -66,20 +63,21 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
+      stdin:
+        help: "Read prompt from standard input instead of an argument"
+        flag: true
       copy:
         help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
         flag: true
       tree:
         help: "If set, print the directory tree to the console"
         flag: true
-
+  
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
-      prompt:
-        help: "Text to generate project plan user stories"
-        positional: true
+      prompt: "Text to generate project plan user stories"
       copy:
         help: "Copy the generated plan prompt to the clipboard instead of invoking the LLM"
         flag: true
