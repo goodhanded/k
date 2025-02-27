@@ -42,7 +42,10 @@ commands:
     help: "Generate pull request changes based on a prompt. Use the --copy flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
     arguments:
-      prompt: "Text to generate pull request changes"
+      prompt:
+        help: "Text to generate pull request changes"
+        positional: true
+        nargs: "?"
       stdin:
         help: "Read prompt from stdin instead of an argument"
         flag: true
@@ -62,7 +65,10 @@ commands:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
-      prompt: "Text to send to the workflow"
+      prompt:
+        help: "Text to send to the workflow"
+        positional: true
+        nargs: "?"
       stdin:
         help: "Read prompt from standard input instead of an argument"
         flag: true
