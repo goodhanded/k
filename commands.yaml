@@ -58,7 +58,9 @@ commands:
       tree:
         help: "If set, print the directory tree to the console"
         flag: true
-
+      include:
+        help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
+  
   advise:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"

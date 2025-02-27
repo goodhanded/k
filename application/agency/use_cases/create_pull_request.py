@@ -20,6 +20,7 @@ class CreatePullRequestUseCase:
 
     def execute(self,
                 prompt: str = None,
+                include: str = None,
                 stdin: bool = False,
                 paste: bool = False,
                 copy: bool = False,
@@ -32,18 +33,22 @@ class CreatePullRequestUseCase:
           - stdin: If True, read the prompt from standard input.
           - paste: If True, read the prompt from the clipboard.
           - copy: If True, indicate that the generated PR prompt should be copied to the clipboard instead of invoking the LLM.
+          - tree: If True, print the directory tree to the console.
+          - include: Override include patterns with a pipe-delimited list of glob patterns.
         """
+
         if stdin:
             prompt = sys.stdin.read()
         elif paste:
             prompt = self.clipboard_service.get()
         if not prompt:
-            print("No prompt provided. Aborting pull request creation.")
+            print("\nNo prompt provided. Aborting pull request creation.\n")
             return
 
         state = {
             "goal": prompt,
             "copy_prompt": copy,
-            "print_tree": tree
+            "print_tree": tree,
+            "include_override": include
         }
         self.workflow.run(state)

@@ -38,7 +38,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
         if state.get("copy_prompt", False):
             try:
                 self.clipboard.set(prompt)
-                print("PR prompt copied to clipboard. No LLM invocation performed.")
+                print("\nPR prompt copied to clipboard. No LLM invocation performed.\n")
             except Exception as e:
                 print(f"Failed to copy prompt to clipboard: {e}")
             return {"changeset": None, "progress": "PR prompt copied to clipboard."}

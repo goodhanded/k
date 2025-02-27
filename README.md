@@ -86,17 +86,14 @@ For subcommands:
 
 ### Commands Overview
 
-| Command      | Usage Example                                                 | Description                                                                                     |
-|--------------|---------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| **init**     | `k init`                                                      | Initializes the .k directory with default configuration templates.                              |
-| **get**      | `k get openai models`                                         | Retrieves a list of available OpenAI models.                                                    |
-|              | `k get anthropic models`                                      | Retrieves a list of available Anthropic models with descriptions.                               |
-| **traceback**| `k traceback`                                                 | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts. |
-| **pr**       | `k pr [prompt] [--clipboard] [--paste] [--tree]`                | Generates a pull request changeset based on your modifications.                                 |
-| **advise**   | `k advise --prompt "Refactor authentication module." [--tree]`  | Provides detailed code advice and suggestions for improvements.                                 |
-| **plan**     | `k plan [prompt] [--copy]`                                      | Creates a project plan by generating user stories from the provided goal.                       |
-
----
+| Command      | Usage Example                                                        | Description                                                                                                                                                                  |
+|--------------|----------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **init**     | `k init`                                                             | Initializes the .k directory with default configuration templates.                                                                                                           |
+| **get**      | `k get openai models` <br> `k get anthropic models`                    | Retrieves a list of available models from OpenAI or Anthropic.                                                                                                               |
+| **traceback**| `k traceback`                                                        | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts.                                                                         |
+| **pr**       | `k pr [prompt] [--copy] [--paste] [--tree] [--include "<pattern>"]`      | Generates a pull request changeset based on your modifications. Use the --include option to override the default file selection by providing a pipe-delimited list of glob patterns (e.g., '*.yaml|*.json|*.html'). |
+| **advise**   | `k advise --prompt "Refactor authentication module." [--tree]`         | Provides detailed code advice and suggestions for improvements.                                                                                                             |
+| **plan**     | `k plan [prompt] [--copy]`                                             | Creates a project plan by generating user stories from the provided goal.                                                                                                    |
 
 ### Examples
 
@@ -106,7 +103,8 @@ For subcommands:
 
 2. **Generate a Pull Request Changeset**  
    `k pr "Refactor database connection logic" --tree`  
-   Generates a detailed pull request changeset, optionally printing the directory tree.
+   Generates a detailed pull request changeset, optionally printing the directory tree. You can also limit the file selection by using the --include option to override the default include patterns. For example:  
+   `k pr "Refactor database connection logic" --include "*.py|*.md" --tree`
 
 3. **Generate Code Advice**  
    `k advise --prompt "Optimize the caching mechanism for performance."`  

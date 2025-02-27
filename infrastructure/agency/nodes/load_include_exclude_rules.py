@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any, Optional
 
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 
@@ -15,15 +15,12 @@ class LoadIncludeExcludeRules(WorkflowNodeProtocol):
     """
 
     def __call__(self, state: dict) -> dict:
-        """
-        Load include and exclude rules from the .k directory.
-
-        Steps:
-          1. Load inclusion patterns from .k/includes.txt.
-          2. Load exclusion patterns from .k/excludes.txt.
-          3. Return both patterns along with a progress message.
-        """
-        include_rules = self._load_pattern(os.path.join(".k", "includes.txt")) or ""
+        if 'include_override' in state and state['include_override']:
+            print("\nInclude override detected. Using the provided include rules.\n")
+            include_rules = state['include_override']
+        else:
+            include_rules = self._load_pattern(os.path.join(".k", "includes.txt")) or ""
+        
         exclude_rules = self._load_pattern(os.path.join(".k", "excludes.txt")) or ""
 
         return {"include_rules": include_rules, "exclude_rules": exclude_rules, "progress": "Include and exclude rules loaded."}

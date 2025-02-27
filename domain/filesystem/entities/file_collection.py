@@ -5,6 +5,7 @@ from .file import File
 from .document import Document
 from .document_collection import DocumentCollection
 
+
 class FileCollection:
     """
     Represents a collection of files.
@@ -18,14 +19,15 @@ class FileCollection:
         """
         self.files = files
 
-    def to_markdown(self) -> str:
+    def to_markdown(self, base_path: str) -> str:
         """
         Returns a markdown representation of the collection.
         """
         markdown = ""
         for file in self.files:
+            rel_path = os.path.relpath(file.path, base_path)
             markdown += f"## {file.name}\n"
-            markdown += f"Path: `{file.path}`\n\n"
+            markdown += f"Path: `{rel_path}`\n\n"
             markdown += "```" + file.extension.lstrip('.') + "\n"
             try:
                 with open(file.path, "r", encoding="utf-8", errors="replace") as f:
@@ -140,14 +142,16 @@ class FileCollection:
            └─ file5.txt
         """
 
+        print("Directory tree:\n")
+
         # Build a tree dictionary from file paths.
         # Assume each File object has a 'path' attribute containing the full path.
         file_paths = [f.path for f in self.files]
+
         if not file_paths:
             return "."
 
-        # Determine the common base directory.
-        base = os.path.commonpath(file_paths)
+        base = os.getcwd()
 
         tree_dict = {}
 
@@ -175,4 +179,7 @@ class FileCollection:
             return lines
 
         tree_lines = ["."] + render_tree(tree_dict)
+
+        print("\n".join(tree_lines))
+
         return "\n".join(tree_lines)

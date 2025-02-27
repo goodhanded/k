@@ -27,4 +27,4 @@ class LoadSourceCode(WorkflowNodeProtocol):
 
         file_collection = state["file_collection"]
 
-        return {"source_code": file_collection.to_markdown(), "progress": "Source code loaded."}
+        return {"source_code": file_collection.to_markdown(base_path=os.getcwd()), "progress": "Source code loaded."}
