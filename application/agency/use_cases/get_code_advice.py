@@ -15,7 +15,7 @@ class GetCodeAdviceUseCase:
     def __init__(self, workflow: 'WorkflowProtocol') -> None:
         self.workflow = workflow
 
-    def execute(self, prompt: str = None, tree: bool = False) -> None:
+    def execute(self, prompt: str = None, tree: bool = False, copy: bool = False) -> None:
         """
         Executes the advice generation.
 
@@ -27,6 +27,7 @@ class GetCodeAdviceUseCase:
         # Proceed with executing the pull request workflow
         state = {
             "prompt": prompt,
+            "copy_prompt": copy,
             "print_tree": tree
         }
         self.workflow.run(state)
