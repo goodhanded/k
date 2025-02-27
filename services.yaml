@@ -272,6 +272,11 @@ services:
     tags:
       - { name: k_template, alias: dotnet }
 
+  init.template.terraform:
+    class: infrastructure.init.templates.terraform.TerraformTemplate
+    tags:
+      - { name: k_template, alias: terraform }
+
   init.template.wiki:
     class: infrastructure.init.templates.wiki.WikiTemplate
     tags:
