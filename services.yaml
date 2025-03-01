@@ -180,7 +180,7 @@ services:
   agency.node.generate_code_advice:
     class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
     arguments: 
-      chat_model: '@langchain.chat_anthropic'
+      chat_model: '@langchain.chat_openai'
       prompt: '@agency.prompt.code_advice'
       clipboard: '@pyperclip'
     tags:

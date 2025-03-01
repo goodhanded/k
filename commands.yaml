@@ -66,6 +66,8 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       prompt: "Text to send to the workflow"
+      include:
+        help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
       copy:
         help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
         flag: true
