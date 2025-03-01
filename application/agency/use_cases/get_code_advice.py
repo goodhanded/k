@@ -1,3 +1,4 @@
+import sys
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -18,17 +19,25 @@ class GetCodeAdviceUseCase:
     def execute(self, 
                 prompt: str = None,
                 include: str = None,
-                tree: bool = False,
-                copy: bool = False) -> None:
+                stdin: bool = False,
+                copy: bool = False,
+                tree: bool = False) -> None:
         """
         Executes the advice generation.
 
         Parameters:
           - prompt: The prompt text containing a specific question.
+          - stdin: If True, read the prompt from standard input instead of command-line argument.
+          - tree: If True, print the directory tree to the console.
+          - copy: If True, copy the generated prompt to the clipboard instead of invoking the LLM.
         """
+        if stdin:
+            prompt = sys.stdin.read()
 
+        if not prompt:
+            print("No prompt provided. Aborting advice generation.")
+            return
 
-        # Proceed with executing the pull request workflow
         state = {
             "prompt": prompt,
             "copy_prompt": copy,

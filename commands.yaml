@@ -65,23 +65,27 @@ commands:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
-      prompt: "Text to send to the workflow"
+      prompt:
+        help: "Text to send to the workflow"
+        positional: true
+        nargs: "?"
       include:
         help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
+      stdin:
+        help: "Read prompt from standard input instead of an argument"
+        flag: true
       copy:
         help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
         flag: true
       tree:
         help: "If set, print the directory tree to the console"
         flag: true
-
+  
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
-      prompt:
-        help: "Text to generate project plan user stories"
-        positional: true
+      prompt: "Text to generate project plan user stories"
       copy:
         help: "Copy the generated plan prompt to the clipboard instead of invoking the LLM"
         flag: true
