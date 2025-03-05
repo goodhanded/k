@@ -68,8 +68,8 @@
      `alias k='/path/to/k/venv/bin/python /path/to/k/k.py'`
    - Now you can simply call `k` instead of `python k.py`
 
-6. **Initialize the .k Directory (Optional):**
-   - Run `k init` to create a fresh .k directory with default configuration templates. This is useful if the directory does not already exist or if you want to reset its contents.
+6. **Initialize the .k Directory:**
+   - Run `k init` to create a fresh .k directory with default configuration templates. This is now required before using k in order to support commands being run from anywhere inside a project's subdirectories. 
 
 7. **Run the CLI:**
    - `k --help`
