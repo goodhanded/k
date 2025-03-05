@@ -91,7 +91,7 @@ For subcommands:
 | **init**     | `k init`                                                             | Initializes the .k directory with default configuration templates.                                                                                                           |
 | **get**      | `k get openai models` <br> `k get anthropic models`                    | Retrieves a list of available models from OpenAI or Anthropic.                                                                                                               |
 | **traceback**| `k traceback`                                                        | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts.                                                                         |
-| **pr**       | `k pr [prompt] [--copy] [--paste] [--tree] [--include "<pattern>"]`      | Generates a pull request changeset based on your modifications. Use the --include option to override the default file selection by providing a pipe-delimited list of glob patterns (e.g., '*.yaml|*.json|*.html'). |
+| **pr**       | `k pr [prompt] [--copy] [--paste] [--tree] [--include "<pattern>"]`    | Generates a pull request changeset based on your modifications. Use the --include option to override the default file selection by providing a pipe-delimited list of glob patterns (e.g., '*.yaml|*.json|*.html'). |
 | **advise**   | `k advise --prompt "Refactor authentication module." [--tree]`         | Provides detailed code advice and suggestions for improvements.                                                                                                             |
 | **plan**     | `k plan [prompt] [--copy]`                                             | Creates a project plan by generating user stories from the provided goal.                                                                                                    |
 
@@ -164,12 +164,15 @@ The application uses several environment variables which must be defined in your
 
 ## Workflow Format
 
-Workflows in k are defined in `workflows.yaml` using a simple edge notation. Each workflow is represented as an ordered list of transitions formatted as:
+Workflows in k are defined in `workflows.yaml` and now support a hybrid format that combines the simplicity of concise edge notation with the flexibility of verbose conditional transitions. In its simplest form, a workflow is represented as an ordered list of transitions using the format:
+
 ```
 FROM_NODE -> TO_NODE
 ```
-Special tokens `START` and `END` denote the beginning and termination of a workflow. For example, the pull request workflow is defined as:
-```yaml
+
+Special tokens `START` and `END` denote the beginning and termination of a workflow. For example, a basic pull request workflow is defined as:
+
+```
 pull_request:
   - START -> get_project_path
   - get_project_path -> load_include_exclude_rules
@@ -183,27 +186,21 @@ pull_request:
   - generate_changeset -> implement_changeset
   - implement_changeset -> END
 ```
-Ensure that every node alias referenced is registered in `services.yaml`.
 
-A more verbose notation can be used when conditional edges are required:
-```yaml
-example_workflow:
-  nodes:
-    - node_1
-    - node_2
+To support dynamic routing based on state, you can also define transitions with conditions. In this verbose notation, an edge is specified as a mapping with the keys `from`, `to`, and `condition`. For instance:
 
-  edges:
-    - from: START
-      to: node_1
-    - from: node_1
-      to: node_2
-      condition: "state.some_condition == True"
-    - from: node_1
-      to: END
-      condition: "state.some_condition == False"
-    - from: node_2
-      to: END
 ```
+hybrid_workflow:
+  - START -> node_a
+  - node_a -> 
+      to: node_b
+      condition: "state.some_condition == true"
+  - node_a -> 
+      to: END
+      condition: "state.some_condition != true"
+```
+
+In a hybrid workflow, both concise and verbose edge definitions can be mixed together. Ensure that every node alias referenced is registered in `services.yaml` and that your workflow state includes any variables used in the conditions.
 
 ---
 
