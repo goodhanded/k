@@ -134,18 +134,8 @@ For subcommands:
 The application uses several environment variables which must be defined in your `.env` file. You can create your own `.env` by copying `.env.example` and modifying the values as needed:
 
 - `K_PATH`: The root directory of the project.
-- `TRANSCRIPTS_BUCKET`: (If applicable) Name of the AWS S3 bucket for transcripts.
-- `AWS_PATH`: Path to the AWS CLI executable.
-- `PROMPT_TEMPLATE_PATH`: File path to prompt templates used by the application.
-- `TRANSCRIPTS_BASE_PATH`: Directory for audio transcript files.
-- `OBSIDIAN_VAULT_PATH`: Path to your Obsidian vault for notes.
-- `FAISS_INDEX_PATH`: Directory for the FAISS index used in search.
 - `OPENAI_API_KEY`: API key for accessing OpenAI's GPT models.
 - `ANTHROPIC_API_KEY`: API key for accessing Anthropic's Claude models.
-- `DISCORD_BOT_TOKEN`: (Not used in current version.)
-- `GENERATE_CHANGESET_MODEL`: Model identifier (e.g., "o3-mini") used for generating pull request changesets.
-- `GENERATE_CODE_ADVICE_MODEL`: Model identifier (e.g., "o3-mini") used for generating code advice.
-- `GENERATE_USER_STORIES_MODEL`: Model identifier (e.g., "o3-mini") used for generating user stories.
 
 ---
 
@@ -194,6 +184,26 @@ pull_request:
   - implement_changeset -> END
 ```
 Ensure that every node alias referenced is registered in `services.yaml`.
+
+A more verbose notation can be used when conditional edges are required:
+```yaml
+example_workflow:
+  nodes:
+    - node_1
+    - node_2
+
+  edges:
+    - from: START
+      to: node_1
+    - from: node_1
+      to: node_2
+      condition: "state.some_condition == True"
+    - from: node_1
+      to: END
+      condition: "state.some_condition == False"
+    - from: node_2
+      to: END
+```
 
 ---
 
