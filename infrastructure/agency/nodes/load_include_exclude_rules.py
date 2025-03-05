@@ -15,13 +15,22 @@ class LoadIncludeExcludeRules(WorkflowNodeProtocol):
     """
 
     def __call__(self, state: dict) -> dict:
+
+        if "project_path" not in state:
+            raise ValueError("Project path not found in state.")
+        
+        project_path = state["project_path"]
+
         if 'include_override' in state and state['include_override']:
             print("\nInclude override detected. Using the provided include rules.\n")
             include_rules = state['include_override']
         else:
-            include_rules = self._load_pattern(os.path.join(".k", "includes.txt")) or ""
+            include_rules = self._load_pattern(os.path.join(project_path, ".k/includes.txt")) or ""
         
-        exclude_rules = self._load_pattern(os.path.join(".k", "excludes.txt")) or ""
+        exclude_rules = self._load_pattern(os.path.join(project_path, ".k/excludes.txt")) or ""
+
+        print(f"\nInclude rules: {include_rules}")
+        print(f"Exclude rules: {exclude_rules}\n")
 
         return {"include_rules": include_rules, "exclude_rules": exclude_rules, "progress": "Include and exclude rules loaded."}
     

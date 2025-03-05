@@ -1,6 +1,5 @@
-import os
-
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
+from domain.filesystem.entities.file_collection import FileCollection
 
 # Workflow Node: LoadDirectoryTree
 # This node creates a textual tree representation of the project's directory structure
@@ -24,9 +23,9 @@ class LoadDirectoryTree(WorkflowNodeProtocol):
         if "file_collection" not in state:
             raise ValueError("File collection not found in state.")
 
-        file_collection = state["file_collection"]
-
-        tree = file_collection.tree()
+        file_collection: FileCollection = state["file_collection"]
+        project_path = state["project_path"]
+        tree = file_collection.tree(base_path=project_path)
 
         print_tree = state.get("print_tree", False)
         if print_tree:

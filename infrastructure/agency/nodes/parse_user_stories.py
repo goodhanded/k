@@ -10,12 +10,13 @@ class ParseUserStories(WorkflowNodeProtocol):
     def __call__(self, state: dict) -> dict:
         if "user_stories" not in state or not state["user_stories"]:
             return {"progress": "No user stories to parse."}
+        if "project_path" not in state:
+            raise ValueError("project_path is required in the state dictionary")
 
         # Convert the structured user stories to a formatted JSON string for now.
         output = json.dumps(state["user_stories"].dict(), indent=2)
-        k_dir = os.path.join(os.getcwd(), ".k")
-        if not os.path.exists(k_dir):
-            os.makedirs(k_dir)
+        k_dir = state["project_path"]
+
         file_path = os.path.join(k_dir, "user_stories.txt")
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(output)

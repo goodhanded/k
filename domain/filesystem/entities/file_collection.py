@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import os
 from pathspec import PathSpec
 from .file import File
@@ -126,7 +126,7 @@ class FileCollection:
 
         return FileCollection(collected_files)
 
-    def tree(self) -> str:
+    def tree(self, base_path: Optional[str] = None) -> str:
         """
         Returns a string directory/file tree representation of the collection.
         Implemented like the Unix tree command, using pipe and dash characters.
@@ -151,14 +151,15 @@ class FileCollection:
         if not file_paths:
             return "."
 
-        base = os.getcwd()
+        if base_path is None:
+            base_path = os.getcwd()
 
         tree_dict = {}
 
         # Insert each file into the tree structure.
         for f in self.files:
             # Compute the relative path from the base.
-            rel_path = os.path.relpath(f.path, base)
+            rel_path = os.path.relpath(f.path, base_path)
             parts = rel_path.split(os.sep)
             cur = tree_dict
             for part in parts[:-1]:

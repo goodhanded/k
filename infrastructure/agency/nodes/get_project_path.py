@@ -19,5 +19,15 @@ class GetProjectPath(WorkflowNodeProtocol):
         Returns:
             dict: Contains 'project_path' with the current working directory and a progress message.
         """
-        # Retrieve current working directory as the project path.
-        return {"project_path": os.getcwd(), "progress": "Project path loaded."}
+        # Save the original working directory
+        project_path = os.getcwd()
+
+        # Look for .k directory by traversing up the directory tree
+        while not os.path.exists(os.path.join(project_path, ".k")):
+            parent_dir = os.path.dirname(project_path)
+            if parent_dir == project_path:  # Reached root directory
+                print("Project directory not found. Call k init to initialize a project.")
+                exit(1)
+            project_path = parent_dir
+
+        return {"project_path": project_path, "progress": "Project path loaded."}

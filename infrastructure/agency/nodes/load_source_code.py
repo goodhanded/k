@@ -26,5 +26,6 @@ class LoadSourceCode(WorkflowNodeProtocol):
             raise ValueError("File collection not found in state.")
 
         file_collection = state["file_collection"]
+        project_path = state["project_path"]
 
-        return {"source_code": file_collection.to_markdown(base_path=os.getcwd()), "progress": "Source code loaded."}
+        return {"source_code": file_collection.to_markdown(base_path=project_path), "progress": "Source code loaded."}
