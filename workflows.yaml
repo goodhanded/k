@@ -27,7 +27,6 @@ workflows:
     - get_project_path -> load_include_exclude_rules
     - get_project_path -> load_project_rules
     - load_project_rules -> load_file_collection
-    - load_include_rules -> load_file_collection
     - load_include_exclude_rules -> load_file_collection
     - load_file_collection -> load_directory_tree
     - load_file_collection -> load_source_code

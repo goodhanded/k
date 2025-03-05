@@ -17,7 +17,7 @@ class ParseUserStories(WorkflowNodeProtocol):
         output = json.dumps(state["user_stories"].dict(), indent=2)
         k_dir = state["project_path"]
 
-        file_path = os.path.join(k_dir, "user_stories.txt")
+        file_path = os.path.join(k_dir, "user_stories.json")
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(output)
         print(f"\nUser stories written to {file_path}")
