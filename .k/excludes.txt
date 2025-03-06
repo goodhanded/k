@@ -14,3 +14,4 @@ effective_agents
 .k/*
 tests/*
 infrastructure/iac/*
+.DS_Store

@@ -14,5 +14,5 @@ class CreateProjectPlanUseCase:
         if not prompt:
             print("No prompt provided. Aborting project plan creation.")
             return
-        state = {"goal": prompt, "user_stories": None, "copy_prompt": copy}
+        state = {"prompt": prompt, "user_stories": None, "copy_prompt": copy}
         result = self.workflow.run(state)

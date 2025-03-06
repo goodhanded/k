@@ -64,7 +64,7 @@ commands:
     arguments:
       <<: *common_arguments
       followup:
-        help: "If set, append to memory file and include its contents in the LLM prompt."
+        help: "If set, append to memory file and include its contents in the LLM prompt for incremental updates."
         flag: true
   
   advise:
@@ -72,6 +72,9 @@ commands:
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
       <<: *common_arguments
+      followup:
+        help: "If set, append to memory file and include its contents in the LLM prompt for incremental updates."
+        flag: true
   
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."

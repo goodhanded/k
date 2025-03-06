@@ -7,3 +7,4 @@ venv/
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfplan
+.k/memory.txt

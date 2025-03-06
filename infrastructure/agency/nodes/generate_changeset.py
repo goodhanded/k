@@ -29,7 +29,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
         self.callback = callback
 
     def __call__(self, state: dict) -> dict:
-        if "goal" not in state:
+        if "prompt" not in state:
             raise ValueError("Goal not found in state.")
         
         memory_text = ""
@@ -40,7 +40,7 @@ class GenerateChangeset(WorkflowNodeProtocol):
                     memory_text = f.read()
         
         prompt_text = self.prompt.format(
-            goal=state["goal"],
+            goal=state["prompt"],
             rules=state.get("project_rules", ""),
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", ""),

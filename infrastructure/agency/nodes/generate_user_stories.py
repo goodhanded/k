@@ -31,10 +31,10 @@ class GenerateUserStories(WorkflowNodeProtocol):
         self.callback = callback
 
     def __call__(self, state: dict) -> dict:
-        if "goal" not in state:
+        if "prompt" not in state:
             raise ValueError("Goal not found in state.")
         prompt = self.prompt.format(
-            goal=state["goal"],
+            goal=state["prompt"],
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
         )

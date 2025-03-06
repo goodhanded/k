@@ -7,7 +7,7 @@ class PullRequestWorkflowState(TypedDict):
     Workflow state for the pull request workflow.
     
     Fields:
-      - goal: The workflow goal string.
+      - prompt: The workflow prompt string.
       - project_path: The absolute project path.
       - include_rules: The include pattern string.
       - exclude_rules: The exclude pattern string.
@@ -22,7 +22,7 @@ class PullRequestWorkflowState(TypedDict):
       - include_override: Override include patterns.
       - followup: Boolean flag indicating if followup mode is active.
     """
-    goal: str
+    prompt: str
     project_path: str
     include_rules: str
     exclude_rules: str

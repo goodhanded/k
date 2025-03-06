@@ -12,7 +12,7 @@ services:
   # Use Case: Get Code Advice
   agency.get_code_advice_use_case:
     class: application.agency.use_cases.get_code_advice.GetCodeAdviceUseCase
-    arguments: ['@agency.workflow.code_advice']
+    arguments: ['@pyperclip','@agency.workflow.code_advice']
 
   # Use Case: Create Project Plan
   agency.create_project_plan_use_case:

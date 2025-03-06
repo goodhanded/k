@@ -28,3 +28,4 @@ class CodeAdviceWorkflowState(TypedDict):
     print_tree: bool
     include_override: str
     copy_prompt: bool
+    followup: bool
