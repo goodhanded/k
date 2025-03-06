@@ -1,3 +1,23 @@
+common_arguments: &common_arguments
+  prompt:
+    help: "Text to generate pull request changes"
+    positional: true
+    nargs: "?"
+  stdin:
+    help: "Read prompt from stdin instead of an argument"
+    flag: true
+  paste:
+    help: "Read prompt from the clipboard instead of an argument or stdin"
+    flag: true
+  copy:
+    help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
+    flag: true
+  tree:
+    help: "If set, print the directory tree to the console"
+    flag: true
+  include:
+    help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
+
 commands:
   init:
     help: "Initialize .k directory with configuration templates."
@@ -42,50 +62,18 @@ commands:
     help: "Generate pull request changes based on a prompt. Use the --copy flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
     arguments:
-      prompt:
-        help: "Text to generate pull request changes"
-        positional: true
-        nargs: "?"
-      stdin:
-        help: "Read prompt from stdin instead of an argument"
-        flag: true
-      paste:
-        help: "Read prompt from the clipboard instead of an argument or stdin"
-        flag: true
-      copy:
-        help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
-        flag: true
-      tree:
-        help: "If set, print the directory tree to the console"
-        flag: true
-      include:
-        help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
+      <<: *common_arguments
+
   
   advise:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"
     arguments:
-      prompt:
-        help: "Text to send to the workflow"
-        positional: true
-        nargs: "?"
-      include:
-        help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
-      stdin:
-        help: "Read prompt from standard input instead of an argument"
-        flag: true
-      copy:
-        help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
-        flag: true
-      tree:
-        help: "If set, print the directory tree to the console"
-        flag: true
+      <<: *common_arguments
   
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
-      prompt: "Text to generate project plan user stories"
-      copy:
-        help: "Copy the generated plan prompt to the clipboard instead of invoking the LLM"
-        flag: true
+      <<: *common_arguments
+

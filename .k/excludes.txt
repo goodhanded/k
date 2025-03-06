@@ -13,3 +13,4 @@ effective_agents
 .terraform
 .k/*
 tests/*
+infrastructure/iac/*
