@@ -19,7 +19,8 @@ workflows:
     - load_file_collection -> load_source_code
     - load_directory_tree -> generate_changeset
     - load_source_code -> generate_changeset
-    - generate_changeset -> implement_changeset
+    - generate_changeset -> record_memory
+    - record_memory -> implement_changeset
     - implement_changeset -> END
 
   project_plan:

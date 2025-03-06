@@ -63,7 +63,9 @@ commands:
     target: "@agency.create_pull_request_use_case.execute"
     arguments:
       <<: *common_arguments
-
+      followup:
+        help: "If set, append to memory file and include its contents in the LLM prompt."
+        flag: true
   
   advise:
     help: "Generate code advice for the project"
@@ -76,4 +78,3 @@ commands:
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
       <<: *common_arguments
-

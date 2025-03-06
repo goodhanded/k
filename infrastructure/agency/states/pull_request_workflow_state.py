@@ -5,7 +5,7 @@ from domain.filesystem.entities.document_collection import DocumentCollection
 class PullRequestWorkflowState(TypedDict):
     """
     Workflow state for the pull request workflow.
-
+    
     Fields:
       - goal: The workflow goal string.
       - project_path: The absolute project path.
@@ -18,6 +18,9 @@ class PullRequestWorkflowState(TypedDict):
       - changeset: The generated changeset (structured as a dict).
       - tests_passed: Boolean flag indicating whether tests passed.
       - copy_prompt: Boolean flag indicating if the generated prompt should be copied to the clipboard instead of invoking the LLM.
+      - print_tree: Boolean flag for printing the directory tree.
+      - include_override: Override include patterns.
+      - followup: Boolean flag indicating if followup mode is active.
     """
     goal: str
     project_path: str
@@ -32,3 +35,4 @@ class PullRequestWorkflowState(TypedDict):
     copy_prompt: bool
     print_tree: bool
     include_override: str
+    followup: bool

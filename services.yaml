@@ -197,6 +197,12 @@ services:
     tags:
       - { name: workflow_node, alias: generate_changeset }
 
+  # Node: Record Memory
+  agency.node.record_memory:
+    class: infrastructure.agency.nodes.record_memory.RecordMemory
+    tags:
+      - { name: workflow_node, alias: record_memory }
+
   # Node: Implement changeset
   agency.node.implement_changeset:
     class: infrastructure.agency.nodes.implement_changeset.ImplementChangeset

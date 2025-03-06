@@ -24,7 +24,8 @@ class CreatePullRequestUseCase:
                 stdin: bool = False,
                 paste: bool = False,
                 copy: bool = False,
-                tree: bool = False) -> None:
+                tree: bool = False,
+                followup: bool = False) -> None:
         """
         Executes the pull request creation process.
         
@@ -35,8 +36,8 @@ class CreatePullRequestUseCase:
           - copy: If True, indicate that the generated PR prompt should be copied to the clipboard instead of invoking the LLM.
           - tree: If True, print the directory tree to the console.
           - include: Override include patterns with a pipe-delimited list of glob patterns.
+          - followup: If set, use followup mode to append to memory file and include its contents in the LLM prompt.
         """
-
         if stdin:
             prompt = sys.stdin.read()
         elif paste:
@@ -49,6 +50,7 @@ class CreatePullRequestUseCase:
             "goal": prompt,
             "copy_prompt": copy,
             "print_tree": tree,
-            "include_override": include
+            "include_override": include,
+            "followup": followup
         }
         self.workflow.run(state)
