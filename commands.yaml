@@ -81,3 +81,14 @@ commands:
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
       <<: *common_arguments
+  
+  add:
+    help: "Add entries to project configuration files."
+    subcommands:
+      rule:
+        help: "Append a rule to .k/rules.txt."
+        target: "@agency.add_rule_use_case.execute"
+        arguments:
+          rule:
+            help: "The rule text to be added to .k/rules.txt."
+            positional: true

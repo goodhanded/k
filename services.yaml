@@ -29,6 +29,10 @@ services:
     class: application.traceback.use_cases.build_troubleshooting_prompt.BuildTroubleshootingPromptUseCase
     arguments: ['@traceback.prompt_builder']
 
+  # Use Case: Add Rule
+  agency.add_rule_use_case:
+    class: application.agency.use_cases.add_rule.AddRuleUseCase
+
 ################################################################################################
 # Prompt Adapters
 ################################################################################################
