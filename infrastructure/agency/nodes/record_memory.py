@@ -9,14 +9,14 @@ class RecordMemory(WorkflowNodeProtocol):
     def __call__(self, state: dict) -> dict:
         if "project_path" not in state:
             raise ValueError("project_path is required in state")
-        if "changeset_prompt" not in state or "changeset" not in state:
-            raise ValueError("Memory requires 'changeset_prompt' and 'changeset' in state")
+        if "goal" not in state or "changeset" not in state:
+            raise ValueError("Memory requires 'goal' and 'changeset' in state")
         
         project_path = state["project_path"]
         memory_file = os.path.join(project_path, ".k", "memory.txt")
         followup = state.get("followup", False)
         
-        entry = f"Prompt:\n{state['changeset_prompt']}\n\nResponse:\n{state['changeset']}\n\n---\n"
+        entry = f"Prompt:\n{state['goal']}\n\nResponse:\n{state['changeset']}\n\n---\n"
         mode = "a" if followup else "w"
         
         with open(memory_file, mode, encoding="utf-8") as f:
