@@ -9,11 +9,14 @@ class RecordMemory(WorkflowNodeProtocol):
     The response can be a changeset (from pull request workflows) or advice (from code advice workflows).
     """
     def __call__(self, state: dict) -> dict:
+
+        if "copy_prompt" in state and state["copy_prompt"]:
+            return {"progress": "Memory recording skipped."}
         if "project_path" not in state:
             raise ValueError("project_path is required in state")
         if "prompt" not in state:
-            raise ValueError("Memory requires 'prompt' in state")
-        
+            raise ValueError("Memory requires 'prompt' in state")        
+
         response = state.get("changeset") or state.get("advice")
         if response is None:
             raise ValueError("Memory requires either 'changeset' or 'advice' in state")
