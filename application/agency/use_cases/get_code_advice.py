@@ -23,7 +23,7 @@ class GetCodeAdviceUseCase:
                 stdin: bool = False,
                 copy: bool = False,
                 paste: bool = False,
-                tree: bool = False,
+                verbose: bool = False,
                 followup: bool = False) -> None:
         """
         Executes the advice generation.
@@ -31,7 +31,7 @@ class GetCodeAdviceUseCase:
         Parameters:
           - prompt: The prompt text containing a specific question.
           - stdin: If True, read the prompt from standard input instead of command-line argument.
-          - tree: If True, print the directory tree to the console.
+          - verbose: If True, print verbose debug output to the console.
           - copy: If True, copy the generated prompt to the clipboard instead of invoking the LLM.
           - followup: If set, append this invocation's prompt and response to a memory file and include its contents in the LLM prompt for incremental updates.
         """
@@ -46,7 +46,7 @@ class GetCodeAdviceUseCase:
         state = {
             "prompt": prompt,
             "copy_prompt": copy,
-            "print_tree": tree,
+            "verbose": verbose,
             "include_override": include,
             "followup": followup
         }

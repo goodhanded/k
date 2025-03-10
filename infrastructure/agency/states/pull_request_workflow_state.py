@@ -7,32 +7,34 @@ class PullRequestWorkflowState(TypedDict):
     Workflow state for the pull request workflow.
     
     Fields:
-      - prompt: The workflow prompt string.
-      - project_path: The absolute project path.
-      - include_rules: The include pattern string.
-      - exclude_rules: The exclude pattern string.
-      - project_rules: The project-specific rules (from .k/rules.txt).
-      - file_collection: The file collection (DocumentCollection) loaded from the project.
-      - directory_tree: A text representation of the directory tree.
-      - source_code: Source code.
       - changeset: The generated changeset (structured as a dict).
-      - tests_passed: Boolean flag indicating whether tests passed.
       - copy_prompt: Boolean flag indicating if the generated prompt should be copied to the clipboard instead of invoking the LLM.
-      - print_tree: Boolean flag for printing the directory tree.
-      - include_override: Override include patterns.
+      - directory_tree: A text representation of the directory tree.
+      - exclude_rules: The exclude pattern string.
+      - file_collection: The file collection (DocumentCollection) loaded from the project.
       - followup: Boolean flag indicating if followup mode is active.
+      - include_override: Override include patterns.
+      - include_rules: The include pattern string.
+      - print_tree: Boolean flag for printing the directory tree.
+      - project_path: The absolute project path.
+      - project_rules: The project-specific rules (from .k/rules.txt).
+      - prompt: The workflow prompt string.
+      - source_code: Source code.
+      - tests_passed: Boolean flag indicating whether tests passed.
+      - verbose: Boolean flag for verbose output.
     """
-    prompt: str
-    project_path: str
-    include_rules: str
-    exclude_rules: str
-    project_rules: str
-    file_collection: DocumentCollection
-    directory_tree: str
-    source_code: str
     changeset: dict
-    tests_passed: bool
     copy_prompt: bool
-    print_tree: bool
-    include_override: str
+    directory_tree: str
+    exclude_rules: str
+    file_collection: DocumentCollection
     followup: bool
+    include_override: str
+    include_rules: str
+    print_tree: bool
+    project_path: str
+    project_rules: str
+    prompt: str
+    source_code: str
+    tests_passed: bool
+    verbose: bool

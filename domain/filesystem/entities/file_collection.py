@@ -142,8 +142,6 @@ class FileCollection:
            └─ file5.txt
         """
 
-        print("Directory tree:\n")
-
         # Build a tree dictionary from file paths.
         # Assume each File object has a 'path' attribute containing the full path.
         file_paths = [f.path for f in self.files]
@@ -180,7 +178,5 @@ class FileCollection:
             return lines
 
         tree_lines = ["."] + render_tree(tree_dict)
-
-        print("\n".join(tree_lines))
 
         return "\n".join(tree_lines)

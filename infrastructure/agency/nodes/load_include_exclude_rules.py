@@ -29,8 +29,9 @@ class LoadIncludeExcludeRules(WorkflowNodeProtocol):
         
         exclude_rules = self._load_pattern(os.path.join(project_path, ".k/excludes.txt")) or ""
 
-        print(f"\nInclude rules: {include_rules}")
-        print(f"Exclude rules: {exclude_rules}\n")
+        if "verbose" in state and state["verbose"]:
+            print(f"\nInclude rules: {include_rules}")
+            print(f"Exclude rules: {exclude_rules}")
 
         return {"include_rules": include_rules, "exclude_rules": exclude_rules, "progress": "Include and exclude rules loaded."}
     

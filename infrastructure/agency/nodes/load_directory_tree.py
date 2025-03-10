@@ -27,8 +27,8 @@ class LoadDirectoryTree(WorkflowNodeProtocol):
         project_path = state["project_path"]
         tree = file_collection.tree(base_path=project_path)
 
-        print_tree = state.get("print_tree", False)
-        if print_tree:
-            print(f"\n{tree}")
+        if "verbose" in state and state["verbose"]:
+            print("\nDirectory tree:")
+            print(f"\n{tree}\n")
 
         return {"directory_tree": tree, "progress": "Directory tree loaded."}

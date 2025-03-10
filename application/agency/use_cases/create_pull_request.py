@@ -24,7 +24,7 @@ class CreatePullRequestUseCase:
                 stdin: bool = False,
                 copy: bool = False,
                 paste: bool = False,
-                tree: bool = False,
+                verbose: bool = False,
                 followup: bool = False) -> None:
         """
         Executes the pull request creation process.
@@ -34,7 +34,7 @@ class CreatePullRequestUseCase:
           - stdin: If True, read the prompt from standard input.
           - copy: If True, indicate that the generated PR prompt should be copied to the clipboard instead of invoking the LLM.
           - paste: If True, read the prompt from the clipboard.
-          - tree: If True, print the directory tree to the console.
+          - verbose: If True, print verbose debug output to the console.
           - include: Override include patterns with a pipe-delimited list of glob patterns.
           - followup: If set, use followup mode to append to memory file and include its contents in the LLM prompt.
         """
@@ -49,7 +49,7 @@ class CreatePullRequestUseCase:
         state = {
             "prompt": prompt,
             "copy_prompt": copy,
-            "print_tree": tree,
+            "verbose": verbose,
             "include_override": include,
             "followup": followup
         }

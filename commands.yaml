@@ -12,8 +12,8 @@ common_arguments: &common_arguments
   copy:
     help: "Copy the generated prompt to the clipboard instead of invoking the LLM"
     flag: true
-  tree:
-    help: "If set, print the directory tree to the console"
+  verbose:
+    help: "If set, print verbose debug output to the console"
     flag: true
   include:
     help: "Override include patterns with a pipe-delimited list of glob patterns, e.g. '*.yaml|*.json|*.html'"
