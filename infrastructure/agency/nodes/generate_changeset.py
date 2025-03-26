@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 import os
-from langchain_core.language_models import BaseChatModel
+from langchain.chat_models import init_chat_model
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 from application.filesystem.protocols.clipboard import ClipboardProtocol
 from application.templating.protocols.template import TemplateProtocol
@@ -22,11 +22,10 @@ class GenerateChangeset(WorkflowNodeProtocol):
     """
     Workflow node that generates a pull request changeset.
     """
-    def __init__(self, chat_model: BaseChatModel, clipboard: ClipboardProtocol, prompt: TemplateProtocol, callback: callable = None) -> None:
-        self.chat_model = chat_model
+    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict) -> None:
+        self.chat_model = init_chat_model(model_id, **model_config)
         self.clipboard = clipboard
         self.prompt = prompt
-        self.callback = callback
 
     def __call__(self, state: dict) -> dict:
         if "prompt" not in state:
@@ -58,17 +57,8 @@ class GenerateChangeset(WorkflowNodeProtocol):
         structured_llm = self.chat_model.with_structured_output(Changeset)
         
         print("\nGenerating changeset. This may take a minute...\n")
-        
-        if self.callback:
-            with self.callback() as cb:
-                changeset = structured_llm.invoke([prompt_text])
-            
-            print(f"Input Tokens: {cb.prompt_tokens}")
-            print(f"Output Tokens: {cb.completion_tokens}")
-            print(f"Total: {cb.total_tokens}")
-            print(f"Cost: {cb.total_cost}\n")
-        else:
-            changeset = structured_llm.invoke([prompt_text])
+
+        changeset = structured_llm.invoke([prompt_text])
         
         print(f"{changeset.summary}\n")
         

@@ -112,6 +112,16 @@ class Container:
         if isinstance(arg, TaggedIterator):
             return self._build_tagged_collection(arg)
 
+        # Handle dictionaries
+        if isinstance(arg, dict):
+            return {
+                key: self._resolve_argument(value) for key, value in arg.items()
+            }
+        
+        # Handle lists
+        if isinstance(arg, list):
+            return [self._resolve_argument(item) for item in arg]
+
         # Otherwise, it's literal
         return arg
 

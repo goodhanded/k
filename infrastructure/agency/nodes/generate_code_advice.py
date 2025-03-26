@@ -1,17 +1,15 @@
 import os
-from langchain_community.callbacks.manager import get_openai_callback
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 from application.templating.protocols.template import TemplateProtocol
 from application.filesystem.protocols.clipboard import ClipboardProtocol
-from langchain_core.language_models import BaseChatModel
+from langchain.chat_models import init_chat_model
 
 
 class GenerateCodeAdvice(WorkflowNodeProtocol):
-    def __init__(self, chat_model: BaseChatModel, clipboard: ClipboardProtocol, prompt: TemplateProtocol, callback: callable = None) -> None:
-        self.chat_model = chat_model
+    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict) -> None:
+        self.chat_model = init_chat_model(model_id, **model_config)
         self.clipboard = clipboard
         self.prompt = prompt
-        self.callback = callback
 
     def __call__(self, state: dict) -> dict:
         if "prompt" not in state:
@@ -41,16 +39,7 @@ class GenerateCodeAdvice(WorkflowNodeProtocol):
 
         print("\nGenerating advice. This may take a minute...\n")
 
-        if self.callback:
-            with self.callback() as cb:
-                response = self.chat_model.invoke([prompt_text])
-            
-            print(f"Input Tokens: {cb.prompt_tokens}")
-            print(f"Output Tokens: {cb.completion_tokens}")
-            print(f"Total Tokens: {cb.total_tokens}")
-            print(f"Cost: {cb.total_cost}\n")
-        else:
-            response = self.chat_model.invoke([prompt_text])
+        response = self.chat_model.invoke([prompt_text])
         
         advice = response.content
         print(f"{advice}\n")
