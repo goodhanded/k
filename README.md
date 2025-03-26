@@ -69,7 +69,7 @@
    - Now you can simply call `k` instead of `python k.py`
 
 6. **Initialize the .k Directory:**
-   - Run `k init` to create a fresh .k directory with default configuration templates. This is now required before using k in order to support commands being run from anywhere inside a project's subdirectories. 
+   - Run `k init` to create a fresh .k directory with default configuration templates. This is now required before using k in order to support commands being run from anywhere inside a project's subdirectories.
 
 7. **Run the CLI:**
    - `k --help`
@@ -86,14 +86,16 @@ For subcommands:
 
 ### Commands Overview
 
-| Command      | Usage Example                                                                                                              | Description |
-|--------------|----------------------------------------------------------------------------------------------------------------------------|-------------|
-| **init**     | `k init`                                                                                                                   | Initializes the .k directory with default configuration templates. |
-| **get**      | `k get openai models` <br> `k get anthropic models`                                                                          | Retrieves a list of available models from OpenAI or Anthropic. |
-| **traceback**| `k traceback`                                                                                                              | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts. |
-| **pr**       | `k pr [prompt] [--copy] [--paste] [--tree] [--include "<pattern>"] [--followup]`                                             | Generates a pull request changeset based on your modifications. Use the `--include` option to override the default file selection by providing a pipe-delimited list of glob patterns (e.g., '*.yaml|*.json|*.html'). Use the **--followup** flag to append this invocation's prompt and response to a memory file and include its contents in the LLM prompt for incremental updates. |
-| **advise**   | `k advise --prompt "Refactor authentication module." [--tree] [--followup]`                                             | Provides detailed code advice and suggestions for improvements. Use the **--followup** flag to append this invocation's prompt and response to a memory file and include its contents in the LLM prompt for incremental updates. |
-| **plan**     | `k plan [prompt] [--copy]`                                                                                                  | Creates a project plan by generating user stories from the provided goal. |
+| Command      | Usage Example                                                                                                                  | Description |
+|--------------|--------------------------------------------------------------------------------------------------------------------------------|-------------|
+| **init**     | `k init`                                                                                                                       | Initializes the .k directory with default configuration templates. |
+| **get**      | `k get openai models` <br> `k get anthropic models`                                                                              | Retrieves a list of available models from OpenAI or Anthropic. |
+| **traceback**| `k traceback`                                                                                                                  | Builds a troubleshooting prompt from a traceback present in the clipboard, including source excerpts. |
+| **pr**       | `k pr [prompt] [--copy] [--paste] [--include "<pattern>"] [--followup] [--verbose]`                                           | Generates a pull request changeset based on your modifications. Use the `--include` option to override the default file selection by providing a pipe-delimited list of glob patterns (e.g., '*.yaml|*.json|*.html'). Use the **--followup** flag to append this invocation's prompt and response to a memory file for incremental updates. The **--verbose** flag provides detailed debug output during execution. |
+| **advise**   | `k advise "Refactor authentication module." [--followup] [--verbose]`                                                | Provides detailed code advice and suggestions for improvements. Use the **--followup** flag to append this invocation's prompt and response to a memory file for incremental updates. The **--verbose** flag enables verbose debug output. |
+| **plan**     | `k plan [prompt] [--copy] [--verbose]`                                                                                           | Creates a project plan by generating user stories from the provided goal. The **--verbose** flag can be used to view detailed execution logs. |
+
+---
 
 ### Examples
 
@@ -102,22 +104,24 @@ For subcommands:
    Creates a new .k directory with default templates.
 
 2. **Generate a Pull Request Changeset**  
-   `k pr "Refactor database connection logic" --tree`  
-   Generates a detailed pull request changeset, optionally printing the directory tree. You can also limit the file selection by using the `--include` option to override the default include patterns. For example:  
-   `k pr "Refactor database connection logic" --include "*.py|*.md" --tree`
+   `k pr "Refactor database connection logic" --verbose`  
+   Generates a detailed pull request changeset. Use the **--include** flag to override the default file selection if needed and the **--followup** flag to enable incremental updates. The **--verbose** flag displays detailed debug output.
 
 3. **Generate Code Advice**  
-   `k advise --prompt "Optimize the caching mechanism for performance." --followup`  
-   Receives actionable code improvement suggestions and uses memory to incorporate previous context if available.
+   `k advise "Optimize the caching mechanism for performance." --followup --verbose`  
+   Receives actionable code improvement suggestions. The **--followup** flag activates memory incorporation from previous sessions, while the **--verbose** flag enables detailed debug output.
 
 4. **Generate a Project Plan**  
-   `k plan "Implement user authentication" --copy`  
-   Generates and (optionally) copies a detailed project plan comprising user stories.
+   `k plan "Implement user authentication" --copy --verbose`  
+   Generates and optionally copies a detailed project plan comprising user stories. The **--verbose** flag provides extra execution details.
 
 5. **Build a Troubleshooting Prompt**  
    Copy a traceback to your clipboard, then run:  
    `k traceback`  
-   Constructs a troubleshooting prompt with relevant file content and the original traceback.
+   Constructs a troubleshooting prompt that includes relevant file content and the original traceback.
+
+6. **Enable Verbose Output**  
+   Simply add the **--verbose** flag to any command (e.g., `k pr "Refactor database connection logic" --verbose`) to display detailed debug output during execution.
 
 ---
 
@@ -183,7 +187,8 @@ pull_request:
   - load_file_collection -> load_source_code
   - load_directory_tree -> generate_changeset
   - load_source_code -> generate_changeset
-  - generate_changeset -> implement_changeset
+  - generate_changeset -> record_memory
+  - record_memory -> implement_changeset
   - implement_changeset -> END
 ```
 

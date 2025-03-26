@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
-from langchain_community.callbacks.manager import get_openai_callback
-from langchain_core.language_models import BaseChatModel
+from langchain.chat_models import init_chat_model
 from application.agency.protocols.workflow_node import WorkflowNodeProtocol
 from application.filesystem.protocols.clipboard import ClipboardProtocol
 from application.templating.protocols.template import TemplateProtocol
@@ -24,16 +23,15 @@ class GenerateUserStories(WorkflowNodeProtocol):
     Workflow node that generates user stories based on the provided goal.
     It uses an LLM to produce a structured list of user stories.
     """
-    def __init__(self,chat_model: BaseChatModel, clipboard: ClipboardProtocol, prompt: TemplateProtocol, callback: callable = None) -> None:
-        self.chat_model = chat_model
+    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict = None) -> None:
+        self.chat_model = init_chat_model(model_id, **(model_config or {}))
         self.clipboard = clipboard
         self.prompt = prompt
-        self.callback = callback
 
     def __call__(self, state: dict) -> dict:
         if "prompt" not in state:
             raise ValueError("Goal not found in state.")
-        prompt = self.prompt.format(
+        prompt_text = self.prompt.format(
             goal=state["prompt"],
             tree=state.get("directory_tree", ""),
             source_code=state.get("source_code", "")
@@ -41,7 +39,7 @@ class GenerateUserStories(WorkflowNodeProtocol):
 
         if state.get("copy_prompt", False):
             try:
-                self.clipboard.set(prompt)
+                self.clipboard.set(prompt_text)
                 print("Plan prompt copied to clipboard. No LLM invocation performed.")
             except Exception as e:
                 print(f"Failed to copy prompt to clipboard: {e}")
@@ -49,16 +47,7 @@ class GenerateUserStories(WorkflowNodeProtocol):
 
         print("\nGenerating user stories. This may take a minute...\n")
 
-        if self.callback:
-            with self.callback() as cb:
-                user_stories_plan = self.chat_model.with_structured_output(UserStoriesPlan).invoke([prompt])
-
-            print(f"Input Tokens: {cb.prompt_tokens}")
-            print(f"Output Tokens: {cb.completion_tokens}")
-            print(f"Total: {cb.total_tokens}")
-            print(f"Cost: {cb.total_cost}\n")
-        else:
-            user_stories_plan = self.chat_model.with_structured_output(UserStoriesPlan).invoke([prompt])
+        user_stories_plan = self.chat_model.with_structured_output(UserStoriesPlan).invoke([prompt_text])
 
         print(f"Done. User Stories Summary: {user_stories_plan.summary}")
 

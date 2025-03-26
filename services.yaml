@@ -184,8 +184,8 @@ services:
   agency.node.generate_code_advice:
     class: infrastructure.agency.nodes.generate_code_advice.GenerateCodeAdvice
     arguments: 
-      prompt: '@agency.prompt.code_advice'
       clipboard: '@pyperclip'
+      prompt: '@agency.prompt.code_advice'
       model_id: 'openai:o3-mini'
       model_config:
         reasoning_effort: 'high'
@@ -198,7 +198,6 @@ services:
     arguments: 
       clipboard: '@pyperclip'
       prompt: '@agency.prompt.pr'
-      callback: '@openai.callback'
       model_id: 'openai:o3-mini'
       model_config:
         reasoning_effort: 'high'
@@ -227,10 +226,11 @@ services:
   agency.node.generate_user_stories:
     class: infrastructure.agency.nodes.generate_user_stories.GenerateUserStories
     arguments: 
-      chat_model: '@langchain.chat_openai'
       clipboard: '@pyperclip'
       prompt: '@agency.prompt.project_plan'
-      callback: '@openai.callback'
+      model_id: 'openai:o3-mini'
+      model_config:
+        reasoning_effort: 'high'
     tags:
       - { name: workflow_node, alias: generate_user_stories }
 
@@ -295,21 +295,6 @@ services:
     class: infrastructure.init.templates.wiki.WikiTemplate
     tags:
       - { name: k_template, alias: wiki }
-
-  langchain.chat_openai:
-    class: langchain_openai.ChatOpenAI
-    arguments:
-      model: 'o3-mini'
-      reasoning_effort: 'high'
-
-  langchain.chat_anthropic:
-    class: langchain_anthropic.ChatAnthropic
-    arguments:
-      model: 'claude-3-7-sonnet-latest'
-      max_tokens: 64000
-
-  openai.callback:
-    class: infrastructure.agency.callbacks.openai.OpenAICallback
 
   openai.client:
     class: infrastructure.openai.client.OpenAIClient

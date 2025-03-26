@@ -6,8 +6,8 @@ from langchain.chat_models import init_chat_model
 
 
 class GenerateCodeAdvice(WorkflowNodeProtocol):
-    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict) -> None:
-        self.chat_model = init_chat_model(model_id, **model_config)
+    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict = None) -> None:
+        self.chat_model = init_chat_model(model_id, **(model_config or {}))
         self.clipboard = clipboard
         self.prompt = prompt
 

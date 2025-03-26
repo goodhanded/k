@@ -22,8 +22,8 @@ class GenerateChangeset(WorkflowNodeProtocol):
     """
     Workflow node that generates a pull request changeset.
     """
-    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict) -> None:
-        self.chat_model = init_chat_model(model_id, **model_config)
+    def __init__(self, clipboard: ClipboardProtocol, prompt: TemplateProtocol, model_id: str, model_config: dict = None) -> None:
+        self.chat_model = init_chat_model(model_id, **(model_config or {}))
         self.clipboard = clipboard
         self.prompt = prompt
 
