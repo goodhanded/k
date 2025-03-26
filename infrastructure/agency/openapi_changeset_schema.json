@@ -1,0 +1,82 @@
+{
+  "type": "OBJECT",
+  "description": "Describes a set of file changes: additions, removals, and modifications.",
+  "properties": {
+    "summary": {
+      "type": "STRING",
+      "description": "Descriptive summary of files added, removed, or modified. Explain what was done and why in one sentence for each file."
+    },
+    "additions": {
+      "type": "ARRAY",
+      "description": "List of files added.",
+      "items": {
+        "type": "OBJECT",
+        "description": "Represents an added file.",
+        "properties": {
+          "path": {
+            "type": "STRING",
+            "description": "Relative path to the file within the project."
+          },
+          "content": {
+            "type": "STRING",
+            "description": "Content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc."
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      }
+    },
+    "removals": {
+      "type": "ARRAY",
+      "description": "List of files removed.",
+      "items": {
+        "type": "OBJECT",
+        "description": "Represents a removed file.",
+        "properties": {
+          "path": {
+            "type": "STRING",
+            "description": "Relative path to the file within the project."
+          },
+          "content": {
+            "type": "STRING",
+            "description": "Content of the file before removal. Include the ENTIRE file content."
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      }
+    },
+    "modifications": {
+      "type": "ARRAY",
+      "description": "List of files modified.",
+      "items": {
+        "type": "OBJECT",
+        "description": "Represents a modified file.",
+        "properties": {
+          "path": {
+            "type": "STRING",
+            "description": "Relative path to the file within the project."
+          },
+          "content": {
+            "type": "STRING",
+            "description": "New content of the file. Include the ENTIRE file content, not just the changes. Don't forget imports, etc."
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      }
+    }
+  },
+  "required": [
+    "summary",
+    "additions",
+    "removals",
+    "modifications"
+  ]
+}

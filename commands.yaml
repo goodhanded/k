@@ -57,7 +57,6 @@ commands:
     aliases: ["tb"]
     help: "Build a troubleshooting prompt from a traceback on the clipboard"
     target: "@traceback.build_troubleshooting_prompt_use_case.execute"
-  
   pr:
     help: "Generate pull request changes based on a prompt. Use the --copy flag to copy the generated prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_pull_request_use_case.execute"
@@ -66,7 +65,6 @@ commands:
       followup:
         help: "If set, append to memory file and include its contents in the LLM prompt for incremental updates."
         flag: true
-  
   advise:
     help: "Generate code advice for the project"
     target: "@agency.get_code_advice_use_case.execute"
@@ -75,13 +73,11 @@ commands:
       followup:
         help: "If set, append to memory file and include its contents in the LLM prompt for incremental updates."
         flag: true
-  
   plan:
     help: "Generate project plan based on a prompt by creating user stories. Use the --copy flag to copy the generated plan prompt to the clipboard instead of invoking the LLM."
     target: "@agency.create_project_plan_use_case.execute"
     arguments:
       <<: *common_arguments
-  
   add:
     help: "Add entries to project configuration files."
     subcommands:
@@ -92,3 +88,10 @@ commands:
           rule:
             help: "The rule text to be added to .k/rules.txt."
             positional: true
+  implement:
+    help: "Implement changeset from clipboard. Reads a structured changeset response and applies the changes."
+    target: "@agency.implement_changeset_use_case.execute"
+    arguments:
+      verbose:
+        help: "Print verbose debug output to the console"
+        flag: true

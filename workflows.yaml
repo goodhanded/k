@@ -35,3 +35,7 @@ workflows:
     - load_source_code -> generate_user_stories
     - generate_user_stories -> parse_user_stories
     - parse_user_stories -> END
+
+  implement:
+    - START -> implement_changeset
+    - implement_changeset -> END

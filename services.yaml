@@ -33,6 +33,11 @@ services:
   agency.add_rule_use_case:
     class: application.agency.use_cases.add_rule.AddRuleUseCase
 
+  # Use Case: Implement Changeset from Clipboard
+  agency.implement_changeset_use_case:
+    class: application.agency.use_cases.implement_changeset.ImplementChangesetUseCase
+    arguments: ['@pyperclip', '@agency.workflow.implement_changeset']
+
 ################################################################################################
 # Prompt Adapters
 ################################################################################################
@@ -97,6 +102,12 @@ services:
     factory: ['@agency.workflow_factory', 'create']
     arguments: ['project_plan']
 
+  # Workflow: Implement Changeset from Clipboard
+  agency.workflow.implement_changeset:
+    class: infrastructure.agency.workflow.Workflow
+    factory: ['@agency.workflow_factory', 'create']
+    arguments: ['implement']
+
 ################################################################################################
 # Workflow States
 ################################################################################################
@@ -127,6 +138,13 @@ services:
     inject_class: true
     tags:
       - { name: workflow_state, alias: project_plan }
+
+  # State: Implement Changeset from Clipboard
+  agency.workflow_state.implement:
+    class: infrastructure.agency.states.implement_changeset_workflow_state.ImplementChangesetWorkflowState
+    inject_class: true
+    tags:
+      - { name: workflow_state, alias: implement }
 
 ################################################################################################
 # Workflow Nodes
